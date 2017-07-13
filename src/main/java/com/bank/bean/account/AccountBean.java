@@ -1,7 +1,7 @@
 package com.bank.bean.account;
 
 import com.bank.bean.customeraccount.CustomerAccount;
-import com.bank.service.TimeService;
+import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

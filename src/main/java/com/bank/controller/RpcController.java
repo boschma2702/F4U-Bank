@@ -186,4 +186,18 @@ public class RpcController {
         cardController.unblockCard(authToken, iBAN, pinCard);
         return new EmptyJsonResponse();
     }
+
+    /**
+     * Time extension
+     */
+    @Autowired
+    private TimeController timeController;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418)
+    })
+    public Object simulateTime(@JsonRpcParam("nrOfDays") int nrOfDays) throws InvalidParamValueException {
+        timeController.simulateTime(nrOfDays);
+        return new EmptyJsonResponse();
+    }
 }

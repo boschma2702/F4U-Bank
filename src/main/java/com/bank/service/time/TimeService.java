@@ -1,4 +1,4 @@
-package com.bank.service;
+package com.bank.service.time;
 
 import com.bank.bean.systeminfo.SystemInfo;
 import com.bank.repository.systeminfo.SystemInfoRepository;

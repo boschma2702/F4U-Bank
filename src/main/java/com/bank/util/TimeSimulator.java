@@ -17,4 +17,8 @@ public class TimeSimulator {
     public long getTimeChange() {
         return timeChange;
     }
+
+    public void addTimeChange(long amount){
+        timeChange = timeChange + amount;
+    }
 }

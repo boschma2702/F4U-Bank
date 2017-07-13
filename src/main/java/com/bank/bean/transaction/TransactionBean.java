@@ -2,9 +2,8 @@ package com.bank.bean.transaction;
 
 import com.bank.bean.card.CardBean;
 import com.bank.bean.account.AccountBean;
-import com.bank.service.TimeService;
+import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Date;
