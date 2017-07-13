@@ -200,4 +200,12 @@ public class RpcController {
         timeController.simulateTime(nrOfDays);
         return new EmptyJsonResponse();
     }
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = NoEffectException.class, code = 420)
+    })
+    public Object reset() throws NoEffectException {
+        timeController.reset();
+        return new EmptyJsonResponse();
+    }
 }

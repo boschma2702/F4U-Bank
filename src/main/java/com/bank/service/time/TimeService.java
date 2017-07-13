@@ -1,6 +1,7 @@
 package com.bank.service.time;
 
 import com.bank.bean.systeminfo.SystemInfo;
+import com.bank.exception.NoEffectException;
 import com.bank.repository.systeminfo.SystemInfoRepository;
 import com.bank.util.TimeSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,14 @@ public class TimeService {
         }
         systemInfo.setTimeDiff(TimeService.TIMESIMULATOR.getTimeChange());
         systemInfoRepository.save(systemInfo);
+    }
+
+    public SystemInfo getSystemInfo() throws NoEffectException {
+        Iterator<SystemInfo> iterator = systemInfoRepository.findAll().iterator();
+        if(iterator.hasNext()){
+            return iterator.next();
+        }
+        throw new NoEffectException("Nothing to go back to");
     }
 
 }

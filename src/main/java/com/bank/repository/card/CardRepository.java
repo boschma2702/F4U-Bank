@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @Repository
 @Transactional
@@ -28,4 +29,7 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
             "and a.accountId = ?1 " +
             "and c.pinCard = ?2")
     CardBean getBlockedCardOfNonBlockedAccount(int accountId, String pinCard);
+
+    void deleteCardBeansByCreationDateAfter(Date date);
+
 }
