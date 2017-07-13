@@ -2,9 +2,11 @@ package com.bank.bean.customeraccount;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
+import com.bank.service.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * This class covers the relation between a customer and a account.
@@ -36,6 +38,9 @@ public class CustomerAccount {
     @ManyToOne
     @JoinColumn(name = "account_id", updatable = false, insertable = false)
     private AccountBean accountBean;
+
+    @Column(name = "creation_date")
+    private Date creationDate;
 
     public int getCustomerId() {
         return customerId;
@@ -75,6 +80,11 @@ public class CustomerAccount {
 
     public void setAccountBean(AccountBean accountBean) {
         this.accountBean = accountBean;
+    }
+
+    @PrePersist
+    public void setDate(){
+        creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 
     @Override

@@ -2,9 +2,11 @@ package com.bank.bean.card;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
+import com.bank.service.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * The Card class contains all data values related to a card.
@@ -42,6 +44,9 @@ public class CardBean {
     private boolean isActive = true;
 
     private int attempts = 0;
+
+    @Column(name = "creation_date")
+    private Date creationDate;
 
     public int getAttempts() {
         return attempts;
@@ -97,5 +102,10 @@ public class CardBean {
 
     public void setAccountBean(AccountBean accountBean) {
         this.accountBean = accountBean;
+    }
+
+    @PrePersist
+    public void setDate(){
+        creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

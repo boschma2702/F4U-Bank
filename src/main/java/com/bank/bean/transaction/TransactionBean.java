@@ -2,14 +2,18 @@ package com.bank.bean.transaction;
 
 import com.bank.bean.card.CardBean;
 import com.bank.bean.account.AccountBean;
+import com.bank.service.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "transaction")
 public class TransactionBean {
+
+
     /**
      * Internal transaction id, unique identifier.
      */
@@ -36,7 +40,7 @@ public class TransactionBean {
     @JoinColumn(name = "card_id")
     private CardBean card;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+//    @Column(columnDefinition = "TIMESTAMP")
     private Date date;
 
     @Column(name = "target_name")
@@ -102,5 +106,10 @@ public class TransactionBean {
 
     public void setTargetName(String targetName) {
         this.targetName = targetName;
+    }
+
+    @PrePersist
+    public void setDate(){
+        date = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }
