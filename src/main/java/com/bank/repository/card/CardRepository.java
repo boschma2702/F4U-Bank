@@ -17,5 +17,15 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
 
 
     @Query("select c from CardBean c where c.isActive = true and c.accountBean.accountId = ?1 and c.pinCard = ?2")
-    CardBean getCardBean(int account_id, String pinCard);
+    CardBean getCardBean(int accountId, String pinCard);
+
+
+    @Query("select c " +
+            "from CardBean c, AccountBean a " +
+            "where c.isActive = false " +
+            "and a.isActive = true " +
+            "and c.accountBean.accountId = ?1 " +
+            "and a.accountId = ?1 " +
+            "and c.pinCard = ?2")
+    CardBean getBlockedCardOfNonBlockedAccount(int accountId, String pinCard);
 }

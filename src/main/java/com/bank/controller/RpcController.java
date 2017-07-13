@@ -170,4 +170,20 @@ public class RpcController {
     public Object getBankAccountAccess(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws InvalidParamValueException, NotAuthorizedException {
         return accountController.getBankAccountAccess(authToken, iBAN);
     }
+
+    /**
+     * Extension 2
+     */
+    @Autowired
+    private CardController cardController;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
+            @JsonRpcError(exception = InvalidPINException.class, code = 421)
+    })
+    public Object unblockCard(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("pinCard") String pinCard) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+        cardController.unblockCard(authToken, iBAN, pinCard);
+        return new EmptyJsonResponse();
+    }
 }
