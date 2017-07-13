@@ -12,10 +12,26 @@ public class CardValidateService {
     private CardRepository cardRepository;
 
     public CardBean validateCard(int accountId, String pinCard, String pinCode) throws InvalidPINException {
-        CardBean bean = cardRepository.getCardBean(accountId, pinCard, pinCode);
+        CardBean bean = cardRepository.getCardBean(accountId, pinCard);
         if (bean == null) {
             throw new InvalidPINException("Invalid pin information");
         }
+
+        if(bean.getPinCode().equals(pinCode)){
+            if(bean.getAttempts()!=0){
+                bean.setAttempts(0);
+                cardRepository.save(bean);
+            }
+        }else{
+            if(bean.getAttempts()==3){
+                bean.setActive(false);
+            }else {
+                bean.setAttempts(bean.getAttempts()+1);
+            }
+            cardRepository.save(bean);
+            throw new InvalidPINException("Invalid pin information");
+        }
+
         return bean;
     }
 }
