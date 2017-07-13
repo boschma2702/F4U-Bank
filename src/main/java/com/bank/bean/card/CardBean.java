@@ -41,6 +41,16 @@ public class CardBean {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
+    private int attempts = 0;
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
+    }
+
     public boolean isActive() {
         return isActive;
     }

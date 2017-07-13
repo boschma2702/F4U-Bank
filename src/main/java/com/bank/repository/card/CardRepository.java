@@ -16,6 +16,6 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
     void invalidatePinCards(int accountId);
 
 
-    @Query("select c from CardBean c where c.accountBean.accountId = ?1 and c.pinCard = ?2 and c.pinCode = ?3")
-    CardBean getCardBean(int account_id, String pinCard, String pinCode);
+    @Query("select c from CardBean c where c.isActive = true and c.accountBean.accountId = ?1 and c.pinCard = ?2")
+    CardBean getCardBean(int account_id, String pinCard);
 }
