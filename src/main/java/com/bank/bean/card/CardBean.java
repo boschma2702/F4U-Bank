@@ -108,6 +108,13 @@ public class CardBean {
         this.accountBean = accountBean;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public Date getExperationDate() {
+        return experationDate;
+    }
 
     @PrePersist
     public void setDate(){
