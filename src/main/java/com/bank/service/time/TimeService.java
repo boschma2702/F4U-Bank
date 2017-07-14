@@ -31,6 +31,10 @@ public class TimeService {
         this.systemInfoRepository = systemInfoRepository;
     }
 
+    /**
+     * Adds the given amount to the time used by the system. This also immediately saves the change to the database.
+     * @param amount amount of time that needs to pass. Is in milliseconds.
+     */
     public void addTime(long amount){
         TIMESIMULATOR.addTimeChange(amount);
 
@@ -46,6 +50,11 @@ public class TimeService {
         systemInfoRepository.save(systemInfo);
     }
 
+    /**
+     * Returns the SystemInfo Object. No changes should be made directly to this class.
+     * @return the systemInfoObject
+     * @throws NoEffectException if the no row was present in the database. This means no time change took place.
+     */
     public SystemInfo getSystemInfo() throws NoEffectException {
         Iterator<SystemInfo> iterator = systemInfoRepository.findAll().iterator();
         if(iterator.hasNext()){
