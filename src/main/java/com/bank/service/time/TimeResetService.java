@@ -1,6 +1,5 @@
 package com.bank.service.time;
 
-import com.bank.bean.account.AccountBean;
 import com.bank.bean.systeminfo.SystemInfo;
 import com.bank.bean.transaction.TransactionBean;
 import com.bank.exception.NoEffectException;
@@ -10,6 +9,7 @@ import com.bank.repository.customer.CustomerRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.repository.systeminfo.SystemInfoRepository;
 import com.bank.repository.transaction.TransactionRepository;
+import com.bank.service.transaction.TransactionRevertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,9 @@ public class TimeResetService {
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private TransactionRevertService transactionRevertService;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -55,16 +58,7 @@ public class TimeResetService {
 
     private void resetTransactions(Date date){
         List<TransactionBean> transactionBeans = transactionRepository.findTransactionBeansByDateAfter(date);
-        for(TransactionBean bean : transactionBeans){
-            AccountBean sourceBean = bean.getSourceBean();
-            AccountBean targetBean = bean.getTargetBean();
-            double amount = bean.getAmount();
-            sourceBean.setAmount(sourceBean.getAmount()+amount);
-            targetBean.setAmount(targetBean.getAmount()-amount);
-            accountRepository.save(sourceBean);
-            accountRepository.save(targetBean);
-            transactionRepository.delete(bean);
-        }
+        transactionRevertService.resetTransactions(transactionBeans);
     }
 
     private void resetCustomerAccounts(Date date){
