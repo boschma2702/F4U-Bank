@@ -208,4 +208,8 @@ public class RpcController {
         timeController.reset();
         return new EmptyJsonResponse();
     }
+
+    public Object getDate(){
+        return timeController.getDate();
+    }
 }
