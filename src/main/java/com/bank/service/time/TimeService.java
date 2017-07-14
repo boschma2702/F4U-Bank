@@ -13,6 +13,10 @@ import java.util.Iterator;
 @Service
 public class TimeService {
 
+    /**
+     * This object maintains the time used by the server. When one wants to know the time of the system, they should use
+     * TimeService.TIMERSIMULATOR.getCurrentDay();
+     */
     public static TimeSimulator TIMESIMULATOR;
 
     private final SystemInfoRepository systemInfoRepository;
