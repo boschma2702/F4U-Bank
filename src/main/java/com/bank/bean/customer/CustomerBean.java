@@ -1,5 +1,6 @@
 package com.bank.bean.customer;
 
+import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -67,6 +68,9 @@ public class CustomerBean {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
+
+    @Column(name = "creation_date")
+    private java.util.Date creationDate;
 
     public boolean isActive() {
         return isActive;
@@ -162,5 +166,10 @@ public class CustomerBean {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @PrePersist
+    public void setDate(){
+        creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

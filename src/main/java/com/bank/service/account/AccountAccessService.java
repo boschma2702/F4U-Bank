@@ -56,6 +56,7 @@ public class AccountAccessService {
         PinProjection pinProjection = new PinProjection();
         pinProjection.setPinCard(cardBean.getPinCard());
         pinProjection.setPinCode(cardBean.getPinCode());
+        pinProjection.setExpirationDate(cardBean.getExperationDate());
 
         return pinProjection;
     }

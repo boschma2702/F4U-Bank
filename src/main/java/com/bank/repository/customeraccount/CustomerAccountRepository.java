@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,6 @@ public interface CustomerAccountRepository extends CrudRepository<CustomerAccoun
     CustomerAccount getFirstByAccountIdAndCustomerId(int accountId, int customerId);
 
     void deleteByCustomerIdAndAccountId(int customerId, int accountId);
+
+    void deleteCustomerAccountsByCreationDateAfter(Date date);
 }

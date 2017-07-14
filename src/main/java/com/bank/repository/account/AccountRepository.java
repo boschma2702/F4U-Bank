@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -30,4 +31,7 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "where customeraccount.accountId = ?1 " +
             "and customeraccount.customerId = customer.customerId")
     List<CustomerUsernameProjection> getBankAccountAccess(int accountId);
+
+    void deleteAccountBeansByCreationDateAfter(Date date);
+
 }

@@ -65,6 +65,7 @@ public class AccountOpenService {
         projection.setiBAN(cardBean.getAccountBean().getAccountNumber());
         projection.setPinCard(cardBean.getPinCard());
         projection.setPinCode(cardBean.getPinCode());
+        projection.setExpirationDate(cardBean.getExperationDate());
         return projection;
     }
 
@@ -74,6 +75,7 @@ public class AccountOpenService {
         projection.setiBAN(cardBean.getAccountBean().getAccountNumber());
         projection.setPinCard(cardBean.getPinCard());
         projection.setPinCode(cardBean.getPinCode());
+        projection.setExpirationDate(cardBean.getExperationDate());
         return projection;
     }
 }

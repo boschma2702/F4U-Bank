@@ -1,9 +1,11 @@
 package com.bank.bean.account;
 
 import com.bank.bean.customeraccount.CustomerAccount;
+import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +48,9 @@ public class AccountBean {
     @OneToMany(mappedBy = "accountBean")
     private List<CustomerAccount> customers;
 
+    @Column(name = "creation_date")
+    private Date creationDate;
+
     public int getAccountId() {
         return accountId;
     }
@@ -84,5 +89,10 @@ public class AccountBean {
 
     public void setCustomers(List<CustomerAccount> customers) {
         this.customers = customers;
+    }
+
+    @PrePersist
+    public void setDate(){
+        creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

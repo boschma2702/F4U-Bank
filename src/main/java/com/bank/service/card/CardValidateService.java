@@ -3,6 +3,7 @@ package com.bank.service.card;
 import com.bank.bean.card.CardBean;
 import com.bank.exception.InvalidPINException;
 import com.bank.repository.card.CardRepository;
+import com.bank.service.time.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class CardValidateService {
     private CardRepository cardRepository;
 
     public CardBean validateCard(int accountId, String pinCard, String pinCode) throws InvalidPINException {
-        CardBean bean = cardRepository.getCardBean(accountId, pinCard);
+        CardBean bean = cardRepository.getCardBean(accountId, pinCard, TimeService.TIMESIMULATOR.getCurrentDate());
         if (bean == null) {
             throw new InvalidPINException("Invalid pin information");
         }
