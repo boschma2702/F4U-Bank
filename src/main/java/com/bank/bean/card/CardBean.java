@@ -6,6 +6,7 @@ import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -47,6 +48,9 @@ public class CardBean {
 
     @Column(name = "creation_date")
     private Date creationDate;
+
+    @Column(name = "expiration_date")
+    private Date experationDate;
 
     public int getAttempts() {
         return attempts;
@@ -104,8 +108,14 @@ public class CardBean {
         this.accountBean = accountBean;
     }
 
+
     @PrePersist
     public void setDate(){
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(creationDate);
+        cal.add(Calendar.YEAR, 4);
+        experationDate = cal.getTime();
     }
 }
