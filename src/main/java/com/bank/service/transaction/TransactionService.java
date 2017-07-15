@@ -26,6 +26,10 @@ public class TransactionService {
         if(amount <= 0){
             throw new InvalidParamValueException("Invalid Amount");
         }
+        if(-sourceAccountBean.getOverdraftLimit() > (sourceAccountBean.getAmount()-amount)){
+            throw new InvalidParamValueException("Source account overdraft to high");
+        }
+
         TransactionBean transactionBean = new TransactionBean();
         transactionBean.setSourceBean(sourceAccountBean);
         transactionBean.setTargetBean(targetAccountBean);
