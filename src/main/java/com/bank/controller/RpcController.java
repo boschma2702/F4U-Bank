@@ -212,4 +212,24 @@ public class RpcController {
     public Object getDate(){
         return timeController.getDate();
     }
+
+    /**
+     * Overdraft extension
+     */
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object setOverdraftLimit(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("overdraftLimit") double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException {
+        accountController.setOverdraftLimit(authToken, iBAN, overdraftLimit);
+        return new EmptyJsonResponse();
+    }
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object getOverdraftLimit(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        return accountController.getOverdraftLimit(authToken, iBAN);
+    }
 }

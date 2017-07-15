@@ -51,6 +51,9 @@ public class AccountBean {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(name = "overdraft_limit")
+    private double overdraftLimit = 0;
+
     public int getAccountId() {
         return accountId;
     }
@@ -89,6 +92,22 @@ public class AccountBean {
 
     public void setCustomers(List<CustomerAccount> customers) {
         this.customers = customers;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public double getOverdraftLimit() {
+        return overdraftLimit;
+    }
+
+    public void setOverdraftLimit(double overdraftLimit) {
+        this.overdraftLimit = overdraftLimit;
     }
 
     @PrePersist

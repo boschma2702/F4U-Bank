@@ -6,6 +6,7 @@ import com.bank.exception.NoEffectException;
 import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.account.AccountAmountProjection;
 import com.bank.projection.account.AccountOpenProjection;
+import com.bank.projection.account.AccountOverdraftLimitProjection;
 import com.bank.projection.customer.CustomerUsernameProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.service.AuthenticationService;
@@ -36,6 +37,9 @@ public class AccountController {
 
     @Autowired
     private AccountAmountService accountAmountService;
+
+    @Autowired
+    private AccountOverdraftLimitService accountOverdraftLimitService;
 
     public AccountOpenProjection openAccount(String name,
                                              String surname,
@@ -119,6 +123,32 @@ public class AccountController {
             if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
                 return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             } else {
+                throw new NotAuthorizedException("Not Authorized");
+            }
+        } catch (AuthenticationException e) {
+            throw new NotAuthorizedException("Not Authorized");
+        }
+    }
+
+    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException {
+        try {
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+                accountOverdraftLimitService.setOverdraft(iBAN, overdraftLimit);
+            }else {
+                throw new NotAuthorizedException("Not Authorized");
+            }
+        } catch (AuthenticationException e) {
+            throw new NotAuthorizedException("Not Authorized");
+        }
+    }
+
+    public AccountOverdraftLimitProjection getOverdraftLimit(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        try {
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+                return accountOverdraftLimitService.getOverdraft(iBAN);
+            }else{
                 throw new NotAuthorizedException("Not Authorized");
             }
         } catch (AuthenticationException e) {
