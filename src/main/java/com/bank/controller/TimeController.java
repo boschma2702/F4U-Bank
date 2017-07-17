@@ -4,7 +4,6 @@ import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NoEffectException;
 import com.bank.projection.time.DateProjection;
 import com.bank.service.BackupAndRestoreService;
-import com.bank.service.time.TimeResetService;
 import com.bank.service.time.TimeService;
 import com.bank.service.time.TimeSimulateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,13 @@ public class TimeController {
     @Autowired
     private TimeSimulateService timeSimulateService;
 
-    @Autowired
-    private TimeResetService timeResetService;
+//    @Autowired
+//    private TimeResetService timeResetService;
 
     @Autowired
     private BackupAndRestoreService backupAndRestoreService;
 
-    public void simulateTime(int nrOfDays) throws InvalidParamValueException {
+    public void simulateTime(int nrOfDays) throws InvalidParamValueException, NoEffectException {
         timeSimulateService.simulateTime(nrOfDays);
     }
 

@@ -61,15 +61,23 @@ public class TimeService {
      *
      * @param amount amount of time that needs to pass. Is in milliseconds.
      */
-    public void addTime(long amount) {
-
-        //TODO actual add the time
-        try {
-            backupAndRestoreService.backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void addTime(long amount) throws NoEffectException {
+        TIMESIMULATOR.addTimeChange(amount);
+        //Check if first time a timejump took place
+        if(isFirstTimeJump()){
+            try {
+                backupAndRestoreService.backup();
+                SystemInfo systemInfo = new SystemInfo();
+                systemInfo.setInitialDate(new Date());
+                systemInfo.setTimeDiff(amount);
+                systemInfoRepository.save(systemInfo);
+            } catch (InterruptedException | IOException e) {
+                throw new NoEffectException("could not create backup");
+            }
+        }else{
+            SystemInfo systemInfo = getSystemInfo();
+            systemInfo.setTimeDiff(systemInfo.getTimeDiff()+amount);
+            systemInfoRepository.save(systemInfo);
         }
     }
 
@@ -85,6 +93,18 @@ public class TimeService {
             return iterator.next();
         }
         throw new NoEffectException("Nothing to go back to");
+    }
+
+    /**
+     * Checks whether there is a SystemInfo row present
+     * @return true if it is present, false if not
+     */
+    public boolean isFirstTimeJump() {
+        Iterator<SystemInfo> iterator = systemInfoRepository.findAll().iterator();
+        if (iterator.hasNext()) {
+            return false;
+        }
+        return true;
     }
 
 

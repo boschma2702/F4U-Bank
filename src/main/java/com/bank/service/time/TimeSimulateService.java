@@ -1,6 +1,7 @@
 package com.bank.service.time;
 
 import com.bank.exception.InvalidParamValueException;
+import com.bank.exception.NoEffectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class TimeSimulateService {
     @Autowired
     private TimeService timeService;
 
-    public void simulateTime(int nrOfDays) throws InvalidParamValueException {
+    public void simulateTime(int nrOfDays) throws InvalidParamValueException, NoEffectException {
         if(nrOfDays<=0){
             throw new InvalidParamValueException("Invalid number of days");
         }

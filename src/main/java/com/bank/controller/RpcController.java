@@ -194,9 +194,10 @@ public class RpcController {
     private TimeController timeController;
 
     @JsonRpcErrors({
-            @JsonRpcError(exception = InvalidParamValueException.class, code = 418)
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NoEffectException.class, code = 420)
     })
-    public Object simulateTime(@JsonRpcParam("nrOfDays") int nrOfDays) throws InvalidParamValueException {
+    public Object simulateTime(@JsonRpcParam("nrOfDays") int nrOfDays) throws InvalidParamValueException, NoEffectException {
         timeController.simulateTime(nrOfDays);
         return new EmptyJsonResponse();
     }
