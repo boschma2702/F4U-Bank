@@ -1,6 +1,8 @@
 package com.bank.service.account;
 
+import com.bank.bean.account.AccountBean;
 import com.bank.bean.customeraccount.CustomerAccount;
+import com.bank.exception.NotAuthorizedException;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.card.CardRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
@@ -24,8 +26,12 @@ public class AccountCloseService {
     @Autowired
     private CustomerCloseService customerCloseService;
 
-    public void closeAccount(String iBAN, int customerId) {
+    public void closeAccount(String iBAN, int customerId) throws NotAuthorizedException {
         // close account
+        AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(iBAN);
+        if(accountBean.getAmount()<0){
+            throw new NotAuthorizedException("Account has a negative balance");
+        }
         accountRepository.closeAccount(iBAN);
 
         // invalidate all pin cards
