@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountOverdraftLimitService {
 
+    private static final double OVERDRAFT_MAX = 5000;
+
     @Autowired
     private AccountRepository accountRepository;
 
@@ -17,6 +19,10 @@ public class AccountOverdraftLimitService {
     private AccountService accountService;
 
     public void setOverdraft(String accountNumber, double amount) throws InvalidParamValueException {
+        if(!(amount>=0 && amount<=OVERDRAFT_MAX)){
+            throw new InvalidParamValueException("invalid overdraft amount");
+        }
+
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(accountNumber);
         accountBean.setOverdraftLimit(amount);
         accountRepository.save(accountBean);
