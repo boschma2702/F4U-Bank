@@ -1,7 +1,9 @@
 package com.bank.util;
 
+import java.util.Date;
+
 public interface DayPassedListener {
 
-    void onDayPassed();
+    void onDayPassed(Date start, Date end);
 
 }
