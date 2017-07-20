@@ -48,6 +48,7 @@ public class TimeSimulator implements Runnable {
             Calendar calendar = Calendar.getInstance();
             Date currentDate = getCurrentDate();
             calendar.setTime(currentDate);
+            //TODO change to 00:000:00 of new day
             calendar.set(Calendar.HOUR_OF_DAY, 23);
             calendar.set(Calendar.MINUTE, 59);
             calendar.set(Calendar.SECOND, 0);
@@ -73,6 +74,7 @@ public class TimeSimulator implements Runnable {
                     notifyDayPassedListeners(getStartOfDay(date), getEndOfDay(date));
                     calendar.setTime(date);
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    date.setTime(calendar.getTime().getTime());
                 }
             }
 

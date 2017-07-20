@@ -1,6 +1,7 @@
 package com.bank.repository.account;
 
 import com.bank.bean.account.AccountBean;
+import com.bank.bean.customer.CustomerBean;
 import com.bank.projection.customer.CustomerUsernameProjection;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +24,10 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
     void closeAccount(String iBAN);
 
     @Modifying
-    @Query("update AccountBean a set a.amount = a.amount + ?2 where a.accountId = ?1")
+    @Query("update AccountBean a " +
+            "set a.amount = a.amount + ?2, " +
+            "a.minimumDayAmount = case when (a.amount < a.minimumDayAmount) then a.amount else a.minimumDayAmount end " +
+            "where a.accountId = ?1")
     void updateAmount(int accountId, double amount);
 
     @Query("select new com.bank.projection.customer.CustomerUsernameProjection(customer.username) " +
@@ -32,6 +36,23 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "and customeraccount.customerId = customer.customerId")
     List<CustomerUsernameProjection> getBankAccountAccess(int accountId);
 
-    void deleteAccountBeansByCreationDateAfter(Date date);
+
+    @Query("select a " +
+            "from AccountBean a " +
+            "where a.minimumDayAmount < 0 " +
+            "and a.isActive = true")
+    List<AccountBean> getActiveAccountBeansWithNegativeDayOverdraft();
+
+    @Query("select a " +
+            "from AccountBean a " +
+            "where a.buildUpOverdraftInterest < 0 " +
+            "and a.isActive = true")
+    List<AccountBean> getActiveAccountBeansWithOverdraftInterest();
+
+    @Modifying
+    @Query("update AccountBean  a " +
+            "set a.minimumDayAmount = a.amount " +
+            "where a.isActive = true")
+    void resetMinimumDayAmount();
 
 }

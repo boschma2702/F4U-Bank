@@ -54,6 +54,12 @@ public class AccountBean {
     @Column(name = "overdraft_limit")
     private double overdraftLimit = 0;
 
+    @Column(name = "minimum_day_Amount")
+    private double minimumDayAmount = 0;
+
+    @Column(name = "build_up_overdraft_interest")
+    private double buildUpOverdraftInterest = 0;
+
     public int getAccountId() {
         return accountId;
     }
@@ -108,6 +114,22 @@ public class AccountBean {
 
     public void setOverdraftLimit(double overdraftLimit) {
         this.overdraftLimit = overdraftLimit;
+    }
+
+    public double getMinimumDayAmount() {
+        return minimumDayAmount;
+    }
+
+    public void setMinimumDayAmount(double minimumDayAmount) {
+        this.minimumDayAmount = minimumDayAmount;
+    }
+
+    public double getBuildUpOverdraftInterest() {
+        return buildUpOverdraftInterest;
+    }
+
+    public void setBuildUpOverdraftInterest(double buildUpOverdraftInterest) {
+        this.buildUpOverdraftInterest = buildUpOverdraftInterest;
     }
 
     @PrePersist
