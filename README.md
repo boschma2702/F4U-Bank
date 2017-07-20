@@ -5,7 +5,7 @@ This project implements a simple banking system using the Spring framework.
 
 How to Run
 ----------
-Before starting the program, make sure that a MySQL database server is running,  locally hosted and create an empty database with name 'bank'.
+Before starting the program, make sure that a MySQL database server is running,  locally hosted and create an empty database with name 'bank'. It is also required to set the PATH variable to the MySQL bin. 
 
 Create an `application.properties` configuration file in `src/main/resources` and update it with the new database credentials:
 ```
