@@ -5,11 +5,11 @@ This project implements a simple banking system using the Spring framework.
 
 How to Run
 ----------
-Before starting the program, make sure that a MySQL database server is running, preferably locally hosted and create an empty database.
+Before starting the program, make sure that a MySQL database server is running,  locally hosted and create an empty database with name 'bank'.
 
 Create an `application.properties` configuration file in `src/main/resources` and update it with the new database credentials:
 ```
-spring.datasource.url = jdbc:mysql://<domain>:<port>/<database_name>
+spring.datasource.url = jdbc:mysql://<domain>:<port>/bank
 spring.datasource.username = root
 spring.datasource.password = ****
 spring.jpa.show-sql = true
