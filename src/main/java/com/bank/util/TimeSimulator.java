@@ -52,55 +52,45 @@ public class TimeSimulator implements Runnable {
             Calendar calendar = Calendar.getInstance();
             Date currentDate = getCurrentDate();
             calendar.setTime(currentDate);
-            //TODO change to 00:000:00 of new day
-            calendar.set(Calendar.HOUR_OF_DAY, 23);
-            calendar.set(Calendar.MINUTE, 59);
+            //Set calender to 00:00:000 of new day
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
 
             long sleepTime = calendar.getTime().getTime()-currentDate.getTime();
-            if(sleepTime<=0){
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-                sleepTime = calendar.getTime().getTime()-currentDate.getTime();
-            }
 
             try {
                 Thread.sleep(sleepTime);
                 //day is over
-
-                notifyDayPassedListeners(getStartOfDay(currentDate), getEndOfDay(currentDate));
+                notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
             } catch (InterruptedException e) {
                 // time is changed
-                long timeChanged = getCurrentDate().getTime()-currentDate.getTime();
+                long timeChanged = getCurrentDate().getTime()-calendar.getTime().getTime();
                 int daysChanged = (int) TimeUnit.DAYS.convert(timeChanged, TimeUnit.MILLISECONDS);
 
-                Date date = new Date(currentDate.getTime());
-                for(int i=0; i<daysChanged; i++){
-                    notifyDayPassedListeners(getStartOfDay(date), getEndOfDay(date));
-                    calendar.setTime(date);
+                for(int i=0; i<=daysChanged; i++){
+                    notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
-                    date.setTime(calendar.getTime().getTime());
                 }
             }
 
         }
     }
 
-    private Date getStartOfDay(Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar.getTime();
+    private Date getStartOfDay(Calendar calendar){
+        Calendar start = Calendar.getInstance();
+        start.setTime(calendar.getTime());
+        start.add(Calendar.DAY_OF_MONTH, -1);
+        return start.getTime();
     }
 
-    private Date getEndOfDay(Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar.getTime();
+    private Date getEndOfDay(Calendar calendar){
+        Calendar end = Calendar.getInstance();
+        end.setTime(calendar.getTime());
+        end.add(Calendar.MILLISECOND, -1);
+        return end.getTime();
     }
 
 
