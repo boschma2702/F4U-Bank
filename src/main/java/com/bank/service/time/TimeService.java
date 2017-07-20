@@ -62,7 +62,6 @@ public class TimeService {
      * @param amount amount of time that needs to pass. Is in milliseconds.
      */
     public void addTime(long amount) throws NoEffectException {
-        TIMESIMULATOR.addTimeChange(amount);
         //Check if first time a timejump took place
         if(isFirstTimeJump()){
             try {
@@ -79,6 +78,7 @@ public class TimeService {
             systemInfo.setTimeDiff(systemInfo.getTimeDiff()+amount);
             systemInfoRepository.save(systemInfo);
         }
+        TIMESIMULATOR.addTimeChange(amount);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.service.time.TimeService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,7 @@ public class BackupAndRestoreService {
 
         int processComplete = proc.waitFor();
         if (processComplete == 0) {
+            TimeService.TIMESIMULATOR.reset();
             return true;
         } else {
             System.err.println(stringBuilder.toString());

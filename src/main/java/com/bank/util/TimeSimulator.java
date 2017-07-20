@@ -41,6 +41,10 @@ public class TimeSimulator implements Runnable {
         }
     }
 
+    public void reset(){
+        timeChange = 0;
+    }
+
 
     @Override
     public void run() {
