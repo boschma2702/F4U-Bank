@@ -43,6 +43,7 @@ public class TimeSimulator implements Runnable {
 
     public void reset(){
         timeChange = 0;
+        thread.interrupt();
     }
 
 
@@ -67,6 +68,11 @@ public class TimeSimulator implements Runnable {
                 notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
             } catch (InterruptedException e) {
                 // time is changed
+                //In case of reset
+                if(timeChange==0){
+                    continue;
+                }
+                //In case of time simulation
                 long timeChanged = getCurrentDate().getTime()-calendar.getTime().getTime();
                 int daysChanged = (int) TimeUnit.DAYS.convert(timeChanged, TimeUnit.MILLISECONDS);
 
