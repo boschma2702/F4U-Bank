@@ -31,7 +31,6 @@ public class InterestOverdraftService implements DayPassedListener {
     @Override
     @Transactional
     public void onDayPassed(Date start, Date end) {
-        System.out.println("day passed");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         int amountOfDaysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
