@@ -5,6 +5,7 @@ import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
+import com.bank.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,10 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     public boolean checkIfIsMainAccountHolder(String accountNumber, int customerId) throws InvalidParamValueException {
+        Logger.info("Checking if customerId=%s is main accountholder of accountNumber=%s", customerId, accountNumber);
         AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(accountNumber);
         if (accountBean == null) {
+            Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
         CustomerAccount customerAccount = customerAccountRepository.getFirstByAccountIdAndCustomerId(accountBean.getAccountId(), customerId);
@@ -26,8 +29,10 @@ public class AccountService {
     }
 
     public boolean checkIfAccountHolder(String accountNumber, int customerId) throws InvalidParamValueException {
+        Logger.info("Checking if customerId=%s is accountholder of accountNumber=%s", customerId, accountNumber);
         AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(accountNumber);
         if (accountBean == null) {
+            Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
         CustomerAccount customerAccount = customerAccountRepository.getFirstByAccountIdAndCustomerId(accountBean.getAccountId(), customerId);
@@ -35,8 +40,10 @@ public class AccountService {
     }
 
     public AccountBean getAccountBeanByAccountNumber(String accountNumber) throws InvalidParamValueException {
+        Logger.info("Retrieving accountBean of accountNumber=%s", accountNumber);
         AccountBean bean = accountRepository.findAccountBeanByAccountNumber(accountNumber);
         if (bean == null) {
+            Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
         return bean;

@@ -5,6 +5,7 @@ import com.bank.bean.customer.CustomerBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.service.customer.CustomerCreateService;
+import com.bank.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class AccountOpenService {
                                              String username,
                                              String password) throws InvalidParamValueException {
 
+        Logger.info("Opening an account for name=%s, surname=%s and username=%s", name, surname, username);
         CustomerBean customerBean = new CustomerBean();
         customerBean.setName(name);
         customerBean.setSurname(surname);
@@ -70,6 +72,7 @@ public class AccountOpenService {
     }
 
     public AccountOpenProjection openAdditionalAccount(int customerId) {
+        Logger.info("Opening an additional account for customerId=%s", customerId);
         CardBean cardBean = accountCreateService.createAccount(customerId, true);
         AccountOpenProjection projection = new AccountOpenProjection();
         projection.setiBAN(cardBean.getAccountBean().getAccountNumber());
