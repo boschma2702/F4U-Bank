@@ -12,6 +12,7 @@ import com.bank.repository.account.AccountRepository;
 import com.bank.service.card.CardCreateService;
 import com.bank.service.customer.CustomerService;
 import com.bank.service.customeraccount.CustomerAccountService;
+import com.bank.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +36,12 @@ public class AccountAccessService {
     private AccountRepository accountRepository;
 
     public PinProjection provideAccess(String accountNumber, String username) throws NoEffectException, InvalidParamValueException {
+        Logger.info(String.format("Providing access to accountNumber=%s to username=%s", accountNumber, username));
+
         CustomerBean customerBean = customerService.getCustomerBeanByUsername(username);
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(accountNumber);
         if (customerBean == null || accountBean == null) {
+            Logger.error(String.format("Could not find customerBean with username=%s or accountBean with accountNumber=%s", username, accountNumber));
             throw new InvalidParamValueException("Invalid account or username");
         }
 
@@ -62,15 +66,18 @@ public class AccountAccessService {
     }
 
     public void revokeAccess(int customerId, String accountNumber) throws InvalidParamValueException, NoEffectException {
+        Logger.info(String.format("Revoking access to accountNumber=%s of customerId=%s", accountNumber, customerId));
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(accountNumber);
         if (customerBean == null || accountBean == null) {
+            Logger.error(String.format("Could not find customerBean with customerId=%s or accountBean with accountNumber=%s", customerId, accountNumber));
             throw new InvalidParamValueException("Invalid account or username");
         }
         customerAccountService.removeCustomerAccount(customerId, accountBean.getAccountId());
     }
 
     public List<CustomerUsernameProjection> getBankAccountAccess(int accountId) {
+        Logger.info(String.format("Retrieving customerUsernameProjections from accountId=%s", accountId));
         return accountRepository.getBankAccountAccess(accountId);
     }
 }
