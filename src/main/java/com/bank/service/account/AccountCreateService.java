@@ -8,6 +8,7 @@ import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.service.IBANGeneratorService;
 import com.bank.service.card.CardCreateService;
 import com.bank.service.customer.CustomerService;
+import com.bank.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class AccountCreateService {
      * @param isMain     sets whether the given customerAccount is the main owner.
      */
     public CardBean createAccount(int customerId, boolean isMain) {
+        Logger.info("Creating an account for customerId=%s and isMain=%s", customerId, isMain);
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountNumber(ibanGeneratorService.generateIBAN());
         accountRepository.save(accountBean);
