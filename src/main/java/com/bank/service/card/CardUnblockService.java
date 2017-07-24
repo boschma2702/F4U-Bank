@@ -3,7 +3,7 @@ package com.bank.service.card;
 import com.bank.bean.card.CardBean;
 import com.bank.exception.NoEffectException;
 import com.bank.repository.card.CardRepository;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.bank.service;
 
 import com.bank.service.time.TimeService;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

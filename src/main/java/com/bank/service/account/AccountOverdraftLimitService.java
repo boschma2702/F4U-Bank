@@ -4,7 +4,7 @@ import com.bank.bean.account.AccountBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountOverdraftLimitProjection;
 import com.bank.repository.account.AccountRepository;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

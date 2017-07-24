@@ -1,7 +1,7 @@
 package com.bank.service.account;
 
 import com.bank.repository.account.AccountRepository;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

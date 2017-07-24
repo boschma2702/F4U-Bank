@@ -1,4 +1,4 @@
-package com.bank.util;
+package com.bank.util.Logging;
 
 
 public class Logger {

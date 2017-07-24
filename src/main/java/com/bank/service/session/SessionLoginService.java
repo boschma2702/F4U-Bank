@@ -6,7 +6,7 @@ import com.bank.projection.session.SessionPasswordProjection;
 import com.bank.repository.session.LoginRepository;
 import com.bank.service.AuthenticationService;
 import com.bank.service.customer.CustomerGetService;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

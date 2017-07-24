@@ -3,7 +3,7 @@ package com.bank.service.customeraccount;
 import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.NoEffectException;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
-import com.bank.util.Logger;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
