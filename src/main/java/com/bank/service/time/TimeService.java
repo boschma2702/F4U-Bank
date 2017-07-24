@@ -4,6 +4,7 @@ import com.bank.bean.systeminfo.SystemInfo;
 import com.bank.exception.NoEffectException;
 import com.bank.repository.systeminfo.SystemInfoRepository;
 import com.bank.service.BackupAndRestoreService;
+import com.bank.util.Logger;
 import com.bank.util.TimeSimulator;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -54,6 +55,7 @@ public class TimeService {
         }
         TIMESIMULATOR = new TimeSimulator(timeDiff);
         this.systemInfoRepository = systemInfoRepository;
+        Logger.info("System time initialized, currentTime=%s", TIMESIMULATOR.getCurrentDate());
     }
 
     /**
@@ -62,15 +64,18 @@ public class TimeService {
      * @param amount amount of time that needs to pass. Is in milliseconds.
      */
     public void addTime(long amount) throws NoEffectException {
+        Logger.info("Adding time, amount=%s", amount);
         //Check if first time a timejump took place
         if(isFirstTimeJump()){
             try {
+                Logger.info("Creating backup of database");
                 backupAndRestoreService.backup();
                 SystemInfo systemInfo = new SystemInfo();
                 systemInfo.setInitialDate(new Date());
                 systemInfo.setTimeDiff(amount);
                 systemInfoRepository.save(systemInfo);
             } catch (InterruptedException | IOException e) {
+                Logger.error("Could not create backup of database");
                 throw new NoEffectException("could not create backup");
             }
         }else{
