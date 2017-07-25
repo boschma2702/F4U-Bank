@@ -50,6 +50,7 @@ public class TimeService {
      * @param amount amount of time that needs to pass. Is in milliseconds.
      */
     public void addTime(long amount) throws NoEffectException {
+        Date initialDate = new Date();
         Logger.info("Adding time, amount=%s", amount);
         //Check if first time a timejump took place
         if(isFirstTimeJump()){
@@ -57,7 +58,7 @@ public class TimeService {
                 Logger.info("Creating backup of database");
                 backupAndRestoreService.backup();
                 SystemInfo systemInfo = new SystemInfo();
-                systemInfo.setInitialDate(new Date());
+                systemInfo.setInitialDate(initialDate);
                 systemInfo.setTimeDiff(amount);
                 systemInfoRepository.save(systemInfo);
             } catch (InterruptedException | IOException e) {

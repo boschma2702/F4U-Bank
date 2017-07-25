@@ -53,6 +53,29 @@ public class Logger {
         printWriter.flush();
     }
 
+    public static void resetLog(Date resetDate) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String line; (line = br.readLine()) != null; ) {
+                try {
+                    String dateString = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
+                    Date dateEntry = simpleDateFormat.parse(dateString);
+                    if(dateEntry.after(resetDate)){
+                        break;
+                    }
+                    stringBuilder.append(line);
+                    stringBuilder.append(System.getProperty("line.separator"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
+            printWriter.write(stringBuilder.toString());
+            printWriter.flush();
+            printWriter.close();
+        }
+    }
+
     public static List<LogEntryProjection> getLogsBetween(Date a, Date b) {
         List<LogEntryProjection> list = new LinkedList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {

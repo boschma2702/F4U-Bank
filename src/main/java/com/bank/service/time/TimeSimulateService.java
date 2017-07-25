@@ -15,11 +15,11 @@ public class TimeSimulateService {
     private TimeService timeService;
 
     public void simulateTime(int nrOfDays) throws InvalidParamValueException, NoEffectException {
-        Logger.info("Simulating time, nrOfDays=%s", nrOfDays);
         if(nrOfDays<=0){
             Logger.error("Invalid number of days, nrOfDays=%s", nrOfDays);
             throw new InvalidParamValueException("Invalid number of days");
         }
         timeService.addTime(nrOfDays*DAY_AMOUNT);
+        Logger.info("Simulated time, nrOfDays=%s", nrOfDays);
     }
 }
