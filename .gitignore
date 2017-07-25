@@ -6,3 +6,5 @@ target/
 *.properties
 /src/main/resources/application.properties
 /bankdump.sql
+/log.log
+/bankbackup.sql

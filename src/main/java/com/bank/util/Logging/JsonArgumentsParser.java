@@ -9,7 +9,7 @@ import java.util.*;
 
 public class JsonArgumentsParser {
 
-    public static final Set<String> ARGUMENTS_TO_NOT_LOG = new HashSet<>(Arrays.asList("password", "pinCode"));
+    public static final Set<String> ARGUMENTS_TO_NOT_LOG = new HashSet<>(Arrays.asList("password", "pinCode", "authToken"));
 
     public static HashMap<String, Object> getJsonRpcArgumentsMap(Method method, List<JsonNode> arguments){
         Annotation[][] jsonRpcAnnotations = method.getParameterAnnotations();

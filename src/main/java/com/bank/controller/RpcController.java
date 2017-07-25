@@ -233,4 +233,15 @@ public class RpcController {
     public Object getOverdraftLimit(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
         return accountController.getOverdraftLimit(authToken, iBAN);
     }
+
+    /**
+     * Logger extension
+     */
+
+    @Autowired
+    private LoggingController loggingController;
+
+    public Object getEventLogs(@JsonRpcParam("beginDate") Date beginDate, @JsonRpcParam("endDate") Date endDate){
+        return loggingController.getEventLogs(beginDate, endDate);
+    }
 }
