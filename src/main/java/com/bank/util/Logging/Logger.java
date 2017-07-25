@@ -30,7 +30,6 @@ public class Logger {
 
 
     public Logger() {
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         File logFile = new File(LOG_DIRECTORY);
         try {
             FileWriter fileWriter = new FileWriter(logFile);
@@ -39,7 +38,6 @@ public class Logger {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void log(LoggingLevel loggingLevel, String message, Object... objects) {
@@ -60,7 +58,7 @@ public class Logger {
                 try {
                     String dateString = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
                     Date dateEntry = simpleDateFormat.parse(dateString);
-                    if(dateEntry.after(resetDate)){
+                    if (dateEntry.after(resetDate)) {
                         break;
                     }
                     stringBuilder.append(line);
@@ -94,7 +92,7 @@ public class Logger {
                         }
                     }
                 } catch (ParseException e) {
-                    throw new IllegalStateException("Log entry could not be parsed. Entry="+line);
+                    throw new IllegalStateException("Log entry could not be parsed. Entry=" + line);
                 }
             }
         } catch (IOException e) {
