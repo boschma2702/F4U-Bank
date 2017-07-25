@@ -6,6 +6,7 @@ import com.bank.bean.customer.CustomerBean;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.card.CardRepository;
 import com.bank.repository.customer.CustomerRepository;
+import com.bank.util.Logging.Logger;
 import com.bank.util.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,12 @@ public class CardCreateService {
      */
     @Transactional
     public CardBean addCard(CustomerBean customerBean, AccountBean accountBean) {
+        Logger.info("Adding card to CustomerBeanId=$s and AccountBeanId=%s", customerBean.getCustomerId(), accountBean.getAccountId());
         CardBean bean = new CardBean();
         bean.setPinCard(RandomStringGenerator.generateRandomIntegerString(4));
         bean.setPinCode(RandomStringGenerator.generateRandomIntegerString(4));
         bean.setAccountBean(accountBean);
         bean.setCustomerBean(customerBean);
-
         cardRepository.save(bean);
         return bean;
     }

@@ -1,6 +1,7 @@
 package com.bank.service.customer;
 
 import com.bank.repository.customer.CustomerRepository;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class CustomerCloseService {
     private CustomerRepository customerRepository;
 
     public void closeCustomer(int customerId) {
+        Logger.info("Closing customerId=%s", customerId);
         customerRepository.closeCustomer(customerId);
     }
 }

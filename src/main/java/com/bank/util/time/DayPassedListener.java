@@ -1,4 +1,4 @@
-package com.bank.util;
+package com.bank.util.time;
 
 import java.util.Date;
 

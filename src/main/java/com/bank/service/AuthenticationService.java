@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import com.bank.exception.AuthenticationException;
+import com.bank.util.Logging.Logger;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -20,10 +21,10 @@ public final class AuthenticationService {
     }
 
     public final String login(int userId) {
+        Logger.info("Login of userId=%s", userId);
         String token = generateToken();
         map.put(token, new HashMap<String, Object>());
         map.get(token).put(USER_ID, userId);
-
         return token;
     }
 

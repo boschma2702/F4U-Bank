@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import com.bank.service.time.TimeService;
+import com.bank.util.Logging.Logger;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BackupAndRestoreService {
     private static final String DIRECTORY_DUMP = System.getProperty("user.dir") + File.separator + DUMP_NAME;
 
     public boolean backup() throws InterruptedException, IOException {
+        Logger.info("Creating database backup");
         String[] executeDumpCommand = new String[]{"mysqldump", "--user=" + username, "--password=" + password, "--databases", "bank"};
         File dumpFile = new File(DIRECTORY_DUMP);
 
@@ -39,25 +41,28 @@ public class BackupAndRestoreService {
 
         String s;
         StringBuilder stringBuilder = new StringBuilder();
-        System.out.println("Here is the standard error of the command (if any):\n");
         while ((s = stdError.readLine()) != null) {
-            stringBuilder.append(s + "\n");
+            stringBuilder.append(s);
+            stringBuilder.append("\n");
         }
 
         int processComplete = proc.waitFor();
         if (processComplete == 0) {
+            Logger.info("Successfully created backup of database");
             return true;
         } else {
-            System.err.println(stringBuilder.toString());
+            Logger.error("Could not create database backup, error output=%s", stringBuilder.toString());
             return false;
         }
     }
 
     public boolean restore() throws IOException, InterruptedException {
+        Logger.info("Restoring database backup");
         String[] executeCmd = new String[]{"mysql", "--user=" + username, "--password=" + password, "-e", "source " + DIRECTORY_DUMP};
         File dumpFile = new File(DIRECTORY_DUMP);
 
         if (!(dumpFile.exists() && !dumpFile.isDirectory())) {
+            Logger.info("Could not find backup file");
             throw new FileNotFoundException();
         }
         Process proc = Runtime.getRuntime().exec(executeCmd);
@@ -74,9 +79,10 @@ public class BackupAndRestoreService {
         int processComplete = proc.waitFor();
         if (processComplete == 0) {
             TimeService.TIMESIMULATOR.reset();
+            Logger.info("Successfully restored backup of database");
             return true;
         } else {
-            System.err.println(stringBuilder.toString());
+            Logger.error("Could not restore database backup, error output=%s", stringBuilder.toString());
             return false;
         }
 
