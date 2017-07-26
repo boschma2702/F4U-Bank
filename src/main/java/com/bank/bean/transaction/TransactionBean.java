@@ -51,6 +51,9 @@ public class TransactionBean {
     @Column(length = 128)
     private String comment;
 
+    @Column(name = "from_savings")
+    private boolean fromSavings = false;
+
     public double getAmount() {
         return amount;
     }
@@ -105,6 +108,14 @@ public class TransactionBean {
 
     public void setTargetName(String targetName) {
         this.targetName = targetName;
+    }
+
+    public boolean isFromSavings() {
+        return fromSavings;
+    }
+
+    public void setFromSavings(boolean fromSavings) {
+        this.fromSavings = fromSavings;
     }
 
     @PrePersist
