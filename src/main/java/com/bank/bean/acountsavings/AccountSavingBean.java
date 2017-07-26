@@ -29,6 +29,8 @@ public class AccountSavingBean {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(name = "minimum_day_Amount")
+    private double minimumDayAmount = 0;
 
     public AccountBean getAccountBean() {
         return accountBean;
@@ -60,6 +62,22 @@ public class AccountSavingBean {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getAccountSavingId() {
+        return accountSavingId;
+    }
+
+    public void setAccountSavingId(int accountSavingId) {
+        this.accountSavingId = accountSavingId;
+    }
+
+    public double getMinimumDayAmount() {
+        return minimumDayAmount;
+    }
+
+    public void setMinimumDayAmount(double minimumDayAmount) {
+        this.minimumDayAmount = minimumDayAmount;
     }
 
     @PrePersist
