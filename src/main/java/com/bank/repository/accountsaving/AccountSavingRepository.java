@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface AccountSavingRepository extends CrudRepository<AccountSavingBean, Integer> {
 
     AccountSavingBean findAccountSavingBeanByAccountBean(AccountBean accountBean);
+
 }

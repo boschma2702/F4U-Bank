@@ -1,16 +1,13 @@
 package com.bank.util.time;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TimeSimulator implements Runnable {
 
     private long timeChange;
     private Thread thread;
-    private List<DayPassedListener> dayPassedListeners = new ArrayList<>();
+    private PriorityQueue<DayPassedListener> dayPassedListeners = new PriorityQueue<>();
 
     public TimeSimulator(long timeChange) {
         this.timeChange = timeChange;
