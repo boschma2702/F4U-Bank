@@ -39,12 +39,6 @@ public class AccountSavingInterestService extends DayPassedListener {
             accountSavingBean.setBuildUpInterest(buildUpInterest+interest);
             accountSavingRepository.save(accountSavingBean);
         }
-
-        //If first of January, then transfer build up interest
-        if(day.get(Calendar.MONTH)==1 && day.get(Calendar.DAY_OF_MONTH)==1){
-            //TODO move to independent service
-            accountSavingInterestTransferService.transferAccountSavingInterest();
-        }
     }
 
     @Override

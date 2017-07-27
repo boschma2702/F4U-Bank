@@ -1,11 +1,14 @@
 package com.bank.util.time;
 
+import com.bank.service.time.TimeSimulateService;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TimeSimulator implements Runnable {
 
     private long timeChange;
+    private long toAdd;
     private Thread thread;
     private PriorityQueue<DayPassedListener> dayPassedListeners = new PriorityQueue<>();
 
@@ -24,7 +27,8 @@ public class TimeSimulator implements Runnable {
     }
 
     public void addTimeChange(long amount){
-        timeChange = timeChange + amount;
+//        timeChange = timeChange + amount;
+        toAdd = amount;
         thread.interrupt();
     }
 
@@ -40,6 +44,7 @@ public class TimeSimulator implements Runnable {
 
     public void reset(){
         timeChange = 0;
+        toAdd = 0;
         thread.interrupt();
     }
 
@@ -66,14 +71,19 @@ public class TimeSimulator implements Runnable {
             } catch (InterruptedException e) {
                 // time is changed
                 //In case of reset
-                if(timeChange==0){
+                if(timeChange==0&&toAdd==0){
                     continue;
                 }
                 //In case of time simulation
-                long timeChanged = getCurrentDate().getTime()-calendar.getTime().getTime();
-                int daysChanged = (int) TimeUnit.DAYS.convert(timeChanged, TimeUnit.MILLISECONDS);
+//                long timeChanged = getCurrentDate().getTime()-calendar.getTime().getTime();
+//                long timeChanged = getCurrentDate().getTime()+toAdd-calendar.getTime().getTime();
 
-                for(int i=0; i<=daysChanged; i++){
+//                int daysChanged = (int) TimeUnit.DAYS.convert(timeChanged, TimeUnit.MILLISECONDS);
+                //TODO rework this method
+                int daysChanged = (int)(toAdd/TimeSimulateService.DAY_AMOUNT);
+
+                for(int i=0; i<daysChanged; i++){
+                    timeChange += TimeSimulateService.DAY_AMOUNT;
                     notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
                 }
