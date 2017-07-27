@@ -70,20 +70,21 @@ public class TransactionService {
     }
 
     /**
-     * Retrieves money form an account and sends it to 'nowhere'
+     * Retrieves money form an account and sends it to 'nowhere'. Does not check if account it is allowed to retrieve
+     * the amount.
      * @param sourceAccountBean
-     * @param amount to retrieve, must be negative
+     * @param amount to retrieve, must be positive
      * @param comment
      */
     public void retrieveTransaction(AccountBean sourceAccountBean, double amount, String comment){
         TransactionBean transactionBean = new TransactionBean();
         transactionBean.setSourceBean(sourceAccountBean);
-        transactionBean.setAmount(-amount);
+        transactionBean.setAmount(amount);
         transactionBean.setComment(comment);
 
         transactionRepository.save(transactionBean);
 
-        accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), amount);
+        accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), -amount);
     }
 
 
