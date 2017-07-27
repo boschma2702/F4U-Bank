@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends CrudRepository<TransactionBean, Integer> {
-    @Query("select new com.bank.projection.transaction.TransactionProjection(t.sourceBean.accountNumber, t.targetBean.accountNumber, t.targetName, t.date, t.amount, t.comment) " +
+    @Query("select new com.bank.projection.transaction.TransactionProjection(t.sourceBean.accountNumber, t.targetBean.accountNumber, t.targetName, t.date, t.amount, t.comment, t.fromSavings) " +
             "from TransactionBean t " +
             "where t.sourceBean.accountId = ?1 or t.targetBean.accountId = ?1 " +
             "order by date desc")
