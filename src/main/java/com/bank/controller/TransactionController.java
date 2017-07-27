@@ -9,6 +9,8 @@ import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
 import com.bank.service.transaction.TransactionCreateService;
 import com.bank.service.transaction.TransactionOverviewService;
+import com.bank.service.transaction.TransactionSavingCreateService;
+import com.bank.service.transaction.TransactionSavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ import java.util.List;
 public class TransactionController {
     @Autowired
     private TransactionCreateService transactionCreateService;
+
+    @Autowired
+    private TransactionSavingCreateService transactionSavingCreateService;
 
     @Autowired
     private AccountService accountService;
@@ -36,8 +41,13 @@ public class TransactionController {
     public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, double amount, String description) throws NotAuthorizedException, InvalidParamValueException {
         try {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfAccountHolder(sourceIBAN, customerId)) {
-                transactionCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
+            String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
+            if (accountService.checkIfAccountHolder(iBANToCheck, customerId)) {
+                if(sourceIBAN.endsWith("S")||targetIBAN.endsWith("S")){
+                    transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
+                }else {
+                    transactionCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
+                }
             } else {
                 throw new NotAuthorizedException("Not Authorized");
             }
