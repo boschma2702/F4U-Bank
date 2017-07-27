@@ -260,4 +260,13 @@ public class RpcController {
         accountSavingController.openSavingsAccount(authToken, iBAN);
         return new EmptyJsonResponse();
     }
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object closeSavingsAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        accountSavingController.closeSavingsAccount(authToken, iBAN);
+        return new EmptyJsonResponse();
+    }
 }
