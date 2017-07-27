@@ -2,6 +2,8 @@ package com.bank.service.interest;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.repository.account.AccountRepository;
+import com.bank.service.transaction.TransactionCreateService;
+import com.bank.service.transaction.TransactionService;
 import com.bank.util.AmountFormatter;
 import com.bank.util.Logging.Logger;
 import com.bank.util.time.DayPassedListener;
@@ -19,16 +21,16 @@ public class InterestOverdraftTransferService extends DayPassedListener {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TransactionService transactionService;
+
     public void transferOverdraftInterest(){
         Logger.info("Transferring overdraft interest");
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithOverdraftInterest();
         for(AccountBean accountBean : accountBeans){
             double amount = AmountFormatter.format(accountBean.getBuildUpOverdraftInterest());
-            accountBean.setAmount(accountBean.getAmount()+amount);
-            accountBean.setBuildUpOverdraftInterest(0);
-            //TODO maybe change transferring interest a transaction
+            transactionService.retrieveTransaction(accountBean, amount, "Overdraft interest");
             Logger.info("Overdraft interest amount=%s transferred to accountId=%s", amount, accountBean.getAccountId());
-            accountRepository.save(accountBean);
         }
     }
 

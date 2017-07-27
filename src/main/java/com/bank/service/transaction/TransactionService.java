@@ -69,5 +69,22 @@ public class TransactionService {
         accountUpdateAmountService.updateAmount(targetAccountBean.getAccountId(), amount);
     }
 
+    /**
+     * Retrieves money form an account and sends it to 'nowhere'
+     * @param sourceAccountBean
+     * @param amount to retrieve, must be negative
+     * @param comment
+     */
+    public void retrieveTransaction(AccountBean sourceAccountBean, double amount, String comment){
+        TransactionBean transactionBean = new TransactionBean();
+        transactionBean.setSourceBean(sourceAccountBean);
+        transactionBean.setAmount(-amount);
+        transactionBean.setComment(comment);
+
+        transactionRepository.save(transactionBean);
+
+        accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), amount);
+    }
+
 
 }
