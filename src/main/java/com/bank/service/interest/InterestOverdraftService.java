@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class InterestOverdraftService implements DayPassedListener {
+public class InterestOverdraftService extends DayPassedListener {
 
     private final static double ANNUAL_OVERDRAFT_INTEREST = 0.10;
     private final static double MONTHLY_OVERDRAFT_INTEREST = Math.pow((1+ANNUAL_OVERDRAFT_INTEREST), (1.0*1/12)) - 1;
@@ -22,12 +22,6 @@ public class InterestOverdraftService implements DayPassedListener {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private InterestOverdraftTransferService interestOverdraftTransferService;
-
-    public InterestOverdraftService() {
-        TimeService.TIMESIMULATOR.registerDayPassedListener(this);
-    }
 
     @Override
     @Transactional
@@ -44,12 +38,11 @@ public class InterestOverdraftService implements DayPassedListener {
             accountBean.setBuildUpOverdraftInterest(buildUpInterest+interest);
             accountRepository.save(accountBean);
         }
-        accountRepository.resetMinimumDayAmount();
+    }
 
-        //If last day of month, then transfer interest
-        if(calendar.get(Calendar.DAY_OF_MONTH)==amountOfDaysInMonth){
-            interestOverdraftTransferService.transferOverdraftInterest();
-        }
+    @Override
+    public int getOrder() {
+        return 0;
     }
 
     private double getInterest(int amountOfDaysInMonth, double amount){

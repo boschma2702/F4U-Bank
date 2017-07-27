@@ -1,18 +1,35 @@
 package com.bank.projection.transaction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class TransactionProjection {
     private String sourceIBAN;
     private String targetIBAN;
     private String targetName;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date date;
     private double amount;
     private String description;
 
-    public TransactionProjection(String sourceIBAN, String targetIBAN, String targetName, Date date, double amount, String description) {
-        this.sourceIBAN = sourceIBAN;
-        this.targetIBAN = targetIBAN;
+    public TransactionProjection(String sourceIBAN, String targetIBAN, String targetName, Date date, double amount, String description, boolean fromSaving) {
+        if (sourceIBAN != null && targetIBAN != null) {
+            if(sourceIBAN.equals(targetIBAN)){
+                //was a savings transaction
+                if(fromSaving){
+                    this.sourceIBAN = sourceIBAN+"S";
+                    this.targetIBAN = targetIBAN;
+                }else{
+                    this.sourceIBAN = sourceIBAN;
+                    this.targetIBAN = targetIBAN+"S";
+                }
+            }
+        }else {
+            this.sourceIBAN = sourceIBAN;
+            this.targetIBAN = targetIBAN;
+        }
+
         this.targetName = targetName;
         this.date = date;
         this.amount = amount;

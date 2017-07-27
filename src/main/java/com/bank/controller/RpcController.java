@@ -244,4 +244,29 @@ public class RpcController {
     public Object getEventLogs(@JsonRpcParam("beginDate") Date beginDate, @JsonRpcParam("endDate") Date endDate){
         return loggingController.getEventLogs(beginDate, endDate);
     }
+
+    /**
+     * Savings extension
+     */
+
+    @Autowired
+    private AccountSavingController accountSavingController;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object openSavingsAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        accountSavingController.openSavingsAccount(authToken, iBAN);
+        return new EmptyJsonResponse();
+    }
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object closeSavingsAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        accountSavingController.closeSavingsAccount(authToken, iBAN);
+        return new EmptyJsonResponse();
+    }
 }

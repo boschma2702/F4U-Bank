@@ -6,6 +6,7 @@ import com.bank.bean.transaction.TransactionBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.transaction.TransactionRepository;
 import com.bank.service.account.AccountUpdateAmountService;
+import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,14 @@ public class TransactionService {
     }
 
     public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, double amount, CardBean card, String description, String targetName) throws InvalidParamValueException {
+        Logger.info("Making transaction form sourceAccountBeanId=%s, to targetAccountBeanId=%s", sourceAccountBean.getAccountId(), targetAccountBean.getAccountId());
         if(amount <= 0){
+            Logger.info("Transaction failed, invalid amount=%s", amount);
             throw new InvalidParamValueException("Invalid Amount");
+        }
+        if(sourceAccountBean.getAccountNumber().equals(targetAccountBean.getAccountNumber())){
+            Logger.error("Transaction failed, can not transfer money to the same accountNumber");
+            throw new InvalidParamValueException("Can not transfer money to same accountNumber");
         }
         double newSourceAmount = sourceAccountBean.getAmount()-amount;
         if(!(newSourceAmount >= 0 || newSourceAmount >= -sourceAccountBean.getOverdraftLimit())){

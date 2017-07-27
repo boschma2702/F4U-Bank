@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TimeSimulateService {
 
-    private static final long DAY_AMOUNT = 86400000;
+    public static final long DAY_AMOUNT = 86400000;
 
     @Autowired
     private TimeService timeService;

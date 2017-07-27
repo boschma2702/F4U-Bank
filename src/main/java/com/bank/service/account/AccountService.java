@@ -48,4 +48,14 @@ public class AccountService {
         }
         return bean;
     }
+
+    public AccountBean getAccountBeanByAccountId(int accountId) throws InvalidParamValueException {
+        Logger.info("Retrieving accountBean of accountId=%s", accountId);
+        AccountBean bean = accountRepository.findAccountBeansByAccountId(accountId);
+        if (bean == null) {
+            Logger.error("Unknown accountId=%s", accountId);
+            throw new InvalidParamValueException("Unknown account number");
+        }
+        return bean;
+    }
 }
