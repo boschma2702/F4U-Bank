@@ -5,6 +5,7 @@ import com.bank.bean.acountsavings.AccountSavingBean;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface AccountSavingRepository extends CrudRepository<AccountSavingBean, Integer> {
 
@@ -17,4 +18,9 @@ public interface AccountSavingRepository extends CrudRepository<AccountSavingBea
             "where a.accountBean.accountId = ?1")
     void updateAmount(int accountId, double amount);
 
+    @Modifying
+    @Transactional
+    @Query("update AccountSavingBean  a " +
+            "set a.minimumDayAmount = a.amount")
+    void resetMinimumDayAmount();
 }
