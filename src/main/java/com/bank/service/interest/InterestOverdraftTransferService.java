@@ -2,6 +2,7 @@ package com.bank.service.interest;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.repository.account.AccountRepository;
+import com.bank.util.AmountFormatter;
 import com.bank.util.Logging.Logger;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,11 @@ public class InterestOverdraftTransferService extends DayPassedListener {
         Logger.info("Transferring overdraft interest");
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithOverdraftInterest();
         for(AccountBean accountBean : accountBeans){
-            BigDecimal decimal = new BigDecimal(accountBean.getBuildUpOverdraftInterest());
-            decimal = decimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-            accountBean.setAmount(accountBean.getAmount()+decimal.doubleValue());
+            double amount = AmountFormatter.format(accountBean.getBuildUpOverdraftInterest());
+            accountBean.setAmount(accountBean.getAmount()+amount);
             accountBean.setBuildUpOverdraftInterest(0);
-            //TODO check if interest also affects minimum balance on a day, maybe change transferring interest a transaction
-            Logger.info("Overdraft interest amount=%s transferred to accountId=%s", decimal.doubleValue(), accountBean.getAccountId());
+            //TODO maybe change transferring interest a transaction
+            Logger.info("Overdraft interest amount=%s transferred to accountId=%s", amount, accountBean.getAccountId());
             accountRepository.save(accountBean);
         }
     }
