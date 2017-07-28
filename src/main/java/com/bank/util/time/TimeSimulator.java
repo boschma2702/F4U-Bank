@@ -18,31 +18,30 @@ public class TimeSimulator implements Runnable {
         thread.start();
     }
 
-    public Date getCurrentDate(){
-        return new Date(new Date().getTime()+timeChange);
+    public Date getCurrentDate() {
+        return new Date(new Date().getTime() + timeChange);
     }
 
     public long getTimeChange() {
         return timeChange;
     }
 
-    public void addTimeChange(long amount){
-//        timeChange = timeChange + amount;
+    public void addTimeChange(long amount) {
         toAdd = amount;
         thread.interrupt();
     }
 
-    public void registerDayPassedListener(DayPassedListener dayPassedListener){
+    public void registerDayPassedListener(DayPassedListener dayPassedListener) {
         dayPassedListeners.add(dayPassedListener);
     }
 
-    private void notifyDayPassedListeners(Date start, Date end){
-        for(DayPassedListener listener : dayPassedListeners){
+    private void notifyDayPassedListeners(Date start, Date end) {
+        for (DayPassedListener listener : dayPassedListeners) {
             listener.onDayPassed(start, end);
         }
     }
 
-    public void reset(){
+    public void reset() {
         timeChange = 0;
         toAdd = 0;
         thread.interrupt();
@@ -51,55 +50,59 @@ public class TimeSimulator implements Runnable {
 
     @Override
     public void run() {
-        for(;;){
-            Calendar calendar = Calendar.getInstance();
+        for (; ; ) {
+            Calendar goalDate = Calendar.getInstance();
             Date currentDate = getCurrentDate();
-            calendar.setTime(currentDate);
+            goalDate.setTime(currentDate);
             //Set calender to 00:00:000 of new day
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            goalDate.set(Calendar.HOUR_OF_DAY, 0);
+            goalDate.set(Calendar.MINUTE, 0);
+            goalDate.set(Calendar.SECOND, 0);
+            goalDate.set(Calendar.MILLISECOND, 0);
+            goalDate.add(Calendar.DAY_OF_MONTH, 1);
 
-            long sleepTime = calendar.getTime().getTime()-currentDate.getTime();
+            long sleepTime = goalDate.getTime().getTime() - currentDate.getTime();
 
             try {
                 Thread.sleep(sleepTime);
                 //day is over
-                notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
+                notifyDayPassedListeners(getStartOfDay(goalDate), getEndOfDay(goalDate));
             } catch (InterruptedException e) {
-                // time is changed
-                //In case of reset
-                if(timeChange==0&&toAdd==0){
+                //skip if it was a reset
+                if (timeChange == 0 && toAdd == 0) {
                     continue;
                 }
-                //In case of time simulation
-//                long timeChanged = getCurrentDate().getTime()-calendar.getTime().getTime();
-//                long timeChanged = getCurrentDate().getTime()+toAdd-calendar.getTime().getTime();
 
-//                int daysChanged = (int) TimeUnit.DAYS.convert(timeChanged, TimeUnit.MILLISECONDS);
-                //TODO rework this method
-                int daysChanged = (int)(toAdd/TimeSimulateService.DAY_AMOUNT);
-
-                for(int i=0; i<daysChanged; i++){
-                    timeChange += TimeSimulateService.DAY_AMOUNT;
-                    notifyDayPassedListeners(getStartOfDay(calendar), getEndOfDay(calendar));
-                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                while(toAdd>0) {
+                    //Check if possible to simulate another day
+                    currentDate = getCurrentDate();
+                    long timeStillShort = goalDate.getTimeInMillis() - currentDate.getTime();
+                    if (toAdd > timeStillShort) {
+                        //simulate to 00:00.000 next day (extract from toAdd and add to timeChange
+                        toAdd -= timeStillShort;
+                        timeChange += timeStillShort;
+                        //notify day passed listeners
+                        notifyDayPassedListeners(getStartOfDay(goalDate), getEndOfDay(goalDate));
+                        //set new goalDate
+                        goalDate.add(Calendar.DAY_OF_MONTH, 1);
+                    } else {
+                        timeChange += toAdd;
+                        toAdd = 0;
+                    }
                 }
             }
 
         }
     }
 
-    private Date getStartOfDay(Calendar calendar){
+    private Date getStartOfDay(Calendar calendar) {
         Calendar start = Calendar.getInstance();
         start.setTime(calendar.getTime());
         start.add(Calendar.DAY_OF_MONTH, -1);
         return start.getTime();
     }
 
-    private Date getEndOfDay(Calendar calendar){
+    private Date getEndOfDay(Calendar calendar) {
         Calendar end = Calendar.getInstance();
         end.setTime(calendar.getTime());
         end.add(Calendar.MILLISECOND, -1);

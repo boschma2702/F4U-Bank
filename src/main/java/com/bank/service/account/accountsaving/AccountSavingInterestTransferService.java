@@ -3,6 +3,7 @@ package com.bank.service.account.accountsaving;
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.accountsaving.AccountSavingRepository;
+import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionSavingsService;
 import com.bank.util.AmountFormatter;
 import com.bank.util.Logging.Logger;
@@ -28,7 +29,7 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
     @Override
     public void onDayPassed(Date start, Date end) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(start);
+        calendar.setTime(TimeService.TIMESIMULATOR.getCurrentDate());
         //If first of January, then transfer build up overdraft
         if (calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
             transferAccountSavingInterest();
