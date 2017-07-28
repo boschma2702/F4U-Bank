@@ -5,6 +5,7 @@ import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class AccountBean {
      * Current balance on the account.
      */
     @JsonIgnore
-    private double amount;
+    @Column(scale = 2)
+    private BigDecimal amount = BigDecimal.ZERO;
 
     /**
      * Indicates whether the account is active or not.
@@ -76,11 +78,11 @@ public class AccountBean {
         this.accountNumber = accountNumber;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

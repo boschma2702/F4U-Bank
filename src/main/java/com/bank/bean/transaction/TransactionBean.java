@@ -6,6 +6,7 @@ import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -25,7 +26,8 @@ public class TransactionBean {
     /**
      * Amount to be transferred to the target account.
      */
-    private double amount;
+    @Column(scale = 2)
+    private BigDecimal amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_account_id")
@@ -39,7 +41,6 @@ public class TransactionBean {
     @JoinColumn(name = "card_id")
     private CardBean card;
 
-//    @Column(columnDefinition = "TIMESTAMP")
     private Date date;
 
     @Column(name = "target_name")
@@ -54,11 +55,11 @@ public class TransactionBean {
     @Column(name = "from_savings")
     private boolean fromSavings = false;
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

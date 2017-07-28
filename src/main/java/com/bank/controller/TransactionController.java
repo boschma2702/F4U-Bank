@@ -14,6 +14,7 @@ import com.bank.service.transaction.TransactionSavingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -30,15 +31,15 @@ public class TransactionController {
     @Autowired
     private TransactionOverviewService transactionOverviewService;
 
-    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueException, InvalidPINException {
+    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
         transactionCreateService.depositIntoAccount(IBAN, pinCard, pinCode, amount);
     }
 
-    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueException, InvalidPINException {
+    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
         transactionCreateService.payFromAccount(sourceIBAN, targetIBAN, pinCard, pinCode, amount);
     }
 
-    public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, double amount, String description) throws NotAuthorizedException, InvalidParamValueException {
+    public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException {
         try {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;

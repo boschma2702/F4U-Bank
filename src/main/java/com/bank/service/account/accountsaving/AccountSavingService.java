@@ -1,4 +1,4 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.acountsavings.AccountSavingBean;
@@ -25,6 +25,7 @@ public class AccountSavingService {
     }
 
     public AccountSavingBean getAccountSavingsBeanByAccountBean(AccountBean accountBean) throws InvalidParamValueException {
+        Logger.info("Retrieving AccountSavingBean of accountBeanId=%s", accountBean.getAccountId());
         AccountSavingBean accountSavingBean = accountSavingRepository.findAccountSavingBeanByAccountBean(accountBean);
         if(accountSavingBean == null){
             Logger.error("Could not retrieve AccountSavingBean of accountId=%s", accountBean.getAccountId());

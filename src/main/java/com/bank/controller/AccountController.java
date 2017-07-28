@@ -12,6 +12,7 @@ import com.bank.projection.pin.PinProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.*;
 import com.bank.service.customer.CustomerService;
+import com.bank.service.overdraft.OverdraftLimitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class AccountController {
     private AccountAmountService accountAmountService;
 
     @Autowired
-    private AccountOverdraftLimitService accountOverdraftLimitService;
+    private OverdraftLimitService overdraftLimitService;
 
     public AccountOpenProjection openAccount(String name,
                                              String surname,
@@ -134,7 +135,7 @@ public class AccountController {
         try {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
-                accountOverdraftLimitService.setOverdraft(iBAN, overdraftLimit);
+                overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
             }else {
                 throw new NotAuthorizedException("Not Authorized");
             }
@@ -147,7 +148,7 @@ public class AccountController {
         try {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
-                return accountOverdraftLimitService.getOverdraft(iBAN);
+                return overdraftLimitService.getOverdraft(iBAN);
             }else{
                 throw new NotAuthorizedException("Not Authorized");
             }

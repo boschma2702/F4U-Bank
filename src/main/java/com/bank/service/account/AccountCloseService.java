@@ -11,6 +11,7 @@ import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class AccountCloseService {
         Logger.info("Closing account accountNumber=%s of customerId=%s", iBAN, customerId);
         // close account
         AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(iBAN);
-        if(accountBean.getAmount()<0){
+        if(accountBean.getAmount().compareTo(BigDecimal.ZERO)<0){
             Logger.error(String.format("Could not close account due to negative balance of accountNumber=%s of customerId=%s", iBAN, customerId));
             throw new NotAuthorizedException("Account has a negative balance");
         }

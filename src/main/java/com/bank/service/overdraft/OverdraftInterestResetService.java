@@ -1,4 +1,4 @@
-package com.bank.service.interest;
+package com.bank.service.overdraft;
 
 import com.bank.repository.account.AccountRepository;
 import com.bank.util.time.DayPassedListener;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class InterestOverdraftResetService extends DayPassedListener {
+public class OverdraftInterestResetService extends DayPassedListener {
 
     @Autowired
     private AccountRepository accountRepository;

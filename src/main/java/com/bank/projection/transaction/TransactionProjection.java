@@ -2,6 +2,7 @@ package com.bank.projection.transaction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TransactionProjection {
@@ -13,7 +14,7 @@ public class TransactionProjection {
     private double amount;
     private String description;
 
-    public TransactionProjection(String sourceIBAN, String targetIBAN, String targetName, Date date, double amount, String description, boolean fromSaving) {
+    public TransactionProjection(String sourceIBAN, String targetIBAN, String targetName, Date date, BigDecimal amount, String description, boolean fromSaving) {
         if (sourceIBAN != null && targetIBAN != null) {
             if(sourceIBAN.equals(targetIBAN)){
                 //was a savings transaction
@@ -32,7 +33,7 @@ public class TransactionProjection {
 
         this.targetName = targetName;
         this.date = date;
-        this.amount = amount;
+        this.amount = amount.doubleValue();
         this.description = description;
     }
 

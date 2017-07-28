@@ -1,4 +1,4 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.acountsavings.AccountSavingBean;

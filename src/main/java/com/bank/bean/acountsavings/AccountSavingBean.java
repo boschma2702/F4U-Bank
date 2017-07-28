@@ -5,6 +5,7 @@ import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -21,7 +22,8 @@ public class AccountSavingBean {
     @JoinColumn(name = "account_id")
     private AccountBean accountBean;
 
-    private double amount;
+    @Column(scale = 2)
+    private BigDecimal amount = BigDecimal.ZERO;
 
     @Column(name = "build_up_interest")
     private double buildUpInterest;
@@ -40,11 +42,11 @@ public class AccountSavingBean {
         this.accountBean = accountBean;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

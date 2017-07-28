@@ -11,6 +11,7 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Service
@@ -98,7 +99,7 @@ public class RpcController {
             @JsonRpcError(exception = InvalidPINException.class, code = 421)
     })
     public Object depositIntoAccount(@JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("pinCard") String pinCard, @JsonRpcParam("pinCode") String pinCode, @JsonRpcParam("amount") double amount) throws InvalidParamValueException, InvalidPINException {
-        transactionController.depositIntoAccount(iBAN, pinCard, pinCode, amount);
+        transactionController.depositIntoAccount(iBAN, pinCard, pinCode, new BigDecimal(amount));
         return new EmptyJsonResponse();
     }
 
@@ -107,7 +108,7 @@ public class RpcController {
             @JsonRpcError(exception = InvalidPINException.class, code = 421)
     })
     public Object payFromAccount(@JsonRpcParam("sourceIBAN") String sourceIBAN, @JsonRpcParam("targetIBAN") String targetIBAN, @JsonRpcParam("pinCard") String pinCard, @JsonRpcParam("pinCode") String pinCode, @JsonRpcParam("amount") double amount) throws InvalidParamValueException, InvalidPINException {
-        transactionController.payFromAccount(sourceIBAN, targetIBAN, pinCard, pinCode, amount);
+        transactionController.payFromAccount(sourceIBAN, targetIBAN, pinCard, pinCode, new BigDecimal(amount));
         return new EmptyJsonResponse();
     }
 
@@ -116,7 +117,7 @@ public class RpcController {
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
     })
     public Object transferMoney(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("sourceIBAN") String sourceIBAN, @JsonRpcParam("targetIBAN") String targetIBAN, @JsonRpcParam("targetName") String targetName, @JsonRpcParam("amount") double amount, @JsonRpcParam("description") String description) throws NotAuthorizedException, InvalidParamValueException {
-        transactionController.transferMoney(authToken, sourceIBAN, targetIBAN, targetName, amount, description);
+        transactionController.transferMoney(authToken, sourceIBAN, targetIBAN, targetName, new BigDecimal(amount), description);
         return new EmptyJsonResponse();
     }
 

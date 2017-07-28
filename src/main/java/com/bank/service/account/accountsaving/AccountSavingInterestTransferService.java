@@ -1,9 +1,11 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.accountsaving.AccountSavingRepository;
 import com.bank.service.transaction.TransactionSavingsService;
+import com.bank.util.AmountFormatter;
+import com.bank.util.Logging.Logger;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,27 +29,27 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
     public void onDayPassed(Date start, Date end) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
-        //If first of January, then transfer build up interest
-        if(calendar.get(Calendar.MONTH)==0 && calendar.get(Calendar.DAY_OF_MONTH)==1){
+        //If first of January, then transfer build up overdraft
+        if (calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
             transferAccountSavingInterest();
         }
     }
 
     private void transferAccountSavingInterest() {
+        Logger.info("Transferring overdraft of savings account");
         Iterator<AccountSavingBean> iterator = accountSavingRepository.findAll().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             AccountSavingBean accountSavingBean = iterator.next();
             String description = "Interest of past year";
-            double amount = accountSavingBean.getBuildUpInterest();
+            BigDecimal amount = AmountFormatter.format(accountSavingBean.getBuildUpInterest());
             try {
-                BigDecimal decimal = new BigDecimal(amount);
-                decimal = decimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-                transactionSavingsService.doToSavingsTransaction(accountSavingBean.getAccountBean(), decimal.doubleValue(), description);
+                transactionSavingsService.doToSavingsTransaction(accountSavingBean.getAccountBean(), amount, description);
                 accountSavingBean.setBuildUpInterest(0);
             } catch (InvalidParamValueException e) {
                 //Interest is always positive and can not happen
             }
         }
+        accountSavingRepository.resetBuildUpInterest();
     }
 
     @Override
