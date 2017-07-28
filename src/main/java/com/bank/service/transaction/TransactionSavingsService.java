@@ -46,7 +46,7 @@ public class TransactionSavingsService {
                 throw new InvalidParamValueException("Source account overdraft to high");
             }
         } else {
-            BigDecimal newSourceAmount = accountBean.getAmount().subtract(amount);
+            BigDecimal newSourceAmount = accountSavingBean.getAmount().subtract(amount);
             if (newSourceAmount.compareTo(BigDecimal.ZERO) < 0) {
                 Logger.error("Could not make transaction fromSavings=%s of accountBeanId=%s, transaction would result negative saving balance", fromSavings, accountBean.getAccountId());
                 throw new InvalidParamValueException("Savings account not enough funds");
