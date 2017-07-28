@@ -22,10 +22,10 @@ public class AccountAmountService {
         Logger.info("Getting balance of accountId:%s",accountId);
         AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         AccountAmountProjection projection = new AccountAmountProjection();
-        projection.setBalance(accountBean.getAmount());
+        projection.setBalance(accountBean.getAmount().doubleValue());
         try {
             AccountSavingBean accountSavingBean = accountSavingService.getAccountSavingsBeanByAccountBean(accountBean);
-            projection.setSavingAccountBalance(accountSavingBean.getAmount());
+            projection.setSavingAccountBalance(accountSavingBean.getAmount().doubleValue());
         }catch (InvalidParamValueException e){
             projection.setSavingAccountBalance(0);
         }

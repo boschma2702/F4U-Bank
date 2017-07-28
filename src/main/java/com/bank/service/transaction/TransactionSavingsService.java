@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransactionSavingsService {
 
@@ -29,23 +31,23 @@ public class TransactionSavingsService {
     private AccountSavingUpdateAmountService accountSavingUpdateAmountService;
 
     @Transactional
-    public void doSavingsTransaction(AccountBean accountBean, boolean fromSavings, double amount, String targetName, String description) throws InvalidParamValueException {
+    public void doSavingsTransaction(AccountBean accountBean, boolean fromSavings, BigDecimal amount, String targetName, String description) throws InvalidParamValueException {
         Logger.info("Transaction fromSavings=%s of accountBeanId=%s", fromSavings, accountBean.getAccountId());
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             Logger.error("Transaction fromSavings=%s of accountBeanId=%s has invalid amount=%s", fromSavings, accountBean.getAccountId(), amount);
             throw new InvalidParamValueException("Invalid Amount");
         }
         AccountSavingBean accountSavingBean = accountSavingService.getAccountSavingsBeanByAccountBean(accountBean);
         //Check if transaction is allowed
         if (!fromSavings) {
-            double newSourceAmount = accountBean.getAmount() - amount;
-            if (!(newSourceAmount >= 0 || newSourceAmount >= -accountBean.getOverdraftLimit())) {
+            BigDecimal newSourceAmount = accountBean.getAmount().subtract(amount);
+            if (!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-accountBean.getOverdraftLimit())) >= 0)) {
                 Logger.error("Could not make transaction fromSavings=%s of accountBeanId=%s, sourceaccount overdraft to high", fromSavings, accountBean.getAccountId());
                 throw new InvalidParamValueException("Source account overdraft to high");
             }
         } else {
-            double newSourceAmount = accountSavingBean.getAmount() - amount;
-            if (newSourceAmount < 0) {
+            BigDecimal newSourceAmount = accountBean.getAmount().subtract(amount);
+            if (newSourceAmount.compareTo(BigDecimal.ZERO) < 0) {
                 Logger.error("Could not make transaction fromSavings=%s of accountBeanId=%s, transaction would result negative saving balance", fromSavings, accountBean.getAccountId());
                 throw new InvalidParamValueException("Savings account not enough funds");
             }
@@ -60,16 +62,16 @@ public class TransactionSavingsService {
         transaction.setComment(description);
 
         transactionRepository.save(transaction);
-        double accountAmount = fromSavings ? amount : -amount;
-        double accountSavingAmount = fromSavings ? -amount : amount;
+        BigDecimal accountAmount = fromSavings ? amount : amount.negate();
+        BigDecimal accountSavingAmount = fromSavings ? amount.negate() : amount;
         accountUpdateAmountService.updateAmount(accountBean.getAccountId(), accountAmount);
         accountSavingUpdateAmountService.updateAmount(accountBean.getAccountId(), accountSavingAmount);
     }
 
     @Transactional
-    public void doToSavingsTransaction(AccountBean accountBean, double amount, String description) throws InvalidParamValueException {
+    public void doToSavingsTransaction(AccountBean accountBean, BigDecimal amount, String description) throws InvalidParamValueException {
         Logger.info("Transaction fromSavings=%s of accountBeanId=%s", false, accountBean.getAccountId());
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             Logger.error("Transaction fromSavings=%s of accountBeanId=%s has invalid amount=%s", false, accountBean.getAccountId(), amount);
             throw new InvalidParamValueException("Invalid Amount");
         }

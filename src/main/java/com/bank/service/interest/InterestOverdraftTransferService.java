@@ -28,8 +28,8 @@ public class InterestOverdraftTransferService extends DayPassedListener {
         Logger.info("Transferring overdraft interest");
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithOverdraftInterest();
         for(AccountBean accountBean : accountBeans){
-            double amount = -AmountFormatter.format(accountBean.getBuildUpOverdraftInterest());
-            if(amount>0){
+            BigDecimal amount = AmountFormatter.format(accountBean.getBuildUpOverdraftInterest()).negate();
+            if(amount.compareTo(BigDecimal.ZERO)>0){
                 transactionService.retrieveTransaction(accountBean, amount, "Overdraft interest");
             }
             Logger.info("Overdraft interest amount=%s transferred from accountId=%s", amount, accountBean.getAccountId());

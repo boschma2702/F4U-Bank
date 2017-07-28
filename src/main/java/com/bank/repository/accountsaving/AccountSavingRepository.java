@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 public interface AccountSavingRepository extends CrudRepository<AccountSavingBean, Integer> {
 
     AccountSavingBean findAccountSavingBeanByAccountBean(AccountBean accountBean);
@@ -16,7 +18,7 @@ public interface AccountSavingRepository extends CrudRepository<AccountSavingBea
             "set a.amount = a.amount + ?2, " +
             "a.minimumDayAmount = case when (a.amount < a.minimumDayAmount) then a.amount else a.minimumDayAmount end " +
             "where a.accountBean.accountId = ?1")
-    void updateAmount(int accountId, double amount);
+    void updateAmount(int accountId, BigDecimal amount);
 
     @Modifying
     @Transactional

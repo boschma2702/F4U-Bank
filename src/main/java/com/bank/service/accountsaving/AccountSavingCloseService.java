@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class AccountSavingCloseService {
 
@@ -32,7 +34,7 @@ public class AccountSavingCloseService {
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(iBAN);
         AccountSavingBean accountSavingBean = accountSavingService.getAccountSavingsBeanByAccountBean(accountBean);
         String description = "Closing of saving account";
-        if(accountSavingBean.getAmount()>0) {
+        if (accountSavingBean.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             transactionSavingsService.doSavingsTransaction(accountBean, true, accountSavingBean.getAmount(), "", description);
         }
         accountSavingRepository.delete(accountSavingBean);

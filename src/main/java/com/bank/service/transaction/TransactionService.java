@@ -10,6 +10,8 @@ import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransactionService {
 
@@ -19,13 +21,13 @@ public class TransactionService {
     @Autowired
     private AccountUpdateAmountService accountUpdateAmountService;
 
-    public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, double amount) throws InvalidParamValueException {
+    public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, BigDecimal amount) throws InvalidParamValueException {
         doTransaction(sourceAccountBean, targetAccountBean, amount, null, "", "");
     }
 
-    public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, double amount, CardBean card, String description, String targetName) throws InvalidParamValueException {
+    public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, BigDecimal amount, CardBean card, String description, String targetName) throws InvalidParamValueException {
         Logger.info("Making transaction form sourceAccountBeanId=%s, to targetAccountBeanId=%s", sourceAccountBean.getAccountId(), targetAccountBean.getAccountId());
-        if(amount <= 0){
+        if(amount.compareTo(BigDecimal.ZERO) <= 0){
             Logger.info("Transaction failed, invalid amount=%s", amount);
             throw new InvalidParamValueException("Invalid Amount");
         }
@@ -33,8 +35,8 @@ public class TransactionService {
             Logger.error("Transaction failed, can not transfer money to the same accountNumber");
             throw new InvalidParamValueException("Can not transfer money to same accountNumber");
         }
-        double newSourceAmount = sourceAccountBean.getAmount()-amount;
-        if(!(newSourceAmount >= 0 || newSourceAmount >= -sourceAccountBean.getOverdraftLimit())){
+        BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount.negate());
+        if(!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)){
             throw new InvalidParamValueException("Source account overdraft to high");
         }
 
@@ -52,8 +54,8 @@ public class TransactionService {
         accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), targetAccountBean.getAccountId(), amount);
     }
 
-    public void doSingleTransaction(AccountBean targetAccountBean, CardBean card, double amount) throws InvalidParamValueException {
-        if(amount <= 0){
+    public void doSingleTransaction(AccountBean targetAccountBean, CardBean card, BigDecimal amount) throws InvalidParamValueException {
+        if(amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new InvalidParamValueException("Invalid Amount");
         }
 
@@ -76,7 +78,7 @@ public class TransactionService {
      * @param amount to retrieve, must be positive
      * @param comment
      */
-    public void retrieveTransaction(AccountBean sourceAccountBean, double amount, String comment){
+    public void retrieveTransaction(AccountBean sourceAccountBean, BigDecimal amount, String comment){
         TransactionBean transactionBean = new TransactionBean();
         transactionBean.setSourceBean(sourceAccountBean);
         transactionBean.setAmount(amount);
@@ -84,7 +86,7 @@ public class TransactionService {
 
         transactionRepository.save(transactionBean);
 
-        accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), -amount);
+        accountUpdateAmountService.updateAmount(sourceAccountBean.getAccountId(), amount.negate());
     }
 
 

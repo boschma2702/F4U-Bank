@@ -41,7 +41,7 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
         while (iterator.hasNext()) {
             AccountSavingBean accountSavingBean = iterator.next();
             String description = "Interest of past year";
-            double amount = AmountFormatter.format(accountSavingBean.getBuildUpInterest());
+            BigDecimal amount = AmountFormatter.format(accountSavingBean.getBuildUpInterest());
             try {
                 transactionSavingsService.doToSavingsTransaction(accountSavingBean.getAccountBean(), amount, description);
                 accountSavingBean.setBuildUpInterest(0);

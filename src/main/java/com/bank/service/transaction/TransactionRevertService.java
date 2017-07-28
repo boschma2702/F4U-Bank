@@ -10,30 +10,31 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
+@Deprecated
 public class TransactionRevertService {
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    public void resetTransactions(List<TransactionBean> transactionBeans){
-        for(TransactionBean bean : transactionBeans){
-            resetTransaction(bean);
-        }
-    }
-
-    public void resetTransaction(TransactionBean transactionBean){
-        AccountBean sourceBean = transactionBean.getSourceBean();
-        AccountBean targetBean = transactionBean.getTargetBean();
-        double amount = transactionBean.getAmount();
-        sourceBean.setAmount(sourceBean.getAmount()+amount);
-        targetBean.setAmount(targetBean.getAmount()-amount);
-        accountRepository.save(sourceBean);
-        accountRepository.save(targetBean);
-        transactionRepository.delete(transactionBean);
-    }
+//    @Autowired
+//    private AccountRepository accountRepository;
+//
+//    @Autowired
+//    private TransactionRepository transactionRepository;
+//
+//    public void resetTransactions(List<TransactionBean> transactionBeans){
+//        for(TransactionBean bean : transactionBeans){
+//            resetTransaction(bean);
+//        }
+//    }
+//
+//    public void resetTransaction(TransactionBean transactionBean){
+//        AccountBean sourceBean = transactionBean.getSourceBean();
+//        AccountBean targetBean = transactionBean.getTargetBean();
+//        double amount = transactionBean.getAmount();
+//        sourceBean.setAmount(sourceBean.getAmount()+amount);
+//        targetBean.setAmount(targetBean.getAmount()-amount);
+//        accountRepository.save(sourceBean);
+//        accountRepository.save(targetBean);
+//        transactionRepository.delete(transactionBean);
+//    }
 
 }

@@ -9,6 +9,8 @@ import com.bank.service.card.CardValidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransactionCreateService {
 
@@ -21,13 +23,13 @@ public class TransactionCreateService {
     @Autowired
     private TransactionService transactionService;
 
-    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, double amount) throws InvalidPINException, InvalidParamValueException {
+    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidPINException, InvalidParamValueException {
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(IBAN);
         CardBean cardBean = cardValidateService.validateCard(accountBean.getAccountId(), pinCard, pinCode);
         transactionService.doSingleTransaction(accountBean, cardBean, amount);
     }
 
-    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueException, InvalidPINException {
+    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
         AccountBean sourceAccountBean = accountService.getAccountBeanByAccountNumber(sourceIBAN);
         AccountBean targetAccountBean = accountService.getAccountBeanByAccountNumber(targetIBAN);
 
@@ -36,7 +38,7 @@ public class TransactionCreateService {
         transactionService.doTransaction(sourceAccountBean, targetAccountBean, amount, cardBean, "", "");
     }
 
-    public void transferMoney(String sourceIBAN, String targetIBAN, String targetName, double amount, String description) throws InvalidParamValueException {
+    public void transferMoney(String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws InvalidParamValueException {
         AccountBean sourceAccountBean = accountService.getAccountBeanByAccountNumber(sourceIBAN);
         AccountBean targetAccountBean = accountService.getAccountBeanByAccountNumber(targetIBAN);
 

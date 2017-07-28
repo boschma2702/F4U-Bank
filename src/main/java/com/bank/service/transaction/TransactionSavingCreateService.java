@@ -7,6 +7,8 @@ import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransactionSavingCreateService {
 
@@ -16,7 +18,7 @@ public class TransactionSavingCreateService {
     @Autowired
     private AccountService accountService;
 
-    public void transferMoney(String sourceIBAN, String targetIBAN, String targetName, double amount, String description) throws InvalidParamValueException {
+    public void transferMoney(String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws InvalidParamValueException {
         if(sourceIBAN.endsWith("S")&&targetIBAN.endsWith("S")){
             Logger.error("Can not transfer money, both accounts are savings account. sourceIBAN=%s, targetIBAN=%s", sourceIBAN, targetIBAN);
             throw new InvalidParamValueException("Cannot transfer money from saving account to another account");

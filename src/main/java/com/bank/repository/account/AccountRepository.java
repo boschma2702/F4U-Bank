@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "set a.amount = a.amount + ?2, " +
             "a.minimumDayAmount = case when (a.amount < a.minimumDayAmount) then a.amount else a.minimumDayAmount end " +
             "where a.accountId = ?1")
-    void updateAmount(int accountId, double amount);
+    void updateAmount(int accountId, BigDecimal amount);
 
     @Query("select new com.bank.projection.customer.CustomerUsernameProjection(customer.username) " +
             "from CustomerAccount customeraccount, CustomerBean customer " +
