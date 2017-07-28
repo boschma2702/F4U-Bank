@@ -1,8 +1,7 @@
-package com.bank.service.interest;
+package com.bank.service.overdraft;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.repository.account.AccountRepository;
-import com.bank.service.time.TimeService;
 import com.bank.util.time.DayPassedListener;
 import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class InterestOverdraftService extends DayPassedListener {
+public class OverdraftInterestService extends DayPassedListener {
 
     private final static double ANNUAL_OVERDRAFT_INTEREST = 0.10;
     private final static double MONTHLY_OVERDRAFT_INTEREST = Math.pow((1+ANNUAL_OVERDRAFT_INTEREST), (1.0*1/12)) - 1;
@@ -26,7 +25,7 @@ public class InterestOverdraftService extends DayPassedListener {
     @Override
     @Transactional
     public void onDayPassed(Date start, Date end) {
-        Logger.info("Calculating overdraft interest over day");
+        Logger.info("Calculating overdraft overdraft over day");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         int amountOfDaysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -34,7 +33,7 @@ public class InterestOverdraftService extends DayPassedListener {
         for(AccountBean accountBean : accountBeans){
             double buildUpInterest = accountBean.getBuildUpOverdraftInterest();
             double interest = getInterest(amountOfDaysInMonth, accountBean.getMinimumDayAmount());
-            Logger.info("Overdraft interest of accountId=%s is interest=%s", accountBean.getAccountId(), interest);
+            Logger.info("Overdraft overdraft of accountId=%s is overdraft=%s", accountBean.getAccountId(), interest);
             accountBean.setBuildUpOverdraftInterest(buildUpInterest+interest);
             accountRepository.save(accountBean);
         }

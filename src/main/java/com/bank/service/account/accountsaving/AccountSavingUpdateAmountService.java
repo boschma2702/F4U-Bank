@@ -1,4 +1,4 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.repository.accountsaving.AccountSavingRepository;
 import com.bank.util.Logging.Logger;

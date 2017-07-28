@@ -1,4 +1,4 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.exception.InvalidParamValueException;
@@ -29,14 +29,14 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
     public void onDayPassed(Date start, Date end) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
-        //If first of January, then transfer build up interest
+        //If first of January, then transfer build up overdraft
         if (calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
             transferAccountSavingInterest();
         }
     }
 
     private void transferAccountSavingInterest() {
-        Logger.info("Transferring interest of savings account");
+        Logger.info("Transferring overdraft of savings account");
         Iterator<AccountSavingBean> iterator = accountSavingRepository.findAll().iterator();
         while (iterator.hasNext()) {
             AccountSavingBean accountSavingBean = iterator.next();

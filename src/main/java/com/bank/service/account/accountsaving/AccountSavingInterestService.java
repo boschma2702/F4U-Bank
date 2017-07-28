@@ -1,8 +1,7 @@
-package com.bank.service.accountsaving;
+package com.bank.service.account.accountsaving;
 
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.repository.accountsaving.AccountSavingRepository;
-import com.bank.service.time.TimeService;
 import com.bank.util.Logging.Logger;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class AccountSavingInterestService extends DayPassedListener {
 
     @Override
     public void onDayPassed(Date start, Date end) {
-        Logger.info("Calculate interest over savings account");
+        Logger.info("Calculate overdraft over savings account");
 
         Calendar day = Calendar.getInstance();
         day.setTime(start);
@@ -31,7 +30,7 @@ public class AccountSavingInterestService extends DayPassedListener {
             AccountSavingBean accountSavingBean = iterator.next();
             double buildUpInterest = accountSavingBean.getBuildUpInterest();
             double interest = getInterest(amountOfDaysInMonth, accountSavingBean.getMinimumDayAmount());
-            Logger.info("Interest of accountId=%s is interest=%s", accountSavingBean.getAccountBean().getAccountId(), interest);
+            Logger.info("Interest of accountId=%s is overdraft=%s", accountSavingBean.getAccountBean().getAccountId(), interest);
             accountSavingBean.setBuildUpInterest(buildUpInterest + interest);
             accountSavingRepository.save(accountSavingBean);
         }

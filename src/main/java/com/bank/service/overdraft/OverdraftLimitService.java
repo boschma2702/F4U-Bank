@@ -1,15 +1,16 @@
-package com.bank.service.account;
+package com.bank.service.overdraft;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountOverdraftLimitProjection;
 import com.bank.repository.account.AccountRepository;
+import com.bank.service.account.AccountService;
 import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountOverdraftLimitService {
+public class OverdraftLimitService {
 
     private static final double OVERDRAFT_MAX = 5000;
 
