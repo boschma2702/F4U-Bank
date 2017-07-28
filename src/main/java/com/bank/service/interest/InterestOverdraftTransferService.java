@@ -34,6 +34,7 @@ public class InterestOverdraftTransferService extends DayPassedListener {
             }
             Logger.info("Overdraft interest amount=%s transferred from accountId=%s", amount, accountBean.getAccountId());
         }
+        accountRepository.resetBuildUpOverdraftInterest();
     }
 
     @Override

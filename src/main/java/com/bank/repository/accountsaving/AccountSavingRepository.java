@@ -25,4 +25,10 @@ public interface AccountSavingRepository extends CrudRepository<AccountSavingBea
     @Query("update AccountSavingBean  a " +
             "set a.minimumDayAmount = a.amount")
     void resetMinimumDayAmount();
+
+    @Modifying
+    @Transactional
+    @Query("update AccountSavingBean  a " +
+            "set a.buildUpInterest = 0")
+    void resetBuildUpInterest();
 }

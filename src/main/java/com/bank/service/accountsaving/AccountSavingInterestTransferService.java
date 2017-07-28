@@ -49,6 +49,7 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
                 //Interest is always positive and can not happen
             }
         }
+        accountSavingRepository.resetBuildUpInterest();
     }
 
     @Override

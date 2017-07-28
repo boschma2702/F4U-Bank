@@ -56,4 +56,9 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "where a.isActive = true")
     void resetMinimumDayAmount();
 
+    @Modifying
+    @Query("update AccountBean a " +
+            "set a.buildUpOverdraftInterest = 0 " +
+            "where a.isActive = true")
+    void resetBuildUpOverdraftInterest();
 }
