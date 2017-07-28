@@ -25,6 +25,9 @@ public class TransactionProjection {
                     this.sourceIBAN = sourceIBAN;
                     this.targetIBAN = targetIBAN+"S";
                 }
+            }else{
+                this.sourceIBAN = sourceIBAN;
+                this.targetIBAN = targetIBAN;
             }
         }else {
             this.sourceIBAN = sourceIBAN;
