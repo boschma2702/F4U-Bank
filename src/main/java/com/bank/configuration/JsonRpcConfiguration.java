@@ -1,7 +1,7 @@
 package com.bank.configuration;
 
-import com.bank.util.Logging.JsonRpcErrorResolver;
-import com.bank.util.Logging.JsonRpcInvocationListener;
+import com.bank.util.logging.JsonRpcErrorResolver;
+import com.bank.util.logging.JsonRpcInvocationListener;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImplExporter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

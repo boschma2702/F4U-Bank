@@ -7,7 +7,7 @@ import com.bank.service.BackupAndRestoreService;
 import com.bank.service.time.TimeInitialService;
 import com.bank.service.time.TimeService;
 import com.bank.service.time.TimeSimulateService;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

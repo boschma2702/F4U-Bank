@@ -2,7 +2,7 @@ package com.bank.service;
 
 import com.bank.exception.AuthenticationException;
 import com.bank.exception.NotAuthorizedException;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

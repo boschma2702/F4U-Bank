@@ -5,7 +5,7 @@ import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

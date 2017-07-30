@@ -1,4 +1,4 @@
-package com.bank.util.Logging;
+package com.bank.util.logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.InvocationListener;

@@ -1,7 +1,7 @@
 package com.bank.controller;
 
 import com.bank.projection.logging.LogEntryProjection;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

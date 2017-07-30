@@ -8,7 +8,7 @@ import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.service.IBANGeneratorService;
 import com.bank.service.card.CardCreateService;
 import com.bank.service.customer.CustomerService;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

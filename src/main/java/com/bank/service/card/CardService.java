@@ -4,7 +4,7 @@ import com.bank.bean.card.CardBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.time.TimeService;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

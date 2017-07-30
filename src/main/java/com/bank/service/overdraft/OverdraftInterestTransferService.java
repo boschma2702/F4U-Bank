@@ -4,7 +4,7 @@ import com.bank.bean.account.AccountBean;
 import com.bank.repository.account.AccountRepository;
 import com.bank.service.transaction.TransactionService;
 import com.bank.util.AmountFormatter;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.bank.util.Logging;
+package com.bank.util.logging;
 
 public enum LoggingLevel {
 

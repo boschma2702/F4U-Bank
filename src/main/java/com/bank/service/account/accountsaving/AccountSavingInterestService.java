@@ -2,7 +2,7 @@ package com.bank.service.account.accountsaving;
 
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.repository.accountsaving.AccountSavingRepository;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
