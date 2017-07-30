@@ -2,6 +2,7 @@ package com.bank.service.card;
 
 import com.bank.bean.card.CardBean;
 import com.bank.exception.InvalidPINException;
+import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.time.TimeService;
 import com.bank.util.Constants;
@@ -14,14 +15,12 @@ public class CardValidateService {
     @Autowired
     private CardRepository cardRepository;
 
-    public CardBean validateCard(int accountId, String pinCard, String pinCode) throws InvalidPINException {
-        Logger.info("Validating pinCard=%s of accountId=%s", pinCard, accountId);
-        CardBean bean = cardRepository.getCardBean(accountId, pinCard, TimeService.TIMESIMULATOR.getCurrentDate());
-        if (bean == null) {
-            Logger.error("Could not find pinCard=%s of accountId=%s or pinCard is invalidated", pinCard, accountId);
-            throw new InvalidPINException("Invalid pin information");
-        }
+    @Autowired
+    private CardService cardService;
 
+    public CardBean validateCard(int accountId, String pinCard, String pinCode) throws InvalidPINException, InvalidParamValueException {
+        Logger.info("Validating pinCard=%s of accountId=%s", pinCard, accountId);
+        CardBean bean = cardService.getCardBean(pinCard, accountId);
         if(bean.getPinCode().equals(pinCode)){
             if(bean.getAttempts()!=0){
                 bean.setAttempts(0);
