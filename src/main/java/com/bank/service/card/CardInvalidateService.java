@@ -11,7 +11,7 @@ import com.bank.service.customer.CustomerService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
 import com.bank.util.Constants;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

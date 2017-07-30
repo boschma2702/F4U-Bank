@@ -5,7 +5,7 @@ import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountAmountProjection;
 import com.bank.service.account.accountsaving.AccountSavingService;
-import com.bank.util.Logging.Logger;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

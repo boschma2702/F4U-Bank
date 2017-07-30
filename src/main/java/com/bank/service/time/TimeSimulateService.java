@@ -2,8 +2,7 @@ package com.bank.service.time;
 
 import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NoEffectException;
-import com.bank.util.Logging.Logger;
-import com.bank.util.time.TimeSimulator;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
