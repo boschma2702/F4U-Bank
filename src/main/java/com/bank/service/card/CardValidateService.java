@@ -4,6 +4,7 @@ import com.bank.bean.card.CardBean;
 import com.bank.exception.InvalidPINException;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.time.TimeService;
+import com.bank.util.Constants;
 import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class CardValidateService {
             }
         }else{
             Logger.error("Invalid combination of pin and pinCard=%s of accountId=%s", pinCard, accountId);
-            if(bean.getAttempts()==3){
+            if(bean.getAttempts()== Constants.CARD_BLOCK_LIMIT){
                 Logger.warn("pinCard=%s of accountId=%s reached limit of invalid attempts, card gets blocked", pinCard, accountId);
                 bean.setActive(false);
             }else {
