@@ -16,11 +16,7 @@ public class CustomerController {
     private CustomerAccessService customerAccessService;
 
     public List<CustomerAccountAccessProjection> getUserAccess(String authToken) throws NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            return customerAccessService.getUserAccess(customerId);
-        } catch (AuthenticationException e) {
-            throw new NotAuthorizedException("Not Authorized");
-        }
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        return customerAccessService.getUserAccess(customerId);
     }
 }

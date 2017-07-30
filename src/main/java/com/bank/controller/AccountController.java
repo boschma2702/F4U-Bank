@@ -56,103 +56,71 @@ public class AccountController {
     }
 
     public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            return accountOpenService.openAdditionalAccount(customerId);
-        } catch (AuthenticationException e) {
-            throw new NotAuthorizedException("Invalid authToken");
-        }
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        return accountOpenService.openAdditionalAccount(customerId);
     }
 
     public void closeAccount(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-                accountCloseService.closeAccount(IBAN, customerId);
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+            accountCloseService.closeAccount(IBAN, customerId);
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-                return accountAccessService.provideAccess(IBAN, username);
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+            return accountAccessService.provideAccess(IBAN, username);
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (username == null) {
-                accountAccessService.revokeAccess(customerId, IBAN);
-            } else {
-                if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-                    accountAccessService.revokeAccess(customerService.getCustomerBeanByUsername(username).getCustomerId(), IBAN);
-                }
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (username == null) {
+            accountAccessService.revokeAccess(customerId, IBAN);
+        } else {
+            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+                accountAccessService.revokeAccess(customerService.getCustomerBeanByUsername(username).getCustomerId(), IBAN);
             }
-        } catch (AuthenticationException e) {
-            throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public AccountAmountProjection getBalance(String authToken, String IBAN) throws NotAuthorizedException, InvalidParamValueException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfAccountHolder(IBAN, customerId)) {
-                return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfAccountHolder(IBAN, customerId)) {
+            return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public List<CustomerUsernameProjection> getBankAccountAccess(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-                return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+            return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
-                overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
-            }else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+            overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
+        }else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public AccountOverdraftLimitProjection getOverdraftLimit(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
-                return overdraftLimitService.getOverdraft(iBAN);
-            }else{
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+            return overdraftLimitService.getOverdraft(iBAN);
+        }else{
             throw new NotAuthorizedException("Not Authorized");
         }
     }

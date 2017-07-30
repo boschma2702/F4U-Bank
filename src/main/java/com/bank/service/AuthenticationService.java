@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import com.bank.exception.AuthenticationException;
+import com.bank.exception.NotAuthorizedException;
 import com.bank.util.Logging.Logger;
 
 import java.math.BigInteger;
@@ -45,7 +46,7 @@ public final class AuthenticationService {
         }
     }
 
-    public final Object getObject(String token, String key) throws AuthenticationException {
+    public final Object getObject(String token, String key) throws NotAuthorizedException {
         if (isAuthenticated(token)) {
             if (map.get(token).get(key) != null) {
                 return map.get(token).get(key);
@@ -53,7 +54,7 @@ public final class AuthenticationService {
                 throw new IllegalStateException();
             }
         } else {
-            throw new AuthenticationException("Not authorized: getObject");
+            throw new NotAuthorizedException("Not authorized: getObject");
         }
     }
 }

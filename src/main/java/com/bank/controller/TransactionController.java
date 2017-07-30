@@ -40,32 +40,24 @@ public class TransactionController {
     }
 
     public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
-            if (accountService.checkIfAccountHolder(iBANToCheck, customerId)) {
-                if(sourceIBAN.endsWith("S")||targetIBAN.endsWith("S")){
-                    transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
-                }else {
-                    transactionCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
-                }
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
+        if (accountService.checkIfAccountHolder(iBANToCheck, customerId)) {
+            if(sourceIBAN.endsWith("S")||targetIBAN.endsWith("S")){
+                transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
+            }else {
+                transactionCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
             }
-        } catch (AuthenticationException e) {
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public List<TransactionProjection> getTransactionsOverview(String authToken, String IBAN, int nrOfTransactions) throws InvalidParamValueException, NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfAccountHolder(IBAN, customerId)) {
-                return transactionOverviewService.getTransactionOverview(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId(), nrOfTransactions);
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfAccountHolder(IBAN, customerId)) {
+            return transactionOverviewService.getTransactionOverview(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId(), nrOfTransactions);
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
