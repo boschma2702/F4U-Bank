@@ -61,4 +61,9 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "set a.buildUpOverdraftInterest = 0 " +
             "where a.isActive = true")
     void resetBuildUpOverdraftInterest();
+
+    @Query("select case when (count(a) > 0)  then true else false end " +
+            "from AccountBean a " +
+            "where a.accountNumber = ?1")
+    boolean isAccountNumberTaken(String accountNumber);
 }

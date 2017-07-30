@@ -45,4 +45,9 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
 
     void deleteCardBeansByCreationDateAfter(Date date);
 
+    @Query("select case when (count(c) > 0) then true else false end " +
+            "from CardBean c " +
+            "where c.pinCard = ?1 " +
+            "and c.accountBean.accountId = ?2")
+    boolean isPinCardTaken(String pinCard, int accountId);
 }
