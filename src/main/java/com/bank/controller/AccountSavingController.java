@@ -24,27 +24,19 @@ public class AccountSavingController {
     private AccountSavingCloseService accountSavingCloseService;
 
     public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfAccountHolder(iBAN, customerId)) {
-                accountSavingOpenService.openSavingsAccount(iBAN);
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfAccountHolder(iBAN, customerId)) {
+            accountSavingOpenService.openSavingsAccount(iBAN);
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public void closeSavingsAccount(String authToken, String iBAN) throws InvalidParamValueException, NotAuthorizedException {
-        try {
-            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if (accountService.checkIfAccountHolder(iBAN, customerId)) {
-                accountSavingCloseService.closeAccount(iBAN);
-            } else {
-                throw new NotAuthorizedException("Not Authorized");
-            }
-        } catch (AuthenticationException e) {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfAccountHolder(iBAN, customerId)) {
+            accountSavingCloseService.closeAccount(iBAN);
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
