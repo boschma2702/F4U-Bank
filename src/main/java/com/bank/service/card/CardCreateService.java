@@ -18,10 +18,7 @@ public class CardCreateService {
     private CardRepository cardRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    private CardPinCardGenerator cardPinCardGenerator;
 
     /**
      * Adds a new card to the given account and links it to the given person.
@@ -40,7 +37,7 @@ public class CardCreateService {
     public CardBean addCard(CustomerBean customerBean, AccountBean accountBean, String pinCode){
         Logger.info("Adding card to CustomerBeanId=$s and AccountBeanId=%s", customerBean.getCustomerId(), accountBean.getAccountId());
         CardBean bean = new CardBean();
-        bean.setPinCard(RandomStringGenerator.generateRandomIntegerString(4));
+        bean.setPinCard(cardPinCardGenerator.generatePinCard(accountBean.getAccountId()));
         bean.setPinCode(pinCode);
         bean.setAccountBean(accountBean);
         bean.setCustomerBean(customerBean);
