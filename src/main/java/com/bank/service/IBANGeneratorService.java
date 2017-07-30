@@ -21,7 +21,7 @@ public class IBANGeneratorService {
      */
     public String generateIBAN() {
         String IBAN = PREFIX + RandomStringGenerator.generateRandomIntegerString(RANDOM_SUFFIX_SIZE);
-        IBAN = (accountRepository.isAcountNumberTaken(IBAN) ? generateIBAN() : IBAN);
+        IBAN = (accountRepository.isAccountNumberTaken(IBAN) ? generateIBAN() : IBAN);
         return IBAN;
     }
 }

@@ -65,5 +65,5 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
     @Query("select case when (count(a) > 0)  then true else false end " +
             "from AccountBean a " +
             "where a.accountNumber = ?1")
-    boolean isAcountNumberTaken(String accountNumber);
+    boolean isAccountNumberTaken(String accountNumber);
 }
