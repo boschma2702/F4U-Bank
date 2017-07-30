@@ -10,17 +10,15 @@ import com.bank.service.account.AccountService;
 import com.bank.service.customer.CustomerService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
+import com.bank.util.Constants;
 import com.bank.util.Logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 
 @Service
 public class CardInvalidateService {
-
-    private static final BigDecimal replaceCosts = new BigDecimal(7.50);
 
     @Autowired
     private CardRepository cardRepository;
@@ -47,7 +45,7 @@ public class CardInvalidateService {
         AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
 
-        transactionService.retrieveTransaction(accountBean, replaceCosts, "Card replacement costs");
+        transactionService.retrieveTransaction(accountBean, Constants.CARD_REPLACEMENT_COSTS, "Card replacement costs");
 
         CardBean newCard;
         if(newPin){
