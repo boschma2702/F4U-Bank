@@ -33,10 +33,15 @@ public class CardCreateService {
      */
     @Transactional
     public CardBean addCard(CustomerBean customerBean, AccountBean accountBean) {
+        return addCard(customerBean, accountBean, RandomStringGenerator.generateRandomIntegerString(4));
+    }
+
+    @Transactional
+    public CardBean addCard(CustomerBean customerBean, AccountBean accountBean, String pinCode){
         Logger.info("Adding card to CustomerBeanId=$s and AccountBeanId=%s", customerBean.getCustomerId(), accountBean.getAccountId());
         CardBean bean = new CardBean();
         bean.setPinCard(RandomStringGenerator.generateRandomIntegerString(4));
-        bean.setPinCode(RandomStringGenerator.generateRandomIntegerString(4));
+        bean.setPinCode(pinCode);
         bean.setAccountBean(accountBean);
         bean.setCustomerBean(customerBean);
         cardRepository.save(bean);

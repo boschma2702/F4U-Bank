@@ -16,6 +16,15 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
     @Query("update CardBean c set c.isActive = false where c.accountBean.accountId = ?1")
     void invalidatePinCards(int accountId);
 
+    @Modifying
+    @Query("update CardBean c " +
+            "set c.isActive = false " +
+            "where c.isActive = true " +
+            "and c.accountBean.accountId = ?1 " +
+            "and c.pinCard = ?2 " +
+            "and ?3 < c.experationDate")
+    void invalidatePinCard(int accountId, String pinCard, Date currentDate);
+
 
     @Query("select c from CardBean c " +
             "where c.isActive = true " +
