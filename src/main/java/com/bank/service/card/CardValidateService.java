@@ -28,11 +28,13 @@ public class CardValidateService {
             }
         }else{
             Logger.error("Invalid combination of pin and pinCard=%s of accountId=%s", pinCard, accountId);
-            if(bean.getAttempts()== Constants.CARD_BLOCK_LIMIT){
-                Logger.warn("pinCard=%s of accountId=%s reached limit of invalid attempts, card gets blocked", pinCard, accountId);
-                bean.setActive(false);
-            }else {
+            if(bean.getAttempts() == Constants.CARD_BLOCK_LIMIT){
+                Logger.info("Attempting to pay with blocked account, pinCard=%s of accountId=%s", pinCard, accountId);
+            }else{
                 bean.setAttempts(bean.getAttempts()+1);
+                if(bean.getAttempts() == Constants.CARD_BLOCK_LIMIT){
+                    bean.setActive(false);
+                }
             }
             cardRepository.save(bean);
             throw new InvalidPINException("Invalid pin information");
