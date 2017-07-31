@@ -4,6 +4,8 @@ import com.bank.service.time.TimeSimulateService;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TimeSimulator implements Runnable {
 
@@ -12,6 +14,10 @@ public class TimeSimulator implements Runnable {
     private Thread thread;
     private PriorityQueue<DayPassedListener> dayPassedListeners = new PriorityQueue<>();
 
+    private static final Lock LOCK_TIME = new ReentrantLock();
+    private static final Lock LOCK_FUNCTIONS = new ReentrantLock();
+
+
     public TimeSimulator(long timeChange) {
         this.timeChange = timeChange;
         thread = new Thread(this);
@@ -19,16 +25,32 @@ public class TimeSimulator implements Runnable {
     }
 
     public Date getCurrentDate() {
-        return new Date(new Date().getTime() + timeChange);
+        LOCK_TIME.lock();
+        try {
+            return new Date(new Date().getTime() + timeChange);
+        } finally {
+            LOCK_TIME.unlock();
+        }
     }
 
     public long getTimeChange() {
-        return timeChange;
+        LOCK_TIME.lock();
+        try {
+            return timeChange;
+        } finally {
+            LOCK_TIME.unlock();
+        }
     }
 
     public void addTimeChange(long amount) {
-        toAdd = amount;
-        thread.interrupt();
+        LOCK_FUNCTIONS.lock();
+        try {
+            toAdd = amount;
+            interruptAndWait();
+        } finally {
+            LOCK_FUNCTIONS.unlock();
+        }
+
     }
 
     public void registerDayPassedListener(DayPassedListener dayPassedListener) {
@@ -42,9 +64,30 @@ public class TimeSimulator implements Runnable {
     }
 
     public void reset() {
-        timeChange = 0;
-        toAdd = 0;
+        LOCK_FUNCTIONS.lock();
+        try {
+            timeChange = 0;
+            toAdd = 0;
+            interruptAndWait();
+        } finally {
+            LOCK_FUNCTIONS.unlock();
+        }
+
+    }
+
+    private void interruptAndWait() {
+        LOCK_FUNCTIONS.lock();
         thread.interrupt();
+        try {
+            thread.join();
+            thread = new Thread(this);
+            thread.start();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            LOCK_FUNCTIONS.unlock();
+        }
+
     }
 
 
@@ -72,24 +115,30 @@ public class TimeSimulator implements Runnable {
                 if (timeChange == 0 && toAdd == 0) {
                     continue;
                 }
+                LOCK_TIME.lock();
 
-                while(toAdd>0) {
-                    //Check if possible to simulate another day
-                    currentDate = getCurrentDate();
-                    long timeStillShort = goalDate.getTimeInMillis() - currentDate.getTime();
-                    if (toAdd > timeStillShort) {
-                        //simulate to 00:00.000 next day (extract from toAdd and add to timeChange
-                        toAdd -= timeStillShort;
-                        timeChange += timeStillShort;
-                        //notify day passed listeners
-                        notifyDayPassedListeners(getStartOfDay(goalDate), getEndOfDay(goalDate));
-                        //set new goalDate
-                        goalDate.add(Calendar.DAY_OF_MONTH, 1);
-                    } else {
-                        timeChange += toAdd;
-                        toAdd = 0;
+                try {
+                    while (toAdd > 0) {
+                        //Check if possible to simulate another day
+                        currentDate = getCurrentDate();
+                        long timeStillShort = goalDate.getTimeInMillis() - currentDate.getTime();
+                        if (toAdd > timeStillShort) {
+                            //simulate to 00:00.000 next day (extract from toAdd and add to timeChange
+                            toAdd -= timeStillShort;
+                            timeChange += timeStillShort;
+                            //notify day passed listeners
+                            notifyDayPassedListeners(getStartOfDay(goalDate), getEndOfDay(goalDate));
+                            //set new goalDate
+                            goalDate.add(Calendar.DAY_OF_MONTH, 1);
+                        } else {
+                            timeChange += toAdd;
+                            toAdd = 0;
+                        }
                     }
+                } finally {
+                    LOCK_TIME.unlock();
                 }
+                break;
             }
 
         }
