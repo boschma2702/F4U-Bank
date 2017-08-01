@@ -54,11 +54,17 @@ public class TransactionController {
     }
 
     public List<TransactionProjection> getTransactionsOverview(String authToken, String IBAN, int nrOfTransactions) throws InvalidParamValueException, NotAuthorizedException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfAccountHolder(IBAN, customerId)) {
-            return transactionOverviewService.getTransactionOverview(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId(), nrOfTransactions);
-        } else {
-            throw new NotAuthorizedException("Not Authorized");
+        if(AuthenticationService.instance.isCustomer(authToken)){
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfAccountHolder(IBAN, customerId)) {
+                return transactionOverviewService.getTransactionOverview(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId(), nrOfTransactions);
+            }
+        }else{
+            boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+            if(isAdministrativeEmployee) {
+                return transactionOverviewService.getTransactionOverview(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId(), nrOfTransactions);
+            }
         }
+        throw new NotAuthorizedException("Not Authorized");
     }
 }
