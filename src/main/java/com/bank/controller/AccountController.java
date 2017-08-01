@@ -125,17 +125,15 @@ public class AccountController {
     }
 
     public AccountOverdraftLimitProjection getOverdraftLimit(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        try {
+        if(AuthenticationService.instance.isCustomer(authToken)){
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)) {
                 return overdraftLimitService.getOverdraft(iBAN);
             }
-        }catch (NotAuthorizedException e){
+        }else{
             boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
             if(isAdministrativeEmployee){
                 return overdraftLimitService.getOverdraft(iBAN);
-            }else{
-                throw e;
             }
         }
         throw new NotAuthorizedException("Not Authorized");

@@ -69,4 +69,15 @@ public final class AuthenticationService {
             throw new NotAuthorizedException("Not authorized: getObject");
         }
     }
+
+    public boolean isCustomer(String token) throws NotAuthorizedException {
+        if(isAuthenticated(token)){
+            if(map.get(token).containsKey(USER_ID)){
+                return true;
+            }else if(map.get(token).containsKey(EMPLOYEE_ID)){
+                return false;
+            }
+        }
+        throw new NotAuthorizedException("not Authorized");
+    }
 }
