@@ -196,18 +196,20 @@ public class RpcController {
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
             @JsonRpcError(exception = NoEffectException.class, code = 420)
     })
-    public Object simulateTime(@JsonRpcParam("nrOfDays") int nrOfDays) throws InvalidParamValueException, NoEffectException {
-        timeController.simulateTime(nrOfDays);
+    public Object simulateTime(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("nrOfDays") int nrOfDays) throws InvalidParamValueException, NoEffectException, NotAuthorizedException {
+        timeController.simulateTime(authToken, nrOfDays);
         return new EmptyJsonResponse();
     }
 
     @JsonRpcErrors({
-            @JsonRpcError(exception = NoEffectException.class, code = 420)
+            @JsonRpcError(exception = NoEffectException.class, code = 420),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
     })
-    public Object reset() throws NoEffectException {
-        timeController.reset();
+    public Object reset(@JsonRpcParam("authToken") String authToken) throws NoEffectException, NotAuthorizedException {
+        timeController.reset(authToken);
         return new EmptyJsonResponse();
     }
 
