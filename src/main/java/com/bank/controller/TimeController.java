@@ -32,6 +32,8 @@ public class TimeController {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         if(isAdministrativeEmployee) {
             timeSimulateService.simulateTime(nrOfDays);
+        }else {
+            throw new NotAuthorizedException("Not Authorized");
         }
     }
 
@@ -46,6 +48,8 @@ public class TimeController {
             } catch (IOException | InterruptedException e) {
                 throw new NoEffectException("Failed to restore");
             }
+        }else {
+            throw new NotAuthorizedException("Not Authorized");
         }
     }
 

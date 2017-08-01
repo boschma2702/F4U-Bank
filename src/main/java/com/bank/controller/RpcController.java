@@ -244,8 +244,11 @@ public class RpcController {
     @Autowired
     private LoggingController loggingController;
 
-    public Object getEventLogs(@JsonRpcParam("beginDate") Date beginDate, @JsonRpcParam("endDate") Date endDate){
-        return loggingController.getEventLogs(beginDate, endDate);
+    @JsonRpcErrors({
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object getEventLogs(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("beginDate") Date beginDate, @JsonRpcParam("endDate") Date endDate) throws NotAuthorizedException {
+        return loggingController.getEventLogs(authToken, beginDate, endDate);
     }
 
     /**
