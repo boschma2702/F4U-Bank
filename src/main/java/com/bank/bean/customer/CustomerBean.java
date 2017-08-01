@@ -10,7 +10,7 @@ import java.sql.Date;
  * The Customer class contains all relevant data values related to a customer.
  */
 @Entity
-@Table(name = "customer", uniqueConstraints = @UniqueConstraint(columnNames = {"user_name"}))
+@Table(name = "customer")
 public class CustomerBean {
     /**
      * Internal customer id.
@@ -56,15 +56,6 @@ public class CustomerBean {
      * Email address of the customer, currently no validation is implemented.
      */
     private String email;
-    /**
-     * User name for customer they can use for authentication.
-     */
-    @Column(name = "user_name", unique = true, nullable = false)
-    private String username;
-    /**
-     * Password of the customer
-     */
-    private String password;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
@@ -150,22 +141,6 @@ public class CustomerBean {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @PrePersist

@@ -2,6 +2,7 @@ package com.bank.service.account;
 
 import com.bank.bean.card.CardBean;
 import com.bank.bean.customer.CustomerBean;
+import com.bank.bean.person.PersonBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.service.customer.CustomerCreateService;
@@ -56,10 +57,13 @@ public class AccountOpenService {
         customerBean.setAddress(address);
         customerBean.setTelephoneNumber(telephoneNumber);
         customerBean.setEmail(email);
-        customerBean.setUsername(username);
-        customerBean.setPassword(password);
 
-        customerCreateService.createCustomer(customerBean);
+        PersonBean personBean = new PersonBean();
+        personBean.setUsername(username);
+        personBean.setPassword(password);
+        personBean.setCustomerBean(customerBean);
+
+        customerCreateService.createCustomer(personBean);
 
         CardBean cardBean = accountCreateService.createAccount(customerBean.getCustomerId(), true);
 

@@ -5,5 +5,5 @@ import com.bank.projection.session.SessionPasswordProjection;
 import org.springframework.data.repository.CrudRepository;
 
 public interface LoginRepository extends CrudRepository<CustomerBean, Integer> {
-    SessionPasswordProjection findByUsername(String username);
+//    SessionPasswordProjection findByUsername(String username);
 }

@@ -14,19 +14,20 @@ import java.util.List;
 public interface CustomerRepository extends CrudRepository<CustomerBean, Integer> {
     CustomerBean getCustomerBeanByCustomerId(int customerId);
 
-    CustomerBean getCustomerBeanByUsername(String username);
+//    CustomerBean getCustomerBeanByUsername(String username);
 
     @Modifying
     @Query("update CustomerBean c set c.isActive = false where c.customerId = ?1")
     void closeCustomer(int customerId);
 
-    @Query("select new com.bank.projection.customer.CustomerAccountAccessProjection(account.accountNumber, customer.username) " +
-            "from CustomerBean customer, CustomerAccount customeraccount, CustomerAccount main, AccountBean account " +
+    @Query("select new com.bank.projection.customer.CustomerAccountAccessProjection(account.accountNumber, person.username) " +
+            "from CustomerBean customer, CustomerAccount customeraccount, CustomerAccount main, AccountBean account, PersonBean person " +
             "where customeraccount.customerId = ?1 " +
             "and main.isMain = true " +
             "and customeraccount.accountId = main.accountId " +
             "and customeraccount.accountId = account.accountId " +
-            "and main.customerId = customer.customerId")
+            "and main.customerId = customer.customerId " +
+            "and person.customerBean.customerId = customer.customerId")
     List<CustomerAccountAccessProjection> getCustomerAccess(int customerId);
 
     void deleteCustomerBeansByCreationDateAfter(Date date);
