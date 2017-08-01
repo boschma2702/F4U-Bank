@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 public final class AuthenticationService {
     public static final String USER_ID = "userId";
+    public static final String EMPLOYEE_ID = "employeeId";
+    public static final String ADMINISTRATIVE_EMPLOYEE = "administrativeEmployee";
 
     public static AuthenticationService instance = new AuthenticationService();
 
@@ -21,11 +23,21 @@ public final class AuthenticationService {
 
     }
 
-    public final String login(int userId) {
+    public String customerLogin(int userId) {
         Logger.info("Login of userId=%s", userId);
         String token = generateToken();
         map.put(token, new HashMap<String, Object>());
         map.get(token).put(USER_ID, userId);
+        return token;
+    }
+
+    public String employeeLogin(int employeeId, boolean administrativeEmployee){
+        Logger.info("Login of employeeId=%s", employeeId);
+        String token = generateToken();
+        HashMap<String, Object> info = new HashMap<>();
+        info.put(EMPLOYEE_ID, employeeId);
+        info.put(ADMINISTRATIVE_EMPLOYEE, administrativeEmployee);
+        map.put(token, info);
         return token;
     }
 
@@ -51,7 +63,7 @@ public final class AuthenticationService {
             if (map.get(token).get(key) != null) {
                 return map.get(token).get(key);
             } else {
-                throw new IllegalStateException();
+                throw new IllegalStateException(String.format("key=%s is not set", key));
             }
         } else {
             throw new NotAuthorizedException("Not authorized: getObject");
