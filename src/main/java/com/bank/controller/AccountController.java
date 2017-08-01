@@ -90,21 +90,33 @@ public class AccountController {
     }
 
     public AccountAmountProjection getBalance(String authToken, String IBAN) throws NotAuthorizedException, InvalidParamValueException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfAccountHolder(IBAN, customerId)) {
-            return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
-        } else {
-            throw new NotAuthorizedException("Not Authorized");
+        if(AuthenticationService.instance.isCustomer(authToken)){
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfAccountHolder(IBAN, customerId)) {
+                return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+            }
+        }else{
+            boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+            if(isAdministrativeEmployee){
+                return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+            }
         }
+        throw new NotAuthorizedException("Not Authorized");
     }
 
     public List<CustomerUsernameProjection> getBankAccountAccess(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-            return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
-        } else {
-            throw new NotAuthorizedException("Not Authorized");
+        if(AuthenticationService.instance.isCustomer(authToken)){
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+                return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+            }
+        }else{
+            boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+            if(isAdministrativeEmployee){
+                return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
+            }
         }
+        throw new NotAuthorizedException("Not Authorized");
     }
 
     public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException {
@@ -117,11 +129,17 @@ public class AccountController {
     }
 
     public AccountOverdraftLimitProjection getOverdraftLimit(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
-            return overdraftLimitService.getOverdraft(iBAN);
+        if(AuthenticationService.instance.isCustomer(authToken)){
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)) {
+                return overdraftLimitService.getOverdraft(iBAN);
+            }
         }else{
-            throw new NotAuthorizedException("Not Authorized");
+            boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+            if(isAdministrativeEmployee){
+                return overdraftLimitService.getOverdraft(iBAN);
+            }
         }
+        throw new NotAuthorizedException("Not Authorized");
     }
 }

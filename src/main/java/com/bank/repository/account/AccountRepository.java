@@ -31,10 +31,11 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "where a.accountId = ?1")
     void updateAmount(int accountId, BigDecimal amount);
 
-    @Query("select new com.bank.projection.customer.CustomerUsernameProjection(customer.username) " +
-            "from CustomerAccount customeraccount, CustomerBean customer " +
+    @Query("select new com.bank.projection.customer.CustomerUsernameProjection(person.username) " +
+            "from CustomerAccount customeraccount, CustomerBean customer, PersonBean person " +
             "where customeraccount.accountId = ?1 " +
-            "and customeraccount.customerId = customer.customerId")
+            "and customeraccount.customerId = customer.customerId " +
+            "and person.customerBean.customerId = customer.customerId")
     List<CustomerUsernameProjection> getBankAccountAccess(int accountId);
 
 

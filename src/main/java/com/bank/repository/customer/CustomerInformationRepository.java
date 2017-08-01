@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CustomerInformationRepository extends CrudRepository<CustomerBean, Integer> {
-    CustomerIdProjection findByUsername(String username);
+//    CustomerIdProjection findByUsername(String username);
 }

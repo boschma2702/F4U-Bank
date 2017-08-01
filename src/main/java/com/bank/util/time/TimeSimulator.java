@@ -112,12 +112,14 @@ public class TimeSimulator implements Runnable {
                 notifyDayPassedListeners(getStartOfDay(goalDate), getEndOfDay(goalDate));
             } catch (InterruptedException e) {
                 //skip if it was a reset
-                if (timeChange == 0 && toAdd == 0) {
-                    continue;
-                }
                 LOCK_TIME.lock();
-
                 try {
+                    if (timeChange == 0 && toAdd == 0) {
+                        break;
+                    }
+
+
+
                     while (toAdd > 0) {
                         //Check if possible to simulate another day
                         currentDate = getCurrentDate();

@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 public final class AuthenticationService {
     public static final String USER_ID = "userId";
+    public static final String EMPLOYEE_ID = "employeeId";
+    public static final String HAS_ADMINISTRATIVE_ACCESS = "administrativeEmployee";
 
     public static AuthenticationService instance = new AuthenticationService();
 
@@ -21,11 +23,21 @@ public final class AuthenticationService {
 
     }
 
-    public final String login(int userId) {
+    public String customerLogin(int userId) {
         Logger.info("Login of userId=%s", userId);
         String token = generateToken();
         map.put(token, new HashMap<String, Object>());
         map.get(token).put(USER_ID, userId);
+        return token;
+    }
+
+    public String employeeLogin(int employeeId, boolean administrativeEmployee){
+        Logger.info("Login of employeeId=%s", employeeId);
+        String token = generateToken();
+        HashMap<String, Object> info = new HashMap<>();
+        info.put(EMPLOYEE_ID, employeeId);
+        info.put(HAS_ADMINISTRATIVE_ACCESS, administrativeEmployee);
+        map.put(token, info);
         return token;
     }
 
@@ -51,10 +63,21 @@ public final class AuthenticationService {
             if (map.get(token).get(key) != null) {
                 return map.get(token).get(key);
             } else {
-                throw new IllegalStateException();
+                throw new NotAuthorizedException("Not authorized: getObject");
             }
         } else {
             throw new NotAuthorizedException("Not authorized: getObject");
         }
+    }
+
+    public boolean isCustomer(String token) throws NotAuthorizedException {
+        if(isAuthenticated(token)){
+            if(map.get(token).containsKey(USER_ID)){
+                return true;
+            }else if(map.get(token).containsKey(EMPLOYEE_ID)){
+                return false;
+            }
+        }
+        throw new NotAuthorizedException("not Authorized");
     }
 }
