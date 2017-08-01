@@ -90,17 +90,15 @@ public class AccountController {
     }
 
     public AccountAmountProjection getBalance(String authToken, String IBAN) throws NotAuthorizedException, InvalidParamValueException {
-        try {
+        if(AuthenticationService.instance.isCustomer(authToken)){
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfAccountHolder(IBAN, customerId)) {
                 return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
-        }catch (NotAuthorizedException e){
+        }else{
             boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
             if(isAdministrativeEmployee){
                 return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
-            }else{
-                throw e;
             }
         }
         throw new NotAuthorizedException("Not Authorized");
