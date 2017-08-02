@@ -33,7 +33,7 @@ public class CardBean {
     @Column(name = "pin_code")
     private String pinCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private CustomerBean customerBean;
 
