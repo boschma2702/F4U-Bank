@@ -32,12 +32,4 @@ public class AccountSavingController {
         }
     }
 
-    public void closeSavingsAccount(String authToken, String iBAN) throws InvalidParamValueException, NotAuthorizedException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfAccountHolder(iBAN, customerId)) {
-            accountSavingCloseService.closeAccount(iBAN);
-        } else {
-            throw new NotAuthorizedException("Not Authorized");
-        }
-    }
 }
