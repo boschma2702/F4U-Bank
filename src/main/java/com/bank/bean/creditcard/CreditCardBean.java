@@ -1,5 +1,6 @@
 package com.bank.bean.creditcard;
 
+import ch.qos.logback.classic.db.names.ColumnName;
 import com.bank.bean.account.AccountBean;
 import com.bank.service.time.TimeService;
 
@@ -9,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Entity
-@Table(name = "credit_card")
+@Table(name = "credit_card", uniqueConstraints = @UniqueConstraint(columnNames = {"credit_card_number"}))
 public class CreditCardBean {
 
     @Id
@@ -17,8 +18,11 @@ public class CreditCardBean {
     @Column(name = "credit_card_id")
     private int accountId;
 
-    @Column(name = "credit_card_number", unique = true)
+    @Column(name = "credit_card_number")
     private String creditCardNumber;
+
+    @Column(name = "credit_card_pin", nullable = false)
+    private String creditCardPin;
 
     @Column(scale = 2)
     private BigDecimal credit = new BigDecimal(1000);
@@ -90,6 +94,14 @@ public class CreditCardBean {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getCreditCardPin() {
+        return creditCardPin;
+    }
+
+    public void setCreditCardPin(String creditCardPin) {
+        this.creditCardPin = creditCardPin;
     }
 
     @PrePersist
