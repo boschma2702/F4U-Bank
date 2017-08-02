@@ -1,6 +1,5 @@
 package com.bank.bean.creditcard;
 
-import ch.qos.logback.classic.db.names.ColumnName;
 import com.bank.bean.account.AccountBean;
 import com.bank.service.time.TimeService;
 
@@ -16,7 +15,7 @@ public class CreditCardBean {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "credit_card_id")
-    private int accountId;
+    private int creditCardId;
 
     @Column(name = "credit_card_number")
     private String creditCardNumber;
@@ -26,6 +25,9 @@ public class CreditCardBean {
 
     @Column(scale = 2)
     private BigDecimal credit = new BigDecimal(1000);
+
+    @Column(name = "credit_limit", scale = 2)
+    private BigDecimal creditLimit = new BigDecimal(1000);
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -40,12 +42,12 @@ public class CreditCardBean {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
-    public int getAccountId() {
-        return accountId;
+    public int getCreditCardId() {
+        return creditCardId;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setCreditCardId(int creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     public String getCreditCardNumber() {
@@ -102,6 +104,14 @@ public class CreditCardBean {
 
     public void setCreditCardPin(String creditCardPin) {
         this.creditCardPin = creditCardPin;
+    }
+
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(BigDecimal creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     @PrePersist
