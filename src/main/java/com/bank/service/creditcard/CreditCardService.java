@@ -16,11 +16,32 @@ public class CreditCardService {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
-    public CreditCardBean getCreditCardBeanByCreditCardNumber(String creditCardNumber) throws InvalidParamValueException {
+    public CreditCardBean getCreditCardBeanByCreditCardNumber(String creditCardNumber, boolean pastActivationDate) throws InvalidParamValueException {
         Logger.info("Retrieving credit card with creditCardNumber=%s", creditCardNumber);
-        CreditCardBean creditCardBean = creditCardRepository.findCreditCardBeanByCreditCardNumber(creditCardNumber, TimeService.TIMESIMULATOR.getCurrentDate());
-        if(creditCardBean == null){
+        CreditCardBean creditCardBean;
+        if (pastActivationDate) {
+            creditCardBean = creditCardRepository.findCreditCardBeanByCreditCardNumber(creditCardNumber, TimeService.TIMESIMULATOR.getCurrentDate());
+        } else {
+            creditCardBean = creditCardRepository.findCreditCardBeanByCreditCardNumber(creditCardNumber);
+        }
+
+        if (creditCardBean == null) {
             Logger.error("Could not retrieve credit card with creditCardNumber=%s", creditCardNumber);
+            throw new InvalidParamValueException("Could not find credit card");
+        }
+        return creditCardBean;
+    }
+
+    public CreditCardBean getCreditCardBeanByAccountId(int accountId, boolean pastActivationDate) throws InvalidParamValueException {
+        Logger.info("Retrieving credit card of accountId=%s", accountId);
+        CreditCardBean creditCardBean;
+        if (pastActivationDate) {
+            creditCardBean = creditCardRepository.getCreditCardBeanByAccountId(accountId, TimeService.TIMESIMULATOR.getCurrentDate());
+        } else {
+            creditCardBean = creditCardRepository.getCreditCardBeanByAccountId(accountId);
+        }
+        if (creditCardBean == null) {
+            Logger.error("Could not retrieve credit card of accountId=%s", accountId);
             throw new InvalidParamValueException("Could not find credit card");
         }
         return creditCardBean;

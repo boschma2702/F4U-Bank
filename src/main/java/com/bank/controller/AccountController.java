@@ -11,8 +11,11 @@ import com.bank.projection.customer.CustomerUsernameProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.*;
+import com.bank.service.account.accountsaving.AccountSavingCloseService;
+import com.bank.service.creditcard.CreditCardCloseService;
 import com.bank.service.customer.CustomerService;
 import com.bank.service.overdraft.OverdraftLimitService;
+import com.bank.util.AccountType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,12 @@ public class AccountController {
 
     @Autowired
     private AccountCloseService accountCloseService;
+
+    @Autowired
+    private AccountSavingCloseService accountSavingCloseService;
+
+    @Autowired
+    private CreditCardCloseService creditCardCloseService;
 
     @Autowired
     private AccountAccessService accountAccessService;
@@ -62,8 +71,19 @@ public class AccountController {
 
     public void closeAccount(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-            accountCloseService.closeAccount(IBAN, customerId);
+        String normalizedAccountNumber = AccountType.getNormalizedAccount(IBAN);
+        if (accountService.checkIfIsMainAccountHolder(normalizedAccountNumber, customerId)) {
+            switch (AccountType.getAccountType(IBAN)){
+                case CREDIT:
+                    creditCardCloseService.closeCreditCard(accountService.getAccountBeanByAccountNumber(normalizedAccountNumber).getAccountId());
+                    break;
+                case SAVING:
+                    accountSavingCloseService.closeAccount(normalizedAccountNumber);
+                    break;
+                default:
+                    accountCloseService.closeAccount(IBAN, customerId);
+                    break;
+            }
         } else {
             throw new NotAuthorizedException("Not Authorized");
         }

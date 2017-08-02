@@ -15,7 +15,7 @@ public class CreditCardValidateService {
 
     public CreditCardBean validateCreditCard(String creditCardNumber, String pinCode) throws InvalidParamValueException, InvalidPINException {
         Logger.info("Validating creditCardNumber=%s", creditCardNumber);
-        CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByCreditCardNumber(creditCardNumber);
+        CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByCreditCardNumber(creditCardNumber, true);
         if(!creditCardBean.getCreditCardPin().equals(pinCode)){
             Logger.error("Invalid combination of creditCardId=%s and pinCode", creditCardBean.getCreditCardId());
             throw new InvalidPINException("Invalid credit card number and pincode");

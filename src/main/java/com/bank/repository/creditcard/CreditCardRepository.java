@@ -30,6 +30,25 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
             "and c.activationDate < ?2")
     CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber, Date currentDate);
 
+    @Query("Select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = true " +
+            "and c.creditCardNumber = ?1 ")
+    CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber);
+
+    @Query("select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = true " +
+            "and c.accountBean.accountId = ?1 " +
+            "and c.activationDate < ?2")
+    CreditCardBean getCreditCardBeanByAccountId(int accountId, Date currentDate);
+
+    @Query("select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = true " +
+            "and c.accountBean.accountId = ?1 ")
+    CreditCardBean getCreditCardBeanByAccountId(int accountId);
+
     @Query("select case when (count(c) > 0)  then true else false end " +
             "from CreditCardBean c " +
             "where c.accountBean.accountId = ?1 " +
