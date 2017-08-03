@@ -62,4 +62,10 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
             "and c.credit <> c.creditLimit " +
             "and c.activationDate < ?1")
     List<CreditCardBean> getCreditCardsWithUsedCredit(Date currentDate);
+
+    @Query("select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = true " +
+            "and c.activationDate < ?1")
+    List<CreditCardBean> getAllActiveCreditCards(Date currentDate);
 }
