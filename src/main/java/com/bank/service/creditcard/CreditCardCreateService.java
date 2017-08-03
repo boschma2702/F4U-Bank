@@ -24,16 +24,19 @@ public class CreditCardCreateService {
     private CreditCardNumberGenerator creditCardNumberGenerator;
 
     public CardProjection createCreditCard(int accountId) throws InvalidParamValueException {
+        return createCreditCard(accountId, RandomStringGenerator.generateRandomIntegerString(4));
+    }
+
+    public CardProjection createCreditCard(int accountId, String pinCode) throws InvalidParamValueException {
         Logger.info("Creating credit card for accountId=%s", accountId);
         if(creditCardRepository.hasAccountIdCreditCard(accountId)){
             Logger.error("Could not create credit card, accountId=%s already has active account", accountId);
             throw new InvalidParamValueException("Already active credit card present");
         }
-
         AccountBean accountBean = accountRepository.findAccountBeansByAccountId(accountId);
         CreditCardBean creditCardBean = new CreditCardBean();
         creditCardBean.setCreditCardNumber(creditCardNumberGenerator.generateCreditCardNumber());
-        creditCardBean.setCreditCardPin(RandomStringGenerator.generateRandomIntegerString(4));
+        creditCardBean.setCreditCardPin(pinCode);
         creditCardBean.setAccountBean(accountBean);
         creditCardRepository.save(creditCardBean);
 
@@ -42,6 +45,5 @@ public class CreditCardCreateService {
         cardProjection.setPinCode(creditCardBean.getCreditCardPin());
         return cardProjection;
     }
-
 
 }
