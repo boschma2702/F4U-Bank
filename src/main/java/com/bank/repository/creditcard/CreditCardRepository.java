@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface CreditCardRepository extends CrudRepository<CreditCardBean, Integer> {
@@ -54,4 +55,11 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
             "where c.accountBean.accountId = ?1 " +
             "and c.isActive = true")
     boolean hasAccountIdCreditCard(int accountId);
+
+    @Query("select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = true " +
+            "and c.credit <> c.creditLimit " +
+            "and c.activationDate < ?1")
+    List<CreditCardBean> getCreditCardsWithUsedCredit(Date currentDate);
 }

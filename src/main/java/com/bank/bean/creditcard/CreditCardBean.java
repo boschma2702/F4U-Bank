@@ -29,7 +29,7 @@ public class CreditCardBean {
     @Column(name = "credit_limit", scale = 2)
     private BigDecimal creditLimit = new BigDecimal(1000);
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "account_id")
     private AccountBean accountBean;
 
