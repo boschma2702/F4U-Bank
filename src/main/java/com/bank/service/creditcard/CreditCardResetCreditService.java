@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CreditCardCostService extends DayPassedListener {
+public class CreditCardResetCreditService extends DayPassedListener {
 
     @Autowired
     private CreditCardRepository creditCardRepository;
