@@ -29,13 +29,13 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
             "where c.isActive = true " +
             "and c.creditCardNumber = ?1 " +
             "and c.activationDate < ?2")
-    CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber, Date currentDate);
+    CreditCardBean findActiveCreditCardBeanByCreditCardNumber(String creditCardNumber, Date currentDate);
 
     @Query("Select c " +
             "from CreditCardBean c " +
             "where c.isActive = true " +
             "and c.creditCardNumber = ?1 ")
-    CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber);
+    CreditCardBean findActiveCreditCardBeanByCreditCardNumber(String creditCardNumber);
 
     @Query("select c " +
             "from CreditCardBean c " +
@@ -68,4 +68,12 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
             "where c.isActive = true " +
             "and c.activationDate < ?1")
     List<CreditCardBean> getAllActiveCreditCards(Date currentDate);
+
+    @Query("select c " +
+            "from CreditCardBean c " +
+            "where c.isActive = false " +
+            "and c.creditCardNumber = ?1")
+    CreditCardBean getBlockedCardByCreditCardNumber(String creditCardNumber);
+
+    CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber);
 }

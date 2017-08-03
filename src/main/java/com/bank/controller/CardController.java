@@ -10,6 +10,9 @@ import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
 import com.bank.service.card.CardInvalidateService;
 import com.bank.service.card.CardUnblockService;
+import com.bank.service.creditcard.CreditCardService;
+import com.bank.service.creditcard.CreditCardUnblockService;
+import com.bank.util.CreditCardNumberChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +28,23 @@ public class CardController {
     @Autowired
     private CardInvalidateService cardInvalidateService;
 
+    @Autowired
+    private CreditCardService creditCardService;
+
+    @Autowired
+    private CreditCardUnblockService creditCardUnblockService;
+
     public void unblockCard(String authToken, String iBan, String pinCard) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if(accountService.checkIfIsMainAccountHolder(iBan, customerId)){
-            int accountId = accountService.getAccountBeanByAccountNumber(iBan).getAccountId();
-            cardUnblockService.unblockCard(accountId, pinCard);
+        boolean isCredit = CreditCardNumberChecker.isCreditCardNumber(pinCard);
+        String normalizedIBAN = isCredit ? creditCardService.getCreditCardBean(pinCard).getAccountBean().getAccountNumber() : iBan;
+        if(accountService.checkIfIsMainAccountHolder(normalizedIBAN, customerId)){
+            if(isCredit){
+                creditCardUnblockService.unblockCard(pinCard);
+            }else{
+                int accountId = accountService.getAccountBeanByAccountNumber(iBan).getAccountId();
+                cardUnblockService.unblockCard(accountId, pinCard);
+            }
         }else{
             throw new NotAuthorizedException("Not Authorized");
         }
