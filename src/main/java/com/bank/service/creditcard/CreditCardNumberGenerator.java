@@ -14,9 +14,25 @@ public class CreditCardNumberGenerator {
     private CreditCardRepository creditCardRepository;
 
     public String generateCreditCardNumber(){
-        String creditCardNumber = PREFIX + RandomStringGenerator.generateRandomIntegerString(10);
+        String creditCardNumber = generateCreditCardNumberCheckDigit(PREFIX + RandomStringGenerator.generateRandomIntegerString(9));
         return creditCardRepository.isCreditCardNumberTaken(creditCardNumber) ? generateCreditCardNumber() : creditCardNumber;
     }
 
-
+    private String generateCreditCardNumberCheckDigit(String creditCardNumber){
+        char[] charArray = creditCardNumber.toCharArray();
+        boolean doubleValue = true;
+        int sum = 0;
+        for(int i=charArray.length-1; i>=0; i--){
+            int number = Character.getNumericValue(charArray[i]);
+            if(doubleValue){
+                number = number*2;
+                number = number>9 ? number-9 : number;
+            }
+            sum += number;
+            doubleValue = !doubleValue;
+        }
+        sum = sum*9;
+        int checkDigit = sum % 10;
+        return creditCardNumber+checkDigit;
+    }
 }
