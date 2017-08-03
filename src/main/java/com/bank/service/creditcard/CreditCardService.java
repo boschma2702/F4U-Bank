@@ -18,9 +18,9 @@ public class CreditCardService {
         Logger.info("Retrieving credit card with creditCardNumber=%s", creditCardNumber);
         CreditCardBean creditCardBean;
         if (pastActivationDate) {
-            creditCardBean = creditCardRepository.findActiveCreditCardBeanByCreditCardNumber(creditCardNumber, TimeService.TIMESIMULATOR.getCurrentDate());
+            creditCardBean = creditCardRepository.findActiveCreditCardBeanAfterActivationByCreditCardNumber(creditCardNumber, TimeService.TIMESIMULATOR.getCurrentDate());
         } else {
-            creditCardBean = creditCardRepository.findActiveCreditCardBeanByCreditCardNumber(creditCardNumber);
+            creditCardBean = creditCardRepository.findActiveCreditCardBeanByCreditCardNumber(creditCardNumber, TimeService.TIMESIMULATOR.getCurrentDate());
         }
 
         if (creditCardBean == null) {
@@ -43,9 +43,9 @@ public class CreditCardService {
         Logger.info("Retrieving credit card of accountId=%s", accountId);
         CreditCardBean creditCardBean;
         if (pastActivationDate) {
-            creditCardBean = creditCardRepository.getCreditCardBeanByAccountId(accountId, TimeService.TIMESIMULATOR.getCurrentDate());
+            creditCardBean = creditCardRepository.getCreditCardBeanAfterActivationByAccountId(accountId, TimeService.TIMESIMULATOR.getCurrentDate());
         } else {
-            creditCardBean = creditCardRepository.getCreditCardBeanByAccountId(accountId);
+            creditCardBean = creditCardRepository.getCreditCardBeanByAccountId(accountId, TimeService.TIMESIMULATOR.getCurrentDate());
         }
         if (creditCardBean == null) {
             Logger.error("Could not retrieve credit card of accountId=%s", accountId);

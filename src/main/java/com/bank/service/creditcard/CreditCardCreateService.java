@@ -6,6 +6,7 @@ import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.pin.CardProjection;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.creditcard.CreditCardRepository;
+import com.bank.service.time.TimeService;
 import com.bank.util.RandomStringGenerator;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class CreditCardCreateService {
 
     public CardProjection createCreditCard(int accountId, String pinCode) throws InvalidParamValueException {
         Logger.info("Creating credit card for accountId=%s", accountId);
-        if(creditCardRepository.hasAccountIdCreditCard(accountId)){
+        if(creditCardRepository.hasAccountIdCreditCard(accountId, TimeService.TIMESIMULATOR.getCurrentDate())){
             Logger.error("Could not create credit card, accountId=%s already has active account", accountId);
             throw new InvalidParamValueException("Already active credit card present");
         }
