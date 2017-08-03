@@ -42,6 +42,14 @@ public class CreditCardBean {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
+    @Column(name = "expiration_date")
+    private Date expirationDate;
+
+    private int attempts = 0;
+
+    public CreditCardBean() {
+    }
+
     public int getCreditCardId() {
         return creditCardId;
     }
@@ -114,6 +122,22 @@ public class CreditCardBean {
         this.creditLimit = creditLimit;
     }
 
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
+    }
+
     @PrePersist
     public void setDate(){
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
@@ -121,6 +145,10 @@ public class CreditCardBean {
         calendar.setTime(creationDate);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         activationDate = calendar.getTime();
+
+        calendar.setTime(creationDate);
+        calendar.add(Calendar.YEAR, 4);
+        expirationDate = calendar.getTime();
     }
 
 }
