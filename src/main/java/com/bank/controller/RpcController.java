@@ -267,14 +267,6 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-    @JsonRpcErrors({
-            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
-            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
-    })
-    public Object closeSavingsAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        accountSavingController.closeSavingsAccount(authToken, iBAN);
-        return new EmptyJsonResponse();
-    }
 
     /**
      * Card invalidation extension
@@ -286,5 +278,21 @@ public class RpcController {
     public Object invalidateCard(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("pinCard") String pinCard, @JsonRpcParam("newPin") boolean newPin) throws NotAuthorizedException, InvalidParamValueException {
         return cardController.invalidateCard(authToken, iBAN, pinCard, newPin);
     }
+
+    /**
+     * CreditCard extension
+     */
+
+    @Autowired
+    private CreditCardController creditCardController;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object requestCreditCard(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+        return creditCardController.requestCreditCard(authToken, iBAN);
+    }
+
 
 }
