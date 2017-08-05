@@ -40,15 +40,21 @@ public class TransactionController {
     }
 
     public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
-        if (accountService.checkIfAccountHolder(iBANToCheck, customerId)) {
-            if(sourceIBAN.endsWith("S")||targetIBAN.endsWith("S")){
+        boolean authenticated = false;
+        if(AuthenticationService.instance.isCustomer(authToken)){
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            authenticated = accountService.checkIfAccountHolder(iBANToCheck, customerId);
+        }else {
+            authenticated = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+        }
+        if(authenticated) {
+            if (sourceIBAN.endsWith("S") || targetIBAN.endsWith("S")) {
                 transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
-            }else {
+            } else {
                 transactionCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
             }
-        } else {
+        }else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
