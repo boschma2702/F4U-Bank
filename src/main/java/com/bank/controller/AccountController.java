@@ -51,6 +51,9 @@ public class AccountController {
     @Autowired
     private OverdraftLimitService overdraftLimitService;
 
+    @Autowired
+    private AccountFreezeService accountFreezeService;
+
     public AccountOpenProjection openAccount(String name,
                                              String surname,
                                              String initials,
@@ -161,5 +164,14 @@ public class AccountController {
             }
         }
         throw new NotAuthorizedException("Not Authorized");
+    }
+
+    public void setFreezeUserAccount(String authToken, String iBAN, boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+        boolean isAdmin = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
+        if(isAdmin){
+            accountFreezeService.freezeAccount(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId(), freeze);
+        }else{
+            throw new NotAuthorizedException("Not Authorized");
+        }
     }
 }

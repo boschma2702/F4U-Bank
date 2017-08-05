@@ -62,6 +62,8 @@ public class AccountBean {
     @Column(name = "build_up_overdraft_interest")
     private double buildUpOverdraftInterest = 0;
 
+    private boolean frozen = false;
+
     public int getAccountId() {
         return accountId;
     }
@@ -132,6 +134,14 @@ public class AccountBean {
 
     public void setBuildUpOverdraftInterest(double buildUpOverdraftInterest) {
         this.buildUpOverdraftInterest = buildUpOverdraftInterest;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
     }
 
     @PrePersist

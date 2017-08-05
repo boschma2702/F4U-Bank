@@ -294,5 +294,18 @@ public class RpcController {
         return creditCardController.requestCreditCard(authToken, iBAN);
     }
 
+    /**
+     * Administrive (II)
+     */
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
+            @JsonRpcError(exception = NoEffectException.class, code = 420)
+    })
+    public Object setFreezeUserAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("freeze") boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+        accountController.setFreezeUserAccount(authToken, iBAN, freeze);
+        return new EmptyJsonResponse();
+    }
 
 }
