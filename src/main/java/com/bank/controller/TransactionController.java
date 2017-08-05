@@ -1,9 +1,6 @@
 package com.bank.controller;
 
-import com.bank.exception.AuthenticationException;
-import com.bank.exception.InvalidPINException;
-import com.bank.exception.InvalidParamValueException;
-import com.bank.exception.NotAuthorizedException;
+import com.bank.exception.*;
 import com.bank.projection.transaction.TransactionProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
@@ -31,15 +28,17 @@ public class TransactionController {
     @Autowired
     private TransactionOverviewService transactionOverviewService;
 
-    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
-        transactionCreateService.depositIntoAccount(IBAN, pinCard, pinCode, amount);
+    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException, AccountFrozenException {
+        transactionCreateService.depositIntoAccount(accountService.getAccountBeanByAccountNumberCheckFrozen(IBAN).getAccountId(), pinCard, pinCode, amount);
     }
 
-    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
-        transactionCreateService.payFromAccount(sourceIBAN, targetIBAN, pinCard, pinCode, amount);
+    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException, AccountFrozenException {
+        int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(sourceIBAN).getAccountId();
+        int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(targetIBAN).getAccountId();
+        transactionCreateService.payFromAccount(sourceId, targetId, pinCard, pinCode, amount);
     }
 
-    public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException {
+    public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
         boolean authenticated = false;
         if(AuthenticationService.instance.isCustomer(authToken)){
@@ -49,6 +48,8 @@ public class TransactionController {
             authenticated = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         }
         if(authenticated) {
+            int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(sourceIBAN).getAccountId();
+            int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(targetIBAN).getAccountId();
             if (sourceIBAN.endsWith("S") || targetIBAN.endsWith("S")) {
                 transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
             } else {

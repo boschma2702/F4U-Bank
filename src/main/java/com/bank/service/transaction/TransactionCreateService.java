@@ -34,15 +34,15 @@ public class TransactionCreateService {
     @Autowired
     private TransactionCreditCardService transactionCreditCardService;
 
-    public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidPINException, InvalidParamValueException {
-        AccountBean accountBean = accountService.getAccountBeanByAccountNumber(IBAN);
+    public void depositIntoAccount(int accountId, String pinCard, String pinCode, BigDecimal amount) throws InvalidPINException, InvalidParamValueException {
+        AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         CardBean cardBean = cardValidateService.validateCard(accountBean.getAccountId(), pinCard, pinCode);
         transactionService.doSingleTransaction(accountBean, cardBean, amount);
     }
 
-    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
-        AccountBean sourceAccountBean = accountService.getAccountBeanByAccountNumber(sourceIBAN);
-        AccountBean targetAccountBean = accountService.getAccountBeanByAccountNumber(targetIBAN);
+    public void payFromAccount(int sourceId, int targetId, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException {
+        AccountBean sourceAccountBean = accountService.getAccountBeanByAccountId(sourceId);
+        AccountBean targetAccountBean = accountService.getAccountBeanByAccountId(targetId);
         if(CreditCardNumberChecker.isCreditCardNumber(pinCard)){
             CreditCardBean creditCardBean = creditCardValidateService.validateCreditCard(pinCard, pinCode);
             //maybe check that sourceIBAN is same as creditCardBean
