@@ -1,10 +1,7 @@
 package com.bank.controller;
 
 import com.bank.bean.account.AccountBean;
-import com.bank.exception.AuthenticationException;
-import com.bank.exception.InvalidParamValueException;
-import com.bank.exception.NoEffectException;
-import com.bank.exception.NotAuthorizedException;
+import com.bank.exception.*;
 import com.bank.projection.pin.CardProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
@@ -38,11 +35,11 @@ public class CardController {
     @Autowired
     private CreditCardInvalidateService creditCardInvalidateService;
 
-    public void unblockCard(String authToken, String iBan, String pinCard) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+    public void unblockCard(String authToken, String iBan, String pinCard) throws NotAuthorizedException, InvalidParamValueException, NoEffectException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         boolean isCredit = CreditCardNumberChecker.isCreditCardNumber(pinCard);
-        String normalizedIBAN = isCredit ? creditCardService.getCreditCardBean(pinCard).getAccountBean().getAccountNumber() : iBan;
-        if(accountService.checkIfIsMainAccountHolder(normalizedIBAN, customerId)){
+        String normalizedIBAN = isCredit ? creditCardService.getCreditCardBeanCheckFrozen(pinCard).getAccountBean().getAccountNumber() : iBan;
+        if(accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)){
             if(isCredit){
                 creditCardUnblockService.unblockCard(pinCard);
             }else{
@@ -54,11 +51,11 @@ public class CardController {
         }
     }
 
-    public CardProjection invalidateCard(String authToken, String iBAN, String pinCard, boolean newPin) throws InvalidParamValueException, NotAuthorizedException {
+    public CardProjection invalidateCard(String authToken, String iBAN, String pinCard, boolean newPin) throws InvalidParamValueException, NotAuthorizedException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         boolean isCredit = CreditCardNumberChecker.isCreditCardNumber(pinCard);
-        String normalizedIBAN = isCredit ? creditCardService.getCreditCardBean(pinCard).getAccountBean().getAccountNumber() : iBAN;
-        if(accountService.checkIfIsMainAccountHolder(normalizedIBAN, customerId)){
+        String normalizedIBAN = isCredit ? creditCardService.getCreditCardBeanCheckFrozen(pinCard).getAccountBean().getAccountNumber() : iBAN;
+        if(accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)){
             if(isCredit){
                 return creditCardInvalidateService.invalidateCard(pinCard, newPin);
             }else {

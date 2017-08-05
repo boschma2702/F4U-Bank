@@ -65,12 +65,12 @@ public class AccountAccessService {
         return pinProjection;
     }
 
-    public void revokeAccess(int customerId, String accountNumber) throws InvalidParamValueException, NoEffectException {
-        Logger.info("Revoking access to accountNumber=%s of customerId=%s", accountNumber, customerId);
+    public void revokeAccess(int customerId, int accountId) throws InvalidParamValueException, NoEffectException {
+        Logger.info("Revoking access to accountNumber=%s of customerId=%s", accountId, customerId);
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
-        AccountBean accountBean = accountService.getAccountBeanByAccountNumber(accountNumber);
+        AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         if (customerBean == null || accountBean == null) {
-            Logger.error("Could not find customerBean with customerId=%s or accountBean with accountNumber=%s", customerId, accountNumber);
+            Logger.error("Could not find customerBean with customerId=%s or accountBean with accountId=%s", customerId, accountId);
             throw new InvalidParamValueException("Invalid account or username");
         }
         customerAccountService.removeCustomerAccount(customerId, accountBean.getAccountId());

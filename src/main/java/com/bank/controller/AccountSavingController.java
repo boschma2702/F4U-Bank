@@ -1,5 +1,6 @@
 package com.bank.controller;
 
+import com.bank.exception.AccountFrozenException;
 import com.bank.exception.AuthenticationException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NotAuthorizedException;
@@ -23,9 +24,9 @@ public class AccountSavingController {
     @Autowired
     private AccountSavingCloseService accountSavingCloseService;
 
-    public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+    public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfAccountHolder(iBAN, customerId)) {
+        if (accountService.checkIfAccountHolderCheckFrozen(iBAN, customerId)) {
             accountSavingOpenService.openSavingsAccount(iBAN);
         } else {
             throw new NotAuthorizedException("Not Authorized");
