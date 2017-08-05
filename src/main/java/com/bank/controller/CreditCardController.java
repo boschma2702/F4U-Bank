@@ -1,5 +1,6 @@
 package com.bank.controller;
 
+import com.bank.exception.AccountFrozenException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.pin.CardProjection;
@@ -19,9 +20,9 @@ public class CreditCardController {
     @Autowired
     private AccountService accountService;
 
-    public CardProjection requestCreditCard(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
+    public CardProjection requestCreditCard(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if(accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+        if(accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
             return creditCardCreateService.createCreditCard(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId());
         }else {
             throw new NotAuthorizedException("Not Authorized");
