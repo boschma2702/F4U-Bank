@@ -17,6 +17,12 @@ public interface CustomerAccountRepository extends CrudRepository<CustomerAccoun
 
     CustomerAccount getFirstByAccountIdAndCustomerId(int accountId, int customerId);
 
+    @Query("select c " +
+            "from CustomerAccount c " +
+            "where c.isMain = true " +
+            "and c.accountId = ?1")
+    CustomerAccount getMainCustomerAccount(int accountId);
+
     void deleteByCustomerIdAndAccountId(int customerId, int accountId);
 
     void deleteCustomerAccountsByCreationDateAfter(Date date);
