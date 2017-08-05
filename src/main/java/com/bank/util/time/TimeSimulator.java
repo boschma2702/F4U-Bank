@@ -1,5 +1,6 @@
 package com.bank.util.time;
 
+import com.bank.service.AuthenticationService;
 import com.bank.service.time.TimeSimulateService;
 
 import java.util.*;
@@ -118,7 +119,7 @@ public class TimeSimulator implements Runnable {
                         break;
                     }
 
-
+                    AuthenticationService.removeCookies();
 
                     while (toAdd > 0) {
                         //Check if possible to simulate another day
