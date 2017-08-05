@@ -1,6 +1,7 @@
 package com.bank.service.customeraccount;
 
 import com.bank.bean.customeraccount.CustomerAccount;
+import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NoEffectException;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.util.logging.Logger;
@@ -31,4 +32,24 @@ public class CustomerAccountService {
             throw new NoEffectException("Customer not assigned to this account");
         }
     }
+
+    public CustomerAccount getCustomerAccountByAccountIdAndCustomerId(int accountId, int customerId) throws InvalidParamValueException {
+        CustomerAccount customerAccount = customerAccountRepository.getFirstByAccountIdAndCustomerId(accountId, customerId);
+        if(customerAccount == null){
+            Logger.error("Could not retrieve customerAccount of accountId=%s and customerId=%s", accountId, customerId);
+            throw new InvalidParamValueException("Could not find customer");
+        }
+        return customerAccount;
+    }
+
+    public CustomerAccount getMainCustomerAccountOfAccountId(int accountId) throws InvalidParamValueException {
+        CustomerAccount customerAccount = customerAccountRepository.getMainCustomerAccount(accountId);
+        if(customerAccount == null){
+            Logger.error("Could not retrieve main customerAccount of accountId=%s", accountId);
+            throw new InvalidParamValueException("Could not find main customer");
+        }
+        return customerAccount;
+    }
+
+
 }
