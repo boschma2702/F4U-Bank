@@ -1,9 +1,6 @@
 package com.bank.controller;
 
-import com.bank.exception.AuthenticationException;
-import com.bank.exception.InvalidParamValueException;
-import com.bank.exception.NoEffectException;
-import com.bank.exception.NotAuthorizedException;
+import com.bank.exception.*;
 import com.bank.projection.account.AccountAmountProjection;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.projection.account.AccountOverdraftLimitProjection;
@@ -72,10 +69,10 @@ public class AccountController {
         return accountOpenService.openAdditionalAccount(customerId);
     }
 
-    public void closeAccount(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
+    public void closeAccount(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         String normalizedAccountNumber = AccountType.getNormalizedAccount(IBAN);
-        if (accountService.checkIfIsMainAccountHolder(normalizedAccountNumber, customerId)) {
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedAccountNumber, customerId)) {
             switch (AccountType.getAccountType(IBAN)){
                 case CREDIT:
                     creditCardCloseService.closeCreditCard(accountService.getAccountBeanByAccountNumber(normalizedAccountNumber).getAccountId());
@@ -92,22 +89,22 @@ public class AccountController {
         }
     }
 
-    public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException {
+    public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(IBAN, customerId)) {
             return accountAccessService.provideAccess(IBAN, username);
         } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
-    public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+    public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (username == null) {
-            accountAccessService.revokeAccess(customerId, IBAN);
+            accountAccessService.revokeAccess(customerId, accountService.getAccountBeanByAccountNumberCheckFrozen(IBAN).getAccountId());
         } else {
-            if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
-                accountAccessService.revokeAccess(customerService.getCustomerBeanByUsername(username).getCustomerId(), IBAN);
+            if (accountService.checkIfIsMainAccountHolderCheckFrozen(IBAN, customerId)) {
+                accountAccessService.revokeAccess(customerService.getCustomerBeanByUsername(username).getCustomerId(), accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
         }
     }
@@ -142,9 +139,9 @@ public class AccountController {
         throw new NotAuthorizedException("Not Authorized");
     }
 
-    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException {
+    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)){
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
             overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
         }else {
             throw new NotAuthorizedException("Not Authorized");
