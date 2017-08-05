@@ -15,7 +15,10 @@ import java.util.List;
 public interface TransactionRepository extends CrudRepository<TransactionBean, Integer> {
     @Query("select t " +
             "from TransactionBean t " +
-            "where t.sourceBean.accountId = ?1 or t.targetBean.accountId = ?1 " +
+            "where " +
+            "t in (select t1 from TransactionBean t1 where t1.sourceBean.accountId = ?1 or t.targetBean.accountId = ?1) " +
+            "or " +
+            "t in (select t2 from TransactionBean t2 where t2.creditCardBean.accountBean.accountId = ?1) " +
             "order by date desc")
     Page<TransactionBean> getListOfXLatestTransactions(Pageable pageable, int accountId);
 

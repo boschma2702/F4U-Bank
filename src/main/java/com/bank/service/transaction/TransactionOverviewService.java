@@ -25,7 +25,12 @@ public class TransactionOverviewService {
             List<TransactionBean> list = page.getContent();
             List<TransactionProjection> projectionList = new ArrayList<>();
             for (TransactionBean transactionBean : list) {
-                String sourceIBAN = transactionBean.getSourceBean() != null ? transactionBean.getSourceBean().getAccountNumber() : null;
+                String sourceIBAN;
+                if(transactionBean.getCreditCardBean() == null) {
+                    sourceIBAN = transactionBean.getSourceBean() != null ? transactionBean.getSourceBean().getAccountNumber() : null;
+                }else{
+                    sourceIBAN = transactionBean.getCreditCardBean().getAccountBean().getAccountNumber()+"C";
+                }
                 String targetIBAN = transactionBean.getTargetBean() != null ? transactionBean.getTargetBean().getAccountNumber() : null;
                 projectionList.add(new TransactionProjection(sourceIBAN, targetIBAN, transactionBean.getTargetName(), transactionBean.getDate(), transactionBean.getAmount(), transactionBean.getComment(), transactionBean.isFromSavings()));
             }
