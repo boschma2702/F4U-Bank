@@ -7,6 +7,7 @@ import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.transaction.TransactionRepository;
 import com.bank.service.account.AccountUpdateAmountService;
 import com.bank.service.card.CardSubtractDayRemainingService;
+import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class TransactionService {
     @Autowired
     private CardSubtractDayRemainingService cardSubtractDayRemainingService;
 
+    @Autowired
+    private TransactionAmountService transactionAmountService;
+
     public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, BigDecimal amount) throws InvalidParamValueException {
         doTransaction(sourceAccountBean, targetAccountBean, amount, null, "", "");
     }
@@ -42,6 +46,11 @@ public class TransactionService {
         BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount.negate());
         if(!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)){
             throw new InvalidParamValueException("Source account overdraft to high");
+        }
+        BigDecimal newTransferLimit = transactionAmountService.getTransactionAmountSinceDays(sourceAccountBean.getAccountId(), Constants.TRANSACTION_DAYS_LIMIT).add(amount);
+        if(newTransferLimit.compareTo(sourceAccountBean.getTransferLimit()) > 0){
+            Logger.error("Could not make transaction, weekly transfer limit reached of accountId=%s", sourceAccountBean.getAccountId());
+            throw new InvalidParamValueException("Weekly limit reached");
         }
 
         if(card != null){

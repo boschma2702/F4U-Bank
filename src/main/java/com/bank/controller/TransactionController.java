@@ -48,8 +48,8 @@ public class TransactionController {
             authenticated = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         }
         if(authenticated) {
-            int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(sourceIBAN).getAccountId();
-            int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(targetIBAN).getAccountId();
+            int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
+            int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
             if (sourceIBAN.endsWith("S") || targetIBAN.endsWith("S")) {
                 transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
             } else {

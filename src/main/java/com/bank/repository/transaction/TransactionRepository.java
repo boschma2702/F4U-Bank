@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -23,4 +24,12 @@ public interface TransactionRepository extends CrudRepository<TransactionBean, I
     Page<TransactionBean> getListOfXLatestTransactions(Pageable pageable, int accountId);
 
     List<TransactionBean> findTransactionBeansByDateAfter(Date date);
+
+    @Query("select sum(t.amount) " +
+            "from TransactionBean t " +
+            "where t.fromSavings = false " +
+            "and t.sourceBean.accountId = ?1 " +
+            "and t.date > ?2 " +
+            "and t.targetBean.accountId <> ?1")
+    BigDecimal getTransferredAmountSince(int accountId, Date date);
 }

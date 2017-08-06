@@ -335,4 +335,18 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
+    /**
+     * Spending limits
+     */
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
+            @JsonRpcError(exception = AccountFrozenException.class, code = 423)
+    })
+    public Object setTransferLimit(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("transferLimit") BigDecimal transferLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
+        accountController.setTransferLimit(authToken, iBAN, transferLimit);
+        return new EmptyJsonResponse();
+    }
+
 }

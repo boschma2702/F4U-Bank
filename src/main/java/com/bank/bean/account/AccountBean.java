@@ -2,6 +2,7 @@ package com.bank.bean.account;
 
 import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.service.time.TimeService;
+import com.bank.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -36,6 +37,9 @@ public class AccountBean {
     @JsonIgnore
     @Column(scale = 2)
     private BigDecimal amount = BigDecimal.ZERO;
+
+    @Column(name = "limit_transfer", scale = 2)
+    private BigDecimal transferLimit = Constants.ACCOUNT_DEFAULT_TRANSFER_LIMIT;
 
     /**
      * Indicates whether the account is active or not.
@@ -134,6 +138,14 @@ public class AccountBean {
 
     public void setBuildUpOverdraftInterest(double buildUpOverdraftInterest) {
         this.buildUpOverdraftInterest = buildUpOverdraftInterest;
+    }
+
+    public BigDecimal getTransferLimit() {
+        return transferLimit;
+    }
+
+    public void setTransferLimit(BigDecimal transferLimit) {
+        this.transferLimit = transferLimit;
     }
 
     public boolean isFrozen() {
