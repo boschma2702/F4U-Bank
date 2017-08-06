@@ -6,6 +6,7 @@ import com.bank.bean.transaction.TransactionBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.transaction.TransactionRepository;
 import com.bank.service.account.AccountUpdateAmountService;
+import com.bank.service.card.CardSubtractDayRemainingService;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class TransactionService {
 
     @Autowired
     private AccountUpdateAmountService accountUpdateAmountService;
+
+    @Autowired
+    private CardSubtractDayRemainingService cardSubtractDayRemainingService;
 
     public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, BigDecimal amount) throws InvalidParamValueException {
         doTransaction(sourceAccountBean, targetAccountBean, amount, null, "", "");
@@ -38,6 +42,10 @@ public class TransactionService {
         BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount.negate());
         if(!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)){
             throw new InvalidParamValueException("Source account overdraft to high");
+        }
+
+        if(card != null){
+            cardSubtractDayRemainingService.subtractDayRemaining(card, amount);
         }
 
         TransactionBean transactionBean = new TransactionBean();
