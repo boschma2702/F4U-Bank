@@ -3,9 +3,11 @@ package com.bank.bean.card;
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.service.time.TimeService;
+import com.bank.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -45,6 +47,12 @@ public class CardBean {
     private boolean isActive = true;
 
     private int attempts = 0;
+
+    @Column(name = "limit_day", scale = 2)
+    private BigDecimal dayLimit = Constants.CARD_DAY_LIMIT;
+
+    @Column(name = "limit_day_remaining", scale = 2)
+    private BigDecimal dayLimitRemaining = Constants.CARD_DAY_LIMIT;
 
     @Column(name = "creation_date")
     private Date creationDate;
@@ -114,6 +122,22 @@ public class CardBean {
 
     public Date getExperationDate() {
         return experationDate;
+    }
+
+    public BigDecimal getDayLimit() {
+        return dayLimit;
+    }
+
+    public void setDayLimit(BigDecimal dayLimit) {
+        this.dayLimit = dayLimit;
+    }
+
+    public BigDecimal getDayLimitRemaining() {
+        return dayLimitRemaining;
+    }
+
+    public void setDayLimitRemaining(BigDecimal dayLimitRemaining) {
+        this.dayLimitRemaining = dayLimitRemaining;
     }
 
     @PrePersist

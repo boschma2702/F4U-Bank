@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -50,4 +51,17 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
             "where c.pinCard = ?1 " +
             "and c.accountBean.accountId = ?2")
     boolean isPinCardTaken(String pinCard, int accountId);
+
+    @Query("select c " +
+            "from CardBean c " +
+            "where c.isActive = true " +
+            "and c.experationDate > ?1")
+    List<CardBean> getAllActiveCards(Date currentDate);
+
+    @Modifying
+    @Query("update CardBean c " +
+            "set c.dayLimitRemaining = c.dayLimit " +
+            "where c.isActive = true " +
+            "and c.experationDate > ?1")
+    void resetCardDayLimitRemaining(Date date);
 }
