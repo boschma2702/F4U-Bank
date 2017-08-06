@@ -16,6 +16,7 @@ import com.bank.util.AccountType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -44,6 +45,9 @@ public class AccountController {
 
     @Autowired
     private AccountFreezeService accountFreezeService;
+
+    @Autowired
+    private AccountTransferLimitService accountTransferLimitService;
 
     public AccountOpenProjection openAccount(String name,
                                              String surname,
@@ -128,6 +132,15 @@ public class AccountController {
         boolean isAdmin = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         if(isAdmin){
             accountFreezeService.freezeAccount(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId(), freeze);
+        }else{
+            throw new NotAuthorizedException("Not Authorized");
+        }
+    }
+
+    public void setTransferLimit(String authToken, String iBAN, BigDecimal transferLimit) throws InvalidParamValueException, AccountFrozenException, NotAuthorizedException {
+        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
+            accountTransferLimitService.setTransferLimit(accountService.getAccountBeanByAccountNumberCheckFrozen(iBAN).getAccountId(), transferLimit);
         }else{
             throw new NotAuthorizedException("Not Authorized");
         }
