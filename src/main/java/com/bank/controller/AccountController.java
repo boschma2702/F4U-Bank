@@ -1,5 +1,6 @@
 package com.bank.controller;
 
+import com.bank.bean.account.AccountBean;
 import com.bank.exception.*;
 import com.bank.projection.account.AccountAmountProjection;
 import com.bank.projection.account.AccountOpenProjection;
@@ -14,6 +15,7 @@ import com.bank.service.customer.CustomerService;
 import com.bank.service.overdraft.OverdraftLimitService;
 import com.bank.util.AccountType;
 import com.bank.util.Constants;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,6 +110,7 @@ public class AccountController {
     public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)) {
+            accountService.checkMinor(iBAN);
             overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
         } else {
             throw new NotAuthorizedException("Not Authorized");
