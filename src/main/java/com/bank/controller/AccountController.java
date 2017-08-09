@@ -66,8 +66,15 @@ public class AccountController {
     }
 
     public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException {
-        int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        return accountOpenService.openAdditionalAccount(customerId);
+        if (AuthenticationService.instance.isCustomer(authToken)) {
+            int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            if ((Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.IS_MINOR)){
+                throw new NotAuthorizedException("Not Authorized");
+            }
+            return accountOpenService.openAdditionalAccount(customerId);
+        }else{
+            throw new NotAuthorizedException("Not Authorized");
+        }
     }
 
     public void closeAccount(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException, AccountFrozenException {
