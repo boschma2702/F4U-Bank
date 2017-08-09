@@ -2,6 +2,7 @@ package com.bank.service.overdraft;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.repository.account.AccountRepository;
+import com.bank.util.InterestCalculator;
 import com.bank.util.time.DayPassedListener;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class OverdraftInterestService extends DayPassedListener {
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithNegativeDayOverdraft();
         for(AccountBean accountBean : accountBeans){
             double buildUpInterest = accountBean.getBuildUpOverdraftInterest();
-            double interest = getInterest(amountOfDaysInMonth, accountBean.getMinimumDayAmount());
+            double interest = InterestCalculator.getInterest(amountOfDaysInMonth, accountBean.getMinimumDayAmount(), MONTHLY_OVERDRAFT_INTEREST);
             Logger.info("Overdraft overdraft of accountId=%s is overdraft=%s", accountBean.getAccountId(), interest);
             accountBean.setBuildUpOverdraftInterest(buildUpInterest+interest);
             accountRepository.save(accountBean);
@@ -44,7 +45,4 @@ public class OverdraftInterestService extends DayPassedListener {
         return 0;
     }
 
-    private double getInterest(int amountOfDaysInMonth, double amount){
-        return (Math.pow((1 + MONTHLY_OVERDRAFT_INTEREST), (1.0*1/amountOfDaysInMonth)) - 1) * amount;
-    }
 }
