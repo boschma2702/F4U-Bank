@@ -13,6 +13,7 @@ import com.bank.service.creditcard.CreditCardCloseService;
 import com.bank.service.customer.CustomerService;
 import com.bank.service.overdraft.OverdraftLimitService;
 import com.bank.util.AccountType;
+import com.bank.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,8 +59,8 @@ public class AccountController {
                                              String telephoneNumber,
                                              String email,
                                              String username,
-                                             String password) throws InvalidParamValueException {
-        return accountOpenService.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password);
+                                             String password) throws InvalidParamValueException, NotAuthorizedException {
+        return openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, Constants.ACCOUNT_TYPE_REGULAR, new String[]{});
     }
 
     public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException {
@@ -71,7 +72,7 @@ public class AccountController {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         String normalizedAccountNumber = AccountType.getNormalizedAccount(IBAN);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedAccountNumber, customerId)) {
-            switch (AccountType.getAccountType(IBAN)){
+            switch (AccountType.getAccountType(IBAN)) {
                 case CREDIT:
                     creditCardCloseService.closeCreditCard(accountService.getAccountBeanByAccountNumber(normalizedAccountNumber).getAccountId());
                     break;
@@ -89,14 +90,14 @@ public class AccountController {
 
 
     public AccountAmountProjection getBalance(String authToken, String IBAN) throws NotAuthorizedException, InvalidParamValueException {
-        if(AuthenticationService.instance.isCustomer(authToken)){
+        if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfAccountHolder(IBAN, customerId)) {
                 return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
-        }else{
+        } else {
             boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-            if(isAdministrativeEmployee){
+            if (isAdministrativeEmployee) {
                 return accountAmountService.getBalance(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
         }
@@ -106,22 +107,22 @@ public class AccountController {
 
     public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)) {
             overdraftLimitService.setOverdraft(iBAN, overdraftLimit);
-        }else {
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public AccountOverdraftLimitProjection getOverdraftLimit(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException {
-        if(AuthenticationService.instance.isCustomer(authToken)){
+        if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfIsMainAccountHolder(iBAN, customerId)) {
                 return overdraftLimitService.getOverdraft(iBAN);
             }
-        }else{
+        } else {
             boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-            if(isAdministrativeEmployee){
+            if (isAdministrativeEmployee) {
                 return overdraftLimitService.getOverdraft(iBAN);
             }
         }
@@ -130,19 +131,35 @@ public class AccountController {
 
     public void setFreezeUserAccount(String authToken, String iBAN, boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
         boolean isAdmin = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-        if(isAdmin){
+        if (isAdmin) {
             accountFreezeService.freezeAccount(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId(), freeze);
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public void setTransferLimit(String authToken, String iBAN, BigDecimal transferLimit) throws InvalidParamValueException, AccountFrozenException, NotAuthorizedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)) {
             accountTransferLimitService.setTransferLimit(accountService.getAccountBeanByAccountNumberCheckFrozen(iBAN).getAccountId(), transferLimit);
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
+    }
+
+    public AccountOpenProjection openAccount(String name,
+                                             String surname,
+                                             String initials,
+                                             Date date,
+                                             String ssn,
+                                             String address,
+                                             String telephoneNumber,
+                                             String email,
+                                             String username,
+                                             String password,
+                                             String type,
+                                             String[] guardians) throws NotAuthorizedException, InvalidParamValueException {
+
+        return accountOpenService.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, type, guardians);
     }
 }
