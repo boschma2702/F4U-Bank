@@ -27,6 +27,7 @@ public class AccountSavingController {
     public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (accountService.checkIfAccountHolderCheckFrozen(iBAN, customerId)) {
+            accountService.checkMinor(iBAN);
             accountSavingOpenService.openSavingsAccount(iBAN);
         } else {
             throw new NotAuthorizedException("Not Authorized");
