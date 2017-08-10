@@ -21,8 +21,6 @@ public class AccountSavingController {
     @Autowired
     private AccountSavingOpenService accountSavingOpenService;
 
-    @Autowired
-    private AccountSavingCloseService accountSavingCloseService;
 
     public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
