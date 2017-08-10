@@ -1,5 +1,6 @@
 package com.bank.repository.customer;
 
+import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.projection.customer.CustomerAccountAccessProjection;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,6 +31,21 @@ public interface CustomerRepository extends CrudRepository<CustomerBean, Integer
             "and person.customerBean.customerId = customer.customerId")
     List<CustomerAccountAccessProjection> getCustomerAccess(int customerId);
 
+    @Query("select account " +
+            "from CustomerBean c, CustomerAccount customeraccount, AccountBean account " +
+            "where c.customerId = ?1 " +
+            "and c.customerId = customeraccount.customerId " +
+            "and customeraccount.isMain = true " +
+            "and account.accountId = customeraccount.accountId")
+    List<AccountBean> getCustomerBeanMainAccess(int customerId);
+
     void deleteCustomerBeansByCreationDateAfter(Date date);
+
+    @Query("select c " +
+            "from CustomerBean c " +
+            "where day(c.dob) = day(?1) " +
+            "and month(c.dob) = month(?1) " +
+            "and year(?1) - year(dob) = ?2")
+    List<CustomerBean> getMinorBirthdays(Date date, int minorAge);
 
 }
