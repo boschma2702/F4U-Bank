@@ -4,13 +4,23 @@ import com.bank.bean.card.CardBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.person.PersonBean;
 import com.bank.exception.InvalidParamValueException;
+import com.bank.exception.NoEffectException;
+import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.service.customer.CustomerCreateService;
+import com.bank.service.customer.CustomerService;
+import com.bank.service.time.TimeService;
+import com.bank.util.AgeChecker;
+import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class AccountOpenService {
@@ -19,6 +29,12 @@ public class AccountOpenService {
 
     @Autowired
     private AccountCreateService accountCreateService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private AccountAccessService accountAccessService;
 
     /**
      * Opens an account. This creates a new customer, a new account and a new pin card.
@@ -36,6 +52,7 @@ public class AccountOpenService {
      * @return projection containing the account id, pin number and pin code.
      * @throws InvalidParamValueException when parameters are not correct.
      */
+    @Transactional(rollbackFor = Exception.class)
     public AccountOpenProjection openAccount(String name,
                                              String surname,
                                              String initials,
@@ -45,9 +62,21 @@ public class AccountOpenService {
                                              String telephoneNumber,
                                              String email,
                                              String username,
-                                             String password) throws InvalidParamValueException {
+                                             String password,
+                                             String type,
+                                             String[] guardians) throws InvalidParamValueException, NotAuthorizedException {
 
         Logger.info("Opening an account for name=%s, surname=%s and username=%s", name, surname, username);
+        boolean isMinor = AgeChecker.isMinor(date);
+        if (type.equals(Constants.ACCOUNT_TYPE_MINOR) != isMinor) {
+            Logger.error("Could not open minor account for name=%s, surname=%s and username=%s, account type does not match given age", name, surname, username);
+            throw new InvalidParamValueException("Given age and type do not match");
+        }
+        if (isMinor && guardians.length < 1) {
+            Logger.error("Could not open account for name=%s, surname=%s and username=%s, not enough guardians specified", name, surname, username);
+            throw new NotAuthorizedException("Not enough guardians specified");
+        }
+
         CustomerBean customerBean = new CustomerBean();
         customerBean.setName(name);
         customerBean.setSurname(surname);
@@ -65,7 +94,21 @@ public class AccountOpenService {
 
         customerCreateService.createCustomer(personBean);
 
-        CardBean cardBean = accountCreateService.createAccount(customerBean.getCustomerId(), true);
+        CardBean cardBean = accountCreateService.createAccount(customerBean.getCustomerId(), true, isMinor);
+
+        for(String guardianUsername : guardians){
+            CustomerBean guardianBean = customerService.getCustomerBeanByUsername(guardianUsername);
+            if(AgeChecker.isMinor(guardianBean.getDob())){
+                Logger.error("Could not open account for name=%s, surname=%s and username=%s, guardianUsername=%s does not meet the requirements", name, surname, username, guardianUsername);
+                throw new NotAuthorizedException(String.format("Guardian %s does not meet the age requirement", guardianUsername));
+            }else {
+                try {
+                    accountAccessService.provideAccess(cardBean.getAccountBean().getAccountNumber(), guardianUsername);
+                } catch (NoEffectException e) {
+                    //DO nothing
+                }
+            }
+        }
 
         AccountOpenProjection projection = new AccountOpenProjection();
         projection.setiBAN(cardBean.getAccountBean().getAccountNumber());
@@ -85,4 +128,6 @@ public class AccountOpenService {
         projection.setExpirationDate(cardBean.getExperationDate());
         return projection;
     }
+
+
 }

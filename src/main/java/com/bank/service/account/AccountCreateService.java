@@ -36,9 +36,14 @@ public class AccountCreateService {
      * @param isMain     sets whether the given customerAccount is the main owner.
      */
     public CardBean createAccount(int customerId, boolean isMain) {
+        return createAccount(customerId, isMain, false);
+    }
+
+    public CardBean createAccount(int customerId, boolean isMain, boolean isMinor){
         Logger.info("Creating an account for customerId=%s and isMain=%s", customerId, isMain);
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountNumber(ibanGeneratorService.generateIBAN());
+        accountBean.setMinorAccount(isMinor);
         accountRepository.save(accountBean);
 
         CustomerAccount customerAccount = new CustomerAccount();

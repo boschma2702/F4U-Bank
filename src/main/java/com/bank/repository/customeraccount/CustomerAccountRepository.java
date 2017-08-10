@@ -1,6 +1,7 @@
 package com.bank.repository.customeraccount;
 
 import com.bank.bean.customeraccount.CustomerAccount;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,10 @@ public interface CustomerAccountRepository extends CrudRepository<CustomerAccoun
     void deleteByCustomerIdAndAccountId(int customerId, int accountId);
 
     void deleteCustomerAccountsByCreationDateAfter(Date date);
+
+    @Modifying
+    @Query("delete from CustomerAccount c " +
+            "where c.accountId = ?1 " +
+            "and c.isMain = false")
+    void removeNoneMainAccountHolders(int accountId);
 }

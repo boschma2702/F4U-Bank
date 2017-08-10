@@ -38,7 +38,6 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "and person.customerBean.customerId = customer.customerId")
     List<CustomerUsernameProjection> getBankAccountAccess(int accountId);
 
-
     @Query("select a " +
             "from AccountBean a " +
             "where a.minimumDayAmount < 0 " +
@@ -67,4 +66,18 @@ public interface AccountRepository extends CrudRepository<AccountBean, Integer> 
             "from AccountBean a " +
             "where a.accountNumber = ?1")
     boolean isAccountNumberTaken(String accountNumber);
+
+    @Query("select a " +
+            "from AccountBean a " +
+            "where a.isActive = true " +
+            "and a.isMinorAccount = true " +
+            "and a.frozen = false ")
+    List<AccountBean> getAllActiveMinorAccounts();
+
+    @Modifying
+    @Query("update AccountBean a " +
+            "set a.buildUpInterest = 0 " +
+            "where a.isActive = true")
+    void resetBuildUpInterest();
+
 }

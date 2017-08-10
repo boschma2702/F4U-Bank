@@ -22,6 +22,7 @@ public class CreditCardController {
 
     public CardProjection requestCreditCard(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        accountService.checkMinor(iBAN);
         if(accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
             return creditCardCreateService.createCreditCard(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId());
         }else {

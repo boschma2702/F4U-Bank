@@ -47,6 +47,7 @@ public class AccountAccessController {
 
     public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        accountService.checkMinor(IBAN);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(IBAN, customerId)) {
             return accountAccessService.provideAccess(IBAN, username);
         } else {
@@ -56,6 +57,7 @@ public class AccountAccessController {
 
     public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+        accountService.checkMinor(IBAN);
         if (username == null) {
             accountAccessService.revokeAccess(customerId, accountService.getAccountBeanByAccountNumberCheckFrozen(IBAN).getAccountId());
         } else {

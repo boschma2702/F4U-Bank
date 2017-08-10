@@ -26,7 +26,7 @@ public class SessionLoginService {
             }
             SessionAuthTokenProjection projection = new SessionAuthTokenProjection();
             if (personBean.getCustomerBean() != null) {
-                projection.setAuthToken(AuthenticationService.instance.customerLogin(personBean.getCustomerBean().getCustomerId()));
+                projection.setAuthToken(AuthenticationService.instance.customerLogin(personBean.getCustomerBean().getCustomerId(), personBean.getCustomerBean().getDob()));
             } else if (personBean.getEmployeeBean() != null) {
                 projection.setAuthToken(AuthenticationService.instance.employeeLogin(personBean.getEmployeeBean().getEmployeeId(), true));
             }

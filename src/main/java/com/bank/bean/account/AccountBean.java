@@ -68,6 +68,12 @@ public class AccountBean {
 
     private boolean frozen = false;
 
+    @Column(name = "is_minor_account")
+    private boolean isMinorAccount = false;
+
+    @Column(name = "build_up_interest")
+    private double buildUpInterest = 0;
+
     public int getAccountId() {
         return accountId;
     }
@@ -154,6 +160,22 @@ public class AccountBean {
 
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
+    }
+
+    public boolean isMinorAccount() {
+        return isMinorAccount;
+    }
+
+    public void setMinorAccount(boolean minorAccount) {
+        isMinorAccount = minorAccount;
+    }
+
+    public double getBuildUpInterest() {
+        return buildUpInterest;
+    }
+
+    public void setBuildUpInterest(double buildUpInterest) {
+        this.buildUpInterest = buildUpInterest;
     }
 
     @PrePersist

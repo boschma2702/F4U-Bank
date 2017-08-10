@@ -2,10 +2,12 @@ package com.bank.service;
 
 import com.bank.exception.AuthenticationException;
 import com.bank.exception.NotAuthorizedException;
+import com.bank.util.AgeChecker;
 import com.bank.util.logging.Logger;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
@@ -15,6 +17,7 @@ public final class AuthenticationService implements Runnable {
     public static final String USER_ID = "userId";
     public static final String EMPLOYEE_ID = "employeeId";
     public static final String HAS_ADMINISTRATIVE_ACCESS = "administrativeEmployee";
+    public static final String IS_MINOR = "isMinor";
 
     // 30 minutes
     private static final long COOKIE_VALID_TIME = 30*60000;
@@ -34,11 +37,12 @@ public final class AuthenticationService implements Runnable {
         new Thread(this).start();
     }
 
-    public String customerLogin(int userId) {
+    public String customerLogin(int userId, Date dob) {
         Logger.info("Login of userId=%s", userId);
         String token = generateToken();
         map.put(token, new HashMap<String, Object>());
         map.get(token).put(USER_ID, userId);
+        map.get(token).put(IS_MINOR, AgeChecker.isMinor(dob));
         cookieTimes.put(token, COOKIE_VALID_TIME);
         return token;
     }

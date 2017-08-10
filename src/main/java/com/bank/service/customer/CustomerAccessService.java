@@ -1,5 +1,6 @@
 package com.bank.service.customer;
 
+import com.bank.bean.account.AccountBean;
 import com.bank.projection.customer.CustomerAccountAccessProjection;
 import com.bank.repository.customer.CustomerRepository;
 import com.bank.util.logging.Logger;
@@ -17,4 +18,10 @@ public class CustomerAccessService {
         Logger.info("Retrieve CustomerAccountAccessProjection associated to customerId=%s", customerId);
         return customerRepository.getCustomerAccess(customerId);
     }
+
+    public List<AccountBean> getMainAccountAcces(int customerId) {
+        Logger.info("Retrieving main accounts of customerId=%s", customerId);
+        return customerRepository.getCustomerBeanMainAccess(customerId);
+    }
+
 }

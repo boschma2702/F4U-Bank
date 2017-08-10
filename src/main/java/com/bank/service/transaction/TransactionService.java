@@ -72,6 +72,10 @@ public class TransactionService {
     }
 
     public void doSingleTransaction(AccountBean targetAccountBean, CardBean card, BigDecimal amount) throws InvalidParamValueException {
+        doSingleTransaction(targetAccountBean, card, amount, "");
+    }
+
+    public void doSingleTransaction(AccountBean targetAccountBean, CardBean card, BigDecimal amount, String message) throws InvalidParamValueException {
         if(amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new InvalidParamValueException("Invalid Amount");
         }
@@ -81,7 +85,7 @@ public class TransactionService {
         transactionBean.setAmount(amount);
 
         transactionBean.setCard(card);
-        transactionBean.setComment("");
+        transactionBean.setComment(message);
 
         transactionRepository.save(transactionBean);
 

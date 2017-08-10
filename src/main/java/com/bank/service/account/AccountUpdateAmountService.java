@@ -21,7 +21,7 @@ public class AccountUpdateAmountService {
     }
 
     public void updateAmount(int targetAccountId, BigDecimal amount) {
-        Logger.info("Updating amount=$s of targetAccountId=%s", amount, targetAccountId);
+        Logger.info("Updating amount=%s of targetAccountId=%s", amount, targetAccountId);
         accountRepository.updateAmount(targetAccountId, amount);
     }
 }
