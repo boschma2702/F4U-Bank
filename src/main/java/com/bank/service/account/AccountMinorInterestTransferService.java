@@ -42,7 +42,7 @@ public class AccountMinorInterestTransferService extends DayPassedListener {
             BigDecimal bigDecimal = AmountFormatter.format(accountBean.getBuildUpInterest());
             if(bigDecimal.compareTo(BigDecimal.ZERO) > 0){
                 try {
-                    transactionService.doSingleTransaction(accountBean, null, bigDecimal);
+                    transactionService.doSingleTransaction(accountBean, null, bigDecimal, "Interest of past year");
                 } catch (InvalidParamValueException e) {
                     // do nothing
                 }
