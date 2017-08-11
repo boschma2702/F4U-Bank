@@ -30,7 +30,7 @@ public class AccountSavingInterestService extends DayPassedListener {
         while (iterator.hasNext()) {
             AccountSavingBean accountSavingBean = iterator.next();
             double buildUpInterest = accountSavingBean.getBuildUpInterest();
-            double interest = InterestCalculator.getInterest(amountOfDaysInMonth, accountSavingBean.getMinimumDayAmount(), getInterestPercentage(accountSavingBean.getMinimumDayAmount()));
+            double interest = accountSavingBean.getMinimumDayAmount() * (getInterestPercentage(accountSavingBean.getMinimumDayAmount())/amountOfDaysInMonth);
             Logger.info("Interest of accountId=%s is overdraft=%s", accountSavingBean.getAccountBean().getAccountId(), interest);
             accountSavingBean.setBuildUpInterest(buildUpInterest + interest);
             accountSavingRepository.save(accountSavingBean);

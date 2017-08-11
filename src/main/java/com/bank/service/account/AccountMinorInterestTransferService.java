@@ -29,7 +29,7 @@ public class AccountMinorInterestTransferService extends DayPassedListener {
         //If last day of month, then transfer overdraft
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
-        int amountOfDaysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         if (calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
             transferInterest();
         }
