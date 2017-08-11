@@ -29,7 +29,8 @@ public class AccountSavingInterestTransferService extends DayPassedListener {
     @Override
     public void onDayPassed(Date start, Date end) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(TimeService.TIMESIMULATOR.getCurrentDate());
+        calendar.setTime(start);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         //If first of January, then transfer build up overdraft
         if (calendar.get(Calendar.MONTH) == 0 && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
             transferAccountSavingInterest();

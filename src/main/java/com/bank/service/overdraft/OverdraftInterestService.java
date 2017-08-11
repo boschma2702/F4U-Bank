@@ -17,7 +17,6 @@ import java.util.List;
 public class OverdraftInterestService extends DayPassedListener {
 
     private final static double ANNUAL_OVERDRAFT_INTEREST = 0.10;
-    private final static double MONTHLY_OVERDRAFT_INTEREST = Math.pow((1+ANNUAL_OVERDRAFT_INTEREST), (1.0*1/12)) - 1;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -33,7 +32,7 @@ public class OverdraftInterestService extends DayPassedListener {
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithNegativeDayOverdraft();
         for(AccountBean accountBean : accountBeans){
             double buildUpInterest = accountBean.getBuildUpOverdraftInterest();
-            double interest = InterestCalculator.getInterest(amountOfDaysInMonth, accountBean.getMinimumDayAmount(), MONTHLY_OVERDRAFT_INTEREST);
+            double interest = InterestCalculator.getInterest(amountOfDaysInMonth, accountBean.getMinimumDayAmount(), ANNUAL_OVERDRAFT_INTEREST);
             Logger.info("Overdraft overdraft of accountId=%s is overdraft=%s", accountBean.getAccountId(), interest);
             accountBean.setBuildUpOverdraftInterest(buildUpInterest+interest);
             accountRepository.save(accountBean);

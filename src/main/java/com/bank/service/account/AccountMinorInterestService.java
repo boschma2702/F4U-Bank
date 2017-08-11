@@ -33,7 +33,7 @@ public class AccountMinorInterestService extends DayPassedListener {
         for(AccountBean accountBean : accountBeans){
             double buildUpInterest = accountBean.getBuildUpInterest();
             double amount = accountBean.getMinimumDayAmount() > MAXIMUM_ACCOUNT_INTEREST_AMOUNT ? MAXIMUM_ACCOUNT_INTEREST_AMOUNT : accountBean.getMinimumDayAmount();
-            double interest = InterestCalculator.getInterest(amountOfDaysInMonth, amount, MONTHLY_OVERDRAFT_INTEREST);
+            double interest = amount * (MONTHLY_OVERDRAFT_INTEREST/amountOfDaysInMonth);
             accountBean.setBuildUpInterest(buildUpInterest + interest);
             accountRepository.save(accountBean);
         }
