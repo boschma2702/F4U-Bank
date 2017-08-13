@@ -14,8 +14,6 @@ public class SystemVariableApplyService {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
-    @Autowired
-    private SystemVariableRetrieveService systemVariableRetrieveService;
 
     public void applySystemVariable(String key, String value, Object oldValue){
         switch (key){
@@ -23,9 +21,10 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case CREDIT_CARD_DEFAULT_CREDIT:
-                creditCardRepository.setCreditCardLimit((BigDecimal) oldValue, (BigDecimal) systemVariableRetrieveService.getObjectInternally(key));
+                creditCardRepository.setCreditCardLimit((BigDecimal) oldValue, new BigDecimal(Double.parseDouble(value)));
                 break;
             case CARD_EXPIRATION_LENGTH:
+                //No further change needed
                 break;
             case NEW_CARD_COST:
                 break;

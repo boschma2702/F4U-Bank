@@ -11,11 +11,27 @@ import java.lang.reflect.Field;
 @Service
 public class SystemVariableRetrieveService {
 
-    @Autowired
-    private SystemVariableEditorService systemVariableEditorService;
+    private final SystemVariableEditorService systemVariableEditorService;
+
+    public SystemVariableRetrieveService(SystemVariableEditorService systemVariableEditorService) {
+        this.systemVariableEditorService = systemVariableEditorService;
+    }
 
     public Object getObject(String key) throws InvalidParamValueException {
         SystemVariableBean systemVariableBean = systemVariableEditorService.getSystemVariableBean();
+        return getObject(systemVariableBean, key);
+    }
+
+    public Object getObjectInternally(String key){
+        try {
+            return getObject(key);
+        } catch (InvalidParamValueException e) {
+            //This function should only be used internally, field should always be present
+            throw new IllegalStateException("Could not retrieve system variable object, key="+key);
+        }
+    }
+
+    public static Object getObject(SystemVariableBean systemVariableBean, String key) throws InvalidParamValueException {
         try {
             Field field = systemVariableBean.getClass().getDeclaredField(key);
             field.setAccessible(true);
@@ -29,15 +45,13 @@ public class SystemVariableRetrieveService {
         }
     }
 
-
-    public Object getObjectInternally(String key){
+    public static Object getObjectInternally(SystemVariableBean systemVariableBean, String key){
         try {
-            return getObject(key);
+            return getObject(systemVariableBean, key);
         } catch (InvalidParamValueException e) {
             //This function should only be used internally, field should always be present
             throw new IllegalStateException("Could not retrieve system variable object, key="+key);
         }
     }
-
 
 }

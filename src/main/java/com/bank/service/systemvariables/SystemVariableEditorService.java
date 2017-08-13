@@ -30,9 +30,6 @@ public class SystemVariableEditorService extends DayPassedListener {
     @Autowired
     private SystemVariableApplyService systemVariableApplyService;
 
-    @Autowired
-    private SystemVariableRetrieveService systemVariableRetrieveService;
-
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
         if (systemVariableBean == null) {
@@ -52,7 +49,6 @@ public class SystemVariableEditorService extends DayPassedListener {
                     Logger.error("Could not add set value request, invalid value=%s of key=%s", value, key);
                     throw new InvalidParamValueException("Invalid value format");
                 }
-
             } else {
                 Logger.error("Could not add set value request, unknown system variable key=%s", key);
                 throw new InvalidParamValueException("Unknown system variable");
@@ -90,7 +86,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         try {
             Field field = SystemVariableBean.class.getDeclaredField(key);
             field.setAccessible(true);
-            Object oldValue = systemVariableRetrieveService.getObjectInternally(key);
+            Object oldValue = SystemVariableRetrieveService.getObjectInternally(systemVariableBean, key);
             switch (field.getType().getSimpleName()) {
                 case "double":
                     field.set(systemVariableBean, Double.parseDouble(value));
