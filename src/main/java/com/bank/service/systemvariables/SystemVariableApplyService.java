@@ -1,17 +1,29 @@
 package com.bank.service.systemvariables;
 
+import com.bank.repository.creditcard.CreditCardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
 import static com.bank.util.systemvariable.SystemVariableNames.*;
 
 @Service
 public class SystemVariableApplyService {
 
-    public void applySystemVariable(String key, String value){
+    @Autowired
+    private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
+
+    public void applySystemVariable(String key, String value, Object oldValue){
         switch (key){
             case CREDIT_CARD_MONTHLY_FEE:
                 //No further change needed
                 break;
             case CREDIT_CARD_DEFAULT_CREDIT:
+                creditCardRepository.setCreditCardLimit((BigDecimal) oldValue, (BigDecimal) systemVariableRetrieveService.getObjectInternally(key));
                 break;
             case CARD_EXPIRATION_LENGTH:
                 break;

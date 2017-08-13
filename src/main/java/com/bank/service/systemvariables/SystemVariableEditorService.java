@@ -30,6 +30,9 @@ public class SystemVariableEditorService extends DayPassedListener {
     @Autowired
     private SystemVariableApplyService systemVariableApplyService;
 
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
+
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
         if (systemVariableBean == null) {
@@ -87,6 +90,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         try {
             Field field = SystemVariableBean.class.getDeclaredField(key);
             field.setAccessible(true);
+            Object oldValue = systemVariableRetrieveService.getObjectInternally(key);
             switch (field.getType().getSimpleName()) {
                 case "double":
                     field.set(systemVariableBean, Double.parseDouble(value));
@@ -101,7 +105,7 @@ public class SystemVariableEditorService extends DayPassedListener {
                     //should not happen
                     throw new IllegalStateException("Unknown type:" + field.getType().getSimpleName());
             }
-            systemVariableApplyService.applySystemVariable(key, value);
+            systemVariableApplyService.applySystemVariable(key, value, oldValue);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             //should not happen
             e.printStackTrace();

@@ -37,8 +37,17 @@ public class CreditCardResetCreditService extends DayPassedListener {
         List<CreditCardBean> creditCardBeans = creditCardRepository.getCreditCardsWithUsedCredit(TimeService.TIMESIMULATOR.getCurrentDate());
         for (CreditCardBean creditCardBean : creditCardBeans) {
             String message = "Pay off credit card debt";
-            BigDecimal amount = creditCardBean.getCreditLimit().subtract(creditCardBean.getCredit());
-            transactionService.retrieveTransaction(creditCardBean.getAccountBean(), amount, message);
+            BigDecimal amount;
+            if(creditCardBean.getCredit().compareTo(BigDecimal.ZERO) < 0){
+                // credit is negative
+                amount = creditCardBean.getCreditLimit().subtract(creditCardBean.getCredit());
+            }else{
+                // credit is positive
+                amount = creditCardBean.getCreditLimit().subtract(creditCardBean.getCredit());
+            }
+            if(amount.compareTo(BigDecimal.ZERO) > 0){
+                transactionService.retrieveTransaction(creditCardBean.getAccountBean(), amount, message);
+            }
             creditCardBean.setCredit(creditCardBean.getCreditLimit());
             creditCardRepository.save(creditCardBean);
         }
