@@ -8,6 +8,7 @@ import com.bank.util.logging.Logger;
 import com.bank.util.systemvariable.SystemVariableChangeObject;
 import com.bank.util.systemvariable.SystemVariableFieldChecker;
 import com.bank.util.time.DayPassedListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -25,6 +26,9 @@ public class SystemVariableEditorService extends DayPassedListener {
     private SystemVariableBean systemVariableBean;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+    @Autowired
+    private SystemVariableApplyService systemVariableApplyService;
 
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
@@ -97,6 +101,7 @@ public class SystemVariableEditorService extends DayPassedListener {
                     //should not happen
                     throw new IllegalStateException("Unknown type:" + field.getType().getSimpleName());
             }
+            systemVariableApplyService.applySystemVariable(key, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             //should not happen
             e.printStackTrace();

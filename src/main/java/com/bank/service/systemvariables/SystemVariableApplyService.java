@@ -7,9 +7,9 @@ import static com.bank.util.systemvariable.SystemVariableNames.*;
 public class SystemVariableApplyService {
 
     public void applySystemVariable(String key, String value){
-        //TODO implement this
         switch (key){
             case CREDIT_CARD_MONTHLY_FEE:
+                //No further change needed
                 break;
             case CREDIT_CARD_DEFAULT_CREDIT:
                 break;
