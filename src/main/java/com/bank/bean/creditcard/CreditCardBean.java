@@ -145,10 +145,6 @@ public class CreditCardBean {
         calendar.setTime(creationDate);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         activationDate = calendar.getTime();
-
-        calendar.setTime(creationDate);
-        calendar.add(Calendar.YEAR, 4);
-        expirationDate = calendar.getTime();
     }
 
 }

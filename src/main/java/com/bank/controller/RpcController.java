@@ -372,4 +372,19 @@ public class RpcController {
         return accountController.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, type, guardians);
     }
 
+    /**
+     * Administrive user III
+     */
+    @Autowired
+    private SystemVariableController systemVariableController;
+
+    @JsonRpcErrors({
+            @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+    })
+    public Object setValue(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("key") String key, @JsonRpcParam("value") String value, @JsonRpcParam("date") Date date) throws NotAuthorizedException, InvalidParamValueException {
+        systemVariableController.setValue(authToken, key, value, date);
+        return new EmptyJsonResponse();
+    }
+
 }

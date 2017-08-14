@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -64,4 +65,10 @@ public interface CardRepository extends CrudRepository<CardBean, Integer> {
             "where c.isActive = true " +
             "and c.experationDate > ?1")
     void resetCardDayLimitRemaining(Date date);
+
+    @Modifying
+    @Transactional
+    @Query("update CardBean c " +
+            "set c.dayLimitRemaining = c.dayLimitRemaining + (?2-?1), c.dayLimit = ?2")
+    void updateDayLimit(BigDecimal oldLimit, BigDecimal newLimit);
 }

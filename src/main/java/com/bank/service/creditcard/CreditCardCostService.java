@@ -2,6 +2,7 @@ package com.bank.service.creditcard;
 
 import com.bank.bean.creditcard.CreditCardBean;
 import com.bank.repository.creditcard.CreditCardRepository;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
 import com.bank.util.time.DayPassedListener;
@@ -14,10 +15,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.bank.util.systemvariable.SystemVariableNames.CREDIT_CARD_MONTHLY_FEE;
+
 @Service
 public class CreditCardCostService extends DayPassedListener {
 
-    private static final BigDecimal CREDITCARD_COST = new BigDecimal(5);
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
 
     @Autowired
     private TransactionService transactionService;
@@ -39,7 +43,7 @@ public class CreditCardCostService extends DayPassedListener {
         List<CreditCardBean> creditCardBeans = creditCardRepository.getAllActiveCreditCards(TimeService.TIMESIMULATOR.getCurrentDate());
         for(CreditCardBean creditCardBean : creditCardBeans){
             String message = "Credit card costs";
-            transactionService.retrieveTransaction(creditCardBean.getAccountBean(), CREDITCARD_COST, message);
+            transactionService.retrieveTransaction(creditCardBean.getAccountBean(), (BigDecimal) systemVariableRetrieveService.getObjectInternally(CREDIT_CARD_MONTHLY_FEE), message);
         }
     }
 

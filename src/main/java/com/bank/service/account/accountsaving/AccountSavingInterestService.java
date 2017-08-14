@@ -2,6 +2,7 @@ package com.bank.service.account.accountsaving;
 
 import com.bank.bean.acountsavings.AccountSavingBean;
 import com.bank.repository.accountsaving.AccountSavingRepository;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.util.InterestCalculator;
 import com.bank.util.logging.Logger;
 import com.bank.util.time.DayPassedListener;
@@ -12,11 +13,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
+import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_1;
+import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_2;
+import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_3;
+
 @Service
 public class AccountSavingInterestService extends DayPassedListener {
 
     @Autowired
     private AccountSavingRepository accountSavingRepository;
+
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
 
     @Override
     public void onDayPassed(Date start, Date end) {
@@ -44,11 +52,11 @@ public class AccountSavingInterestService extends DayPassedListener {
 
     private double getInterestPercentage(double amount) {
         if (amount > 0 && amount < 75000) {
-            return 0.15e-2;
+            return (double) systemVariableRetrieveService.getObjectInternally(INTEREST_RATE_1);
         } else if (amount <= 75000 && amount < 1000000) {
-            return 0.2e-2;
+            return (double) systemVariableRetrieveService.getObjectInternally(INTEREST_RATE_2);
         }
-        return 0;
+        return (double) systemVariableRetrieveService.getObjectInternally(INTEREST_RATE_3);
     }
 
 

@@ -11,6 +11,8 @@ import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class AccountAmountService {
     @Autowired
@@ -35,7 +37,8 @@ public class AccountAmountService {
         }
         try {
             CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByAccountId(accountId, true);
-            projection.setCredit(creditCardBean.getCredit().doubleValue());
+            double amount = creditCardBean.getCredit().compareTo(BigDecimal.ZERO) > 1 ? creditCardBean.getCredit().doubleValue() : 0;
+            projection.setCredit(amount);
         }catch (InvalidParamValueException e) {
             // do nothing, leave credit value null
         }

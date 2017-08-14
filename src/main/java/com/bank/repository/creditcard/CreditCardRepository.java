@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -82,4 +83,10 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
     CreditCardBean getBlockedCardByCreditCardNumber(String creditCardNumber);
 
     CreditCardBean findCreditCardBeanByCreditCardNumber(String creditCardNumber);
+
+    @Modifying
+    @Transactional
+    @Query("update CreditCardBean c " +
+            "set c.credit = c.credit + (?2-?1), c.creditLimit = ?2 ")
+    void setCreditCardLimit(BigDecimal oldLimit, BigDecimal limit);
 }

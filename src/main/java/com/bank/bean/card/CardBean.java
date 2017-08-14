@@ -140,13 +140,12 @@ public class CardBean {
         this.dayLimitRemaining = dayLimitRemaining;
     }
 
+    public void setExperationDate(Date experationDate) {
+        this.experationDate = experationDate;
+    }
+
     @PrePersist
     public void setDate(){
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(creationDate);
-        cal.add(Calendar.YEAR, 4);
-        experationDate = cal.getTime();
     }
 }

@@ -6,11 +6,16 @@ import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.pin.CardProjection;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.creditcard.CreditCardRepository;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
 import com.bank.util.RandomStringGenerator;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Calendar;
+
+import static com.bank.util.systemvariable.SystemVariableNames.CARD_EXPIRATION_LENGTH;
 
 @Service
 public class CreditCardCreateService {
@@ -23,6 +28,9 @@ public class CreditCardCreateService {
 
     @Autowired
     private CreditCardNumberGenerator creditCardNumberGenerator;
+
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
 
     public CardProjection createCreditCard(int accountId) throws InvalidParamValueException {
         return createCreditCard(accountId, RandomStringGenerator.generateRandomIntegerString(4));
@@ -39,6 +47,10 @@ public class CreditCardCreateService {
         creditCardBean.setCreditCardNumber(creditCardNumberGenerator.generateCreditCardNumber());
         creditCardBean.setCreditCardPin(pinCode);
         creditCardBean.setAccountBean(accountBean);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(TimeService.TIMESIMULATOR.getCurrentDate());
+        calendar.add(Calendar.YEAR, (Integer) systemVariableRetrieveService.getObjectInternally(CARD_EXPIRATION_LENGTH));
+        creditCardBean.setExpirationDate(calendar.getTime());
         creditCardRepository.save(creditCardBean);
 
         CardProjection cardProjection = new CardProjection();

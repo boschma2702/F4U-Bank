@@ -8,9 +8,14 @@ import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.service.IBANGeneratorService;
 import com.bank.service.card.CardCreateService;
 import com.bank.service.customer.CustomerService;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+import static com.bank.util.systemvariable.SystemVariableNames.WEEKLY_TRANSFER_LIMIT;
 
 @Service
 public class AccountCreateService {
@@ -29,6 +34,9 @@ public class AccountCreateService {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
+
     /**
      * Creates a new account and links it to the given customerAccount. It also creates a new pin and assigns it.
      *
@@ -44,6 +52,7 @@ public class AccountCreateService {
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountNumber(ibanGeneratorService.generateIBAN());
         accountBean.setMinorAccount(isMinor);
+        accountBean.setTransferLimit((BigDecimal) systemVariableRetrieveService.getObjectInternally(WEEKLY_TRANSFER_LIMIT));
         accountRepository.save(accountBean);
 
         CustomerAccount customerAccount = new CustomerAccount();
