@@ -36,10 +36,13 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case INTEREST_RATE_1:
+                //No further change needed
                 break;
             case INTEREST_RATE_2:
+                //No further change needed
                 break;
             case INTEREST_RATE_3:
+                //No further change needed
                 break;
             case OVERDRAFT_INTEREST_RATE:
                 break;
