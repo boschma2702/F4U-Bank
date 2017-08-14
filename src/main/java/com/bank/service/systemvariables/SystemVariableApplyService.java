@@ -30,6 +30,7 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case CARD_USAGE_ATTEMPTS:
+                //No further change needed
                 break;
             case MAX_OVERDRAFT_LIMIT:
                 break;
