@@ -5,14 +5,15 @@ import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.account.AccountOverdraftLimitProjection;
 import com.bank.repository.account.AccountRepository;
 import com.bank.service.account.AccountService;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.bank.util.systemvariable.SystemVariableNames.MAX_OVERDRAFT_LIMIT;
+
 @Service
 public class OverdraftLimitService {
-
-    private static final double OVERDRAFT_MAX = 5000;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -20,9 +21,12 @@ public class OverdraftLimitService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
+
     public void setOverdraft(String accountNumber, double amount) throws InvalidParamValueException {
         Logger.info("Setting overdraft limit of accountNumber=%s to amount=%s", accountNumber, amount);
-        if(!(amount>=0 && amount<=OVERDRAFT_MAX)){
+        if(!(amount>=0 && amount<= (double) systemVariableRetrieveService.getObjectInternally(MAX_OVERDRAFT_LIMIT))){
             Logger.error("Incorrect amount given, amount=%s", amount);
             throw new InvalidParamValueException("invalid overdraft amount");
         }
