@@ -1,5 +1,6 @@
 package com.bank.service.systemvariables;
 
+import com.bank.repository.card.CardRepository;
 import com.bank.repository.creditcard.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class SystemVariableApplyService {
 
     @Autowired
     private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
 
     public void applySystemVariable(String key, String value, Object oldValue){
@@ -48,6 +52,7 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case DAILY_WITHDRAW_LIMIT:
+                cardRepository.updateDayLimit((BigDecimal) oldValue, new BigDecimal(Double.parseDouble(value)));
                 break;
             case WEEKLY_TRANSFER_LIMIT:
                 break;
