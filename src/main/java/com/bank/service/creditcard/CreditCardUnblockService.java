@@ -24,7 +24,7 @@ public class CreditCardUnblockService {
     public void unblockCard(String pinCard) throws NoEffectException {
         Logger.info("Unblocking creditCard=%s", pinCard);
         CreditCardBean creditCardBean = creditCardRepository.getBlockedCardByCreditCardNumber(pinCard);
-        if(creditCardBean == null || !(creditCardBean.getAttempts() == (int) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS))){
+        if(creditCardBean == null || (creditCardBean.getAttempts() == 0)){
             Logger.error("Could not find blocked creditCard=%s", pinCard);
             throw new NoEffectException("Blocked card not present");
         }

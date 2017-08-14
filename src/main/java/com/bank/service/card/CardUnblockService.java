@@ -30,7 +30,7 @@ public class CardUnblockService {
     public void unblockCard(int accountId, String pinCard) throws NoEffectException {
         Logger.info("Unblocking pinCard=%s of accountId=%s", pinCard, accountId);
         CardBean bean = cardRepository.getBlockedCardOfNonBlockedAccount(accountId, pinCard);
-        if(bean == null || !(bean.getAttempts() == (int) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS))){
+        if(bean == null || (bean.getAttempts() == 0)){
             Logger.error("Could not find blocked pinCard=%s of accountId=%s", pinCard, accountId);
             throw new NoEffectException("Blocked card not present");
         }
