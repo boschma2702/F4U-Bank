@@ -1,5 +1,7 @@
 package com.bank.bean.systemvariables;
 
+import com.bank.util.systemvariable.Money;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -13,18 +15,22 @@ public class SystemVariableBean {
     private int id;
 
     @Column(scale = 2)
+    @Money
     private BigDecimal CREDIT_CARD_MONTHLY_FEE = new BigDecimal(5);
 
     @Column(scale = 2)
+    @Money
     private BigDecimal CREDIT_CARD_DEFAULT_CREDIT = new BigDecimal(1000);
 
     private int CARD_EXPIRATION_LENGTH = 4;
 
     @Column(scale = 2)
+    @Money
     private BigDecimal NEW_CARD_COST = new BigDecimal(7.50);
 
     private int CARD_USAGE_ATTEMPTS = 3;
 
+    @Money
     private double MAX_OVERDRAFT_LIMIT = 5000;
 
     private double INTEREST_RATE_1 = 0.15e-2;
@@ -36,9 +42,11 @@ public class SystemVariableBean {
     private double OVERDRAFT_INTEREST_RATE = 0.1;
 
     @Column(scale = 2)
+    @Money
     private BigDecimal DAILY_WITHDRAW_LIMIT = new BigDecimal(250);
 
     @Column(scale = 2)
+    @Money
     private BigDecimal WEEKLY_TRANSFER_LIMIT = new BigDecimal(2500);
 
 }
