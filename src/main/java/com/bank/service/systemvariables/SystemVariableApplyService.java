@@ -45,6 +45,7 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case OVERDRAFT_INTEREST_RATE:
+                //No further change needed
                 break;
             case DAILY_WITHDRAW_LIMIT:
                 break;
