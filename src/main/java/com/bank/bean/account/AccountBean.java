@@ -39,7 +39,7 @@ public class AccountBean {
     private BigDecimal amount = BigDecimal.ZERO;
 
     @Column(name = "limit_transfer", scale = 2)
-    private BigDecimal transferLimit = Constants.ACCOUNT_DEFAULT_TRANSFER_LIMIT;
+    private BigDecimal transferLimit;
 
     /**
      * Indicates whether the account is active or not.

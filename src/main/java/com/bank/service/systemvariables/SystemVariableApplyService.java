@@ -55,6 +55,7 @@ public class SystemVariableApplyService {
                 cardRepository.updateDayLimit((BigDecimal) oldValue, new BigDecimal(Double.parseDouble(value)));
                 break;
             case WEEKLY_TRANSFER_LIMIT:
+                //No further change needed
                 break;
         }
     }
