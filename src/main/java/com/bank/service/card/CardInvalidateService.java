@@ -8,6 +8,7 @@ import com.bank.projection.pin.CardProjection;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.account.AccountService;
 import com.bank.service.customer.CustomerService;
+import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
 import com.bank.util.Constants;
@@ -15,6 +16,10 @@ import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+
+import static com.bank.util.systemvariable.SystemVariableNames.NEW_CARD_COST;
 
 
 @Service
@@ -38,6 +43,9 @@ public class CardInvalidateService {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private SystemVariableRetrieveService systemVariableRetrieveService;
+
     @Transactional
     public CardProjection invalidateCard(int accountId, int customerId, String pinCard, boolean newPin) throws InvalidParamValueException {
         Logger.info("Invalidating pinCard=%s of accountId=%s", pinCard, accountId);
@@ -45,7 +53,7 @@ public class CardInvalidateService {
         AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
 
-        transactionService.retrieveTransaction(accountBean, Constants.CARD_REPLACEMENT_COSTS, "Card replacement costs");
+        transactionService.retrieveTransaction(accountBean, (BigDecimal) systemVariableRetrieveService.getObjectInternally(NEW_CARD_COST), "Card replacement costs");
 
         CardBean newCard;
         if(newPin){

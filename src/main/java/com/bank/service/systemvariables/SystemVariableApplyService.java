@@ -27,6 +27,7 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case NEW_CARD_COST:
+                //No further change needed
                 break;
             case CARD_USAGE_ATTEMPTS:
                 break;
