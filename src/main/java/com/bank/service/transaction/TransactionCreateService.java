@@ -51,7 +51,7 @@ public class TransactionCreateService {
             CardBean cardBean = cardValidateService.validateCard(sourceAccountBean.getAccountId(), pinCard, pinCode);
             if(cardBean.getDayLimitRemaining().compareTo(amount) < 0){
                 Logger.error("Could not pay from account with cardId=%s, day limit reached", cardBean.getCardId());
-                throw new InvalidPINException("Day limit reached");
+                throw new InvalidParamValueException("Day limit reached");
             }
             transactionService.doTransaction(sourceAccountBean, targetAccountBean, amount, cardBean, "", "");
         }

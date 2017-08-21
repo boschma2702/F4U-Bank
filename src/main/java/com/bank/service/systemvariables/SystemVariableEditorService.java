@@ -33,31 +33,11 @@ public class SystemVariableEditorService extends DayPassedListener {
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
         if (systemVariableBean == null) {
-            systemVariableRepository.save(new SystemVariableBean());
+            systemVariableBean = new SystemVariableBean();
+            systemVariableRepository.save(systemVariableBean);
         }
         this.systemVariableRepository = systemVariableRepository;
     }
-
-//    public void setValue(String key, String value, java.sql.Date effectDate) throws InvalidParamValueException {
-//        Logger.info("Setting system variable with key=%s, value=%s, effectDate=%s", key, value, effectDate);
-//        if (effectDate.after(TimeService.TIMESIMULATOR.getCurrentDate())) {
-//            if (SystemVariableFieldChecker.hasObject(key)) {
-//                try {
-//                    Double.parseDouble(value);
-//                    changesQueue.add(new SystemVariableChangeObject(key, value, effectDate));
-//                } catch (NumberFormatException e) {
-//                    Logger.error("Could not add set value request, invalid value=%s of key=%s", value, key);
-//                    throw new InvalidParamValueException("Invalid value format");
-//                }
-//            } else {
-//                Logger.error("Could not add set value request, unknown system variable key=%s", key);
-//                throw new InvalidParamValueException("Unknown system variable");
-//            }
-//        } else {
-//            Logger.error("Could not add set value request, date already passed of key=%s value=%s", key, value);
-//            throw new InvalidParamValueException("Effect date already passed");
-//        }
-//    }
 
     public void addSystemVariableChangeObject(SystemVariableChangeObject systemVariableChangeObject){
         changesQueue.add(systemVariableChangeObject);
