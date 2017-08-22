@@ -20,10 +20,10 @@ public class CreditCardController {
     @Autowired
     private AccountService accountService;
 
-    public CardProjection requestCreditCard(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
+    public PinProjection requestCreditCard(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-        accountService.checkMinor(iBAN);
         if(accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)){
+            accountService.checkMinor(iBAN);
             return creditCardCreateService.createCreditCard(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId());
         }else {
             throw new NotAuthorizedException("Not Authorized");

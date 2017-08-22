@@ -4,6 +4,7 @@ import com.bank.bean.account.AccountBean;
 import com.bank.bean.creditcard.CreditCardBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.pin.CardProjection;
+import com.bank.projection.pin.PinProjection;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.creditcard.CreditCardRepository;
 import com.bank.service.systemvariables.SystemVariableRetrieveService;
@@ -32,11 +33,11 @@ public class CreditCardCreateService {
     @Autowired
     private SystemVariableRetrieveService systemVariableRetrieveService;
 
-    public CardProjection createCreditCard(int accountId) throws InvalidParamValueException {
+    public PinProjection createCreditCard(int accountId) throws InvalidParamValueException {
         return createCreditCard(accountId, RandomStringGenerator.generateRandomIntegerString(4));
     }
 
-    public CardProjection createCreditCard(int accountId, String pinCode) throws InvalidParamValueException {
+    public PinProjection createCreditCard(int accountId, String pinCode) throws InvalidParamValueException {
         Logger.info("Creating credit card for accountId=%s", accountId);
         if(creditCardRepository.hasAccountIdCreditCard(accountId, TimeService.TIMESIMULATOR.getCurrentDate())){
             Logger.error("Could not create credit card, accountId=%s already has active account", accountId);
@@ -53,9 +54,10 @@ public class CreditCardCreateService {
         creditCardBean.setExpirationDate(calendar.getTime());
         creditCardRepository.save(creditCardBean);
 
-        CardProjection cardProjection = new CardProjection();
+        PinProjection cardProjection = new PinProjection();
         cardProjection.setPinCard(creditCardBean.getCreditCardNumber());
         cardProjection.setPinCode(creditCardBean.getCreditCardPin());
+        cardProjection.setExpirationDate(creditCardBean.getExpirationDate());
         return cardProjection;
     }
 

@@ -144,6 +144,7 @@ public class CreditCardBean {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(creationDate);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.MINUTE, -1);
         activationDate = calendar.getTime();
     }
 

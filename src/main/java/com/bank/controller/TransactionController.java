@@ -38,8 +38,10 @@ public class TransactionController {
     }
 
     public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException, AccountFrozenException {
-        int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(sourceIBAN).getAccountId();
-        int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(targetIBAN).getAccountId();
+        String iBANToCheck = sourceIBAN.endsWith("C") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
+        String iBANToCheckTarget = targetIBAN.endsWith("C") ? targetIBAN.substring(0, targetIBAN.length()-1) : targetIBAN;
+        int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
+        int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheckTarget).getAccountId();
         transactionCreateService.payFromAccount(sourceId, targetId, pinCard, pinCode, amount);
     }
 

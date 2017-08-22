@@ -33,11 +33,11 @@ public class AccountAmountService {
             AccountSavingBean accountSavingBean = accountSavingService.getAccountSavingsBeanByAccountBean(accountBean);
             projection.setSavingAccountBalance(accountSavingBean.getAmount().doubleValue());
         } catch (InvalidParamValueException e) {
-            projection.setSavingAccountBalance(0);
+            // do nothing
         }
         try {
             CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByAccountId(accountId, true);
-            double amount = creditCardBean.getCredit().compareTo(BigDecimal.ZERO) > 1 ? creditCardBean.getCredit().doubleValue() : 0;
+            double amount = creditCardBean.getCredit().compareTo(BigDecimal.ZERO) > 0 ? creditCardBean.getCredit().doubleValue() : 0;
             projection.setCredit(amount);
         }catch (InvalidParamValueException e) {
             // do nothing, leave credit value null

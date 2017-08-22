@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -29,7 +30,7 @@ public final class AuthenticationService implements Runnable {
     public static AuthenticationService instance = new AuthenticationService();
 
     private static HashMap<String, HashMap<String, Object>> map = new HashMap<String, HashMap<String, Object>>();
-    private static HashMap<String, Long> cookieTimes = new HashMap();
+    private static ConcurrentHashMap<String, Long> cookieTimes = new ConcurrentHashMap<>();
 
     private SecureRandom random = new SecureRandom();
 
@@ -105,7 +106,7 @@ public final class AuthenticationService implements Runnable {
     public static void removeCookies(){
         try{
             COOKIE_LOCK.lock();
-            cookieTimes = new HashMap<>();
+            cookieTimes = new ConcurrentHashMap<>();
             map = new HashMap<>();
         }finally {
             COOKIE_LOCK.unlock();
