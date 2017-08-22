@@ -2,6 +2,7 @@ package com.bank.service.customer;
 
 import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.person.PersonBean;
+import com.bank.exception.AccountFrozenException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.customer.CustomerRepository;
 import com.bank.service.person.PersonService;
@@ -30,5 +31,12 @@ public class CustomerService {
             throw new InvalidParamValueException("Person is not a customer");
         }
         return personBean.getCustomerBean();
+    }
+
+    public void checkIfCustomerIsFrozen(int customerId) throws AccountFrozenException {
+        Logger.info("Checking if customreId=%s is frozen", customerId);
+        if(customerRepository.isCustomerFrozen(customerId)){
+            throw new AccountFrozenException("Customer account is frozen");
+        }
     }
 }

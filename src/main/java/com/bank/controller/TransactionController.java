@@ -1,9 +1,11 @@
 package com.bank.controller;
 
+import com.bank.bean.customer.CustomerBean;
 import com.bank.exception.*;
 import com.bank.projection.transaction.TransactionProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
+import com.bank.service.customer.CustomerService;
 import com.bank.service.transaction.TransactionCreateService;
 import com.bank.service.transaction.TransactionOverviewService;
 import com.bank.service.transaction.TransactionSavingCreateService;
@@ -28,6 +30,9 @@ public class TransactionController {
     @Autowired
     private TransactionOverviewService transactionOverviewService;
 
+    @Autowired
+    private CustomerService customerService;
+
     public void depositIntoAccount(String IBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException, AccountFrozenException {
         transactionCreateService.depositIntoAccount(accountService.getAccountBeanByAccountNumberCheckFrozen(IBAN).getAccountId(), pinCard, pinCode, amount);
     }
@@ -40,16 +45,18 @@ public class TransactionController {
 
     public void transferMoney(String authToken, String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         String iBANToCheck = sourceIBAN.endsWith("S") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
+        String iBANToCheckTarget = targetIBAN.endsWith("S") ? targetIBAN.substring(0, targetIBAN.length()-1) : targetIBAN;
         boolean authenticated = false;
         if(AuthenticationService.instance.isCustomer(authToken)){
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
+            customerService.checkIfCustomerIsFrozen(customerId);
             authenticated = accountService.checkIfAccountHolder(iBANToCheck, customerId);
         }else {
             authenticated = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         }
         if(authenticated) {
             int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
-            int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
+            int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheckTarget).getAccountId();
             if (sourceIBAN.endsWith("S") || targetIBAN.endsWith("S")) {
                 transactionSavingCreateService.transferMoney(sourceIBAN, targetIBAN, targetName, amount, description);
             } else {

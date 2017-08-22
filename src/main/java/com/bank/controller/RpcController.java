@@ -42,9 +42,10 @@ public class RpcController {
     }
 
     @JsonRpcErrors({
-            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
+            @JsonRpcError(exception = AccountFrozenException.class, code = 423)
     })
-    public Object openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedException {
+    public Object openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedException, AccountFrozenException {
         return accountController.openAdditionalAccount(authToken);
     }
 
@@ -320,8 +321,8 @@ public class RpcController {
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
             @JsonRpcError(exception = NoEffectException.class, code = 420)
     })
-    public Object setFreezeUserAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("freeze") boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
-        accountController.setFreezeUserAccount(authToken, iBAN, freeze);
+    public Object setFreezeUserAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("username") String username, @JsonRpcParam("freeze") boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+        accountController.setFreezeUserAccount(authToken, username, freeze);
         return new EmptyJsonResponse();
     }
 
@@ -355,7 +356,8 @@ public class RpcController {
      */
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
-            @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
+            @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
+            @JsonRpcError(exception = AccountFrozenException.class, code = 423)
     })
     public Object openAccount(@JsonRpcParam("name") String name,
                               @JsonRpcParam("surname") String surname,
@@ -368,7 +370,7 @@ public class RpcController {
                               @JsonRpcParam("username") String username,
                               @JsonRpcParam("password") String password,
                               @JsonRpcParam("type") String type,
-                              @JsonRpcParam("guardians") String[] guardians) throws InvalidParamValueException, NotAuthorizedException {
+                              @JsonRpcParam("guardians") String[] guardians) throws InvalidParamValueException, NotAuthorizedException, AccountFrozenException {
         return accountController.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, type, guardians);
     }
 
