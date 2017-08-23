@@ -58,22 +58,22 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
     @Query("select case when (count(c) > 0)  then true else false end " +
             "from CreditCardBean c " +
             "where c.accountBean.accountId = ?1 " +
-            "and c.isActive = true " +
-            "and ?2 < c.expirationDate")
-    boolean hasAccountIdCreditCard(int accountId, Date currentDate);
+            "and ?2 < c.expirationDate " +
+            "and (c.isActive = true or (c.isActive = false and c.attempts = ?3))")
+    boolean hasAccountIdCreditCard(int accountId, Date currentDate, int blockAttempts);
 
     @Query("select c " +
             "from CreditCardBean c " +
             "where c.isActive = true " +
             "and c.credit <> c.creditLimit " +
-            "and c.activationDate <= ?1 " +
-            "and ?1 < c.expirationDate")
+            "and c.activationDate <= ?1 ")
     List<CreditCardBean> getCreditCardsWithUsedCredit(Date currentDate);
 
     @Query("select c " +
             "from CreditCardBean c " +
             "where c.isActive = true " +
-            "and c.activationDate <= ?1")
+            "and c.activationDate <= ?1 " +
+            "and ?1 < c.expirationDate")
     List<CreditCardBean> getAllActiveCreditCards(Date currentDate);
 
     @Query("select c " +

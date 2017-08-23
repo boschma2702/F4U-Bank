@@ -10,6 +10,7 @@ import com.bank.service.transaction.TransactionCreateService;
 import com.bank.service.transaction.TransactionOverviewService;
 import com.bank.service.transaction.TransactionSavingCreateService;
 import com.bank.service.transaction.TransactionSavingsService;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,12 @@ public class TransactionController {
 
     public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, BigDecimal amount) throws InvalidParamValueException, InvalidPINException, AccountFrozenException {
         String iBANToCheck = sourceIBAN.endsWith("C") ? sourceIBAN.substring(0, sourceIBAN.length()-1) : sourceIBAN;
-        String iBANToCheckTarget = targetIBAN.endsWith("C") ? targetIBAN.substring(0, targetIBAN.length()-1) : targetIBAN;
+        if(targetIBAN.endsWith("C")){
+            Logger.error("sourceIBAN=%s trying to pay to credit card", sourceIBAN);
+            throw new InvalidParamValueException("Can not pay to credit card");
+        }
         int sourceId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheck).getAccountId();
-        int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(iBANToCheckTarget).getAccountId();
+        int targetId = accountService.getAccountBeanByAccountNumberCheckFrozen(targetIBAN).getAccountId();
         transactionCreateService.payFromAccount(sourceId, targetId, pinCard, pinCode, amount);
     }
 

@@ -50,7 +50,10 @@ public class TransactionCreateService {
                 Logger.error("Could not pay from account with cardId=%s, owner of pinCard is frozen", creditCardBean.getCreditCardId());
                 throw new AccountFrozenException("Account belonging to card is frozen");
             }
-            //maybe check that sourceIBAN is same as creditCardBean
+            if(creditCardBean.getAccountBean().getAccountId() != sourceId){
+                Logger.error("Could not pay from account with cardId=%s, given account and credit card do not match", creditCardBean.getCreditCardId());
+                throw new InvalidParamValueException("Source account and credit card do not match");
+            }
             transactionCreditCardService.doTransaction(creditCardBean, targetAccountBean, amount);
         }else{
             CardBean cardBean = cardValidateService.validateCard(sourceAccountBean.getAccountId(), pinCard, pinCode);
