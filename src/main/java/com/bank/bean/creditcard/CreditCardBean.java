@@ -24,10 +24,10 @@ public class CreditCardBean {
     private String creditCardPin;
 
     @Column(scale = 2)
-    private BigDecimal credit = new BigDecimal(1000);
+    private BigDecimal credit;
 
     @Column(name = "credit_limit", scale = 2)
-    private BigDecimal creditLimit = new BigDecimal(1000);
+    private BigDecimal creditLimit;
 
     @OneToOne()
     @JoinColumn(name = "account_id")

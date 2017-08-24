@@ -87,6 +87,6 @@ public interface CreditCardRepository extends CrudRepository<CreditCardBean, Int
     @Modifying
     @Transactional
     @Query("update CreditCardBean c " +
-            "set c.credit = c.credit + (?2-?1), c.creditLimit = ?2 ")
+            "set c.credit = (c.credit + (?2-?1)), c.creditLimit = ?2 ")
     void setCreditCardLimit(BigDecimal oldLimit, BigDecimal limit);
 }

@@ -14,10 +14,12 @@ import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import static com.bank.util.systemvariable.SystemVariableNames.CARD_EXPIRATION_LENGTH;
 import static com.bank.util.systemvariable.SystemVariableNames.CARD_USAGE_ATTEMPTS;
+import static com.bank.util.systemvariable.SystemVariableNames.CREDIT_CARD_DEFAULT_CREDIT;
 
 @Service
 public class CreditCardCreateService {
@@ -49,6 +51,9 @@ public class CreditCardCreateService {
         creditCardBean.setCreditCardNumber(creditCardNumberGenerator.generateCreditCardNumber());
         creditCardBean.setCreditCardPin(pinCode);
         creditCardBean.setAccountBean(accountBean);
+        BigDecimal creditLimit = (BigDecimal) systemVariableRetrieveService.getObjectInternally(CREDIT_CARD_DEFAULT_CREDIT);
+        creditCardBean.setCredit(creditLimit);
+        creditCardBean.setCreditLimit(creditLimit);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(TimeService.TIMESIMULATOR.getCurrentDate());
         calendar.add(Calendar.YEAR, (Integer) systemVariableRetrieveService.getObjectInternally(CARD_EXPIRATION_LENGTH));

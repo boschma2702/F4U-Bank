@@ -21,7 +21,7 @@ public class SystemVariableAddService {
     @Autowired
     private SystemVariableEditorService systemVariableEditorService;
 
-    public void setValue(String key, String value, java.sql.Date effectDate) throws InvalidParamValueException {
+    public void setValue(String key, BigDecimal value, java.sql.Date effectDate) throws InvalidParamValueException {
         Logger.info("Setting system variable with key=%s, value=%s, effectDate=%s", key, value, effectDate);
         if (effectDate.after(TimeService.TIMESIMULATOR.getCurrentDate())) {
             if (checkValue(key, value)) {
@@ -35,19 +35,19 @@ public class SystemVariableAddService {
         }
     }
 
-    private boolean checkValue(String key, String value) throws InvalidParamValueException {
+    private boolean checkValue(String key, BigDecimal value) throws InvalidParamValueException {
         try {
-            double d = Double.parseDouble(value);
+//            double d = Double.parseDouble(value);
             Field field = SystemVariableBean.class.getDeclaredField(key);
             if (field.getType().getSimpleName().equals("int")) {
-                BigDecimal bigDecimal = new BigDecimal(d);
-                if (bigDecimal.scale() > 0) {
+//                BigDecimal bigDecimal = new BigDecimal(d);
+                if (value.scale() > 0) {
                     throw new NumberFormatException();
                 }
             }
             if (field.isAnnotationPresent(Money.class)) {
-                BigDecimal bigDecimal = new BigDecimal(d);
-                if (bigDecimal.scale() > 2) {
+//                BigDecimal bigDecimal = new BigDecimal(d);
+                if (value.scale() > 2) {
                     throw new NumberFormatException();
                 }
             }

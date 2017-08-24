@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 @Service
 @JsonRpcService("/api")
@@ -384,7 +385,7 @@ public class RpcController {
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
     })
-    public Object setValue(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("key") String key, @JsonRpcParam("value") String value, @JsonRpcParam("date") Date date) throws NotAuthorizedException, InvalidParamValueException {
+    public Object setValue(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("key") String key, @JsonRpcParam("value") BigDecimal value, @JsonRpcParam("date") Date date) throws NotAuthorizedException, InvalidParamValueException {
         systemVariableController.setValue(authToken, key, value, date);
         return new EmptyJsonResponse();
     }

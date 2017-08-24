@@ -1,14 +1,15 @@
 package com.bank.util.systemvariable;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class SystemVariableChangeObject implements Comparable<SystemVariableChangeObject> {
 
     private String key;
-    private String value;
+    private BigDecimal value;
     private Date effectDate;
 
-    public SystemVariableChangeObject(String key, String value, Date effectDate) {
+    public SystemVariableChangeObject(String key, BigDecimal value, Date effectDate) {
         this.key = key;
         this.value = value;
         this.effectDate = effectDate;
@@ -26,11 +27,23 @@ public class SystemVariableChangeObject implements Comparable<SystemVariableChan
         return key;
     }
 
-    public String getValue() {
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public BigDecimal getValue() {
         return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
     public Date getEffectDate() {
         return effectDate;
+    }
+
+    public void setEffectDate(Date effectDate) {
+        this.effectDate = effectDate;
     }
 }

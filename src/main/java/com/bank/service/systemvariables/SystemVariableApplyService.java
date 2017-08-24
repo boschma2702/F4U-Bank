@@ -19,13 +19,13 @@ public class SystemVariableApplyService {
     private CardRepository cardRepository;
 
 
-    public void applySystemVariable(String key, String value, Object oldValue){
+    public void applySystemVariable(String key, BigDecimal value, Object oldValue){
         switch (key){
             case CREDIT_CARD_MONTHLY_FEE:
                 //No further change needed
                 break;
             case CREDIT_CARD_DEFAULT_CREDIT:
-                creditCardRepository.setCreditCardLimit((BigDecimal) oldValue, new BigDecimal(Double.parseDouble(value)));
+                creditCardRepository.setCreditCardLimit((BigDecimal) oldValue, value);
                 break;
             case CARD_EXPIRATION_LENGTH:
                 //No further change needed
@@ -52,7 +52,7 @@ public class SystemVariableApplyService {
                 //No further change needed
                 break;
             case DAILY_WITHDRAW_LIMIT:
-                cardRepository.updateDayLimit((BigDecimal) oldValue, new BigDecimal(Double.parseDouble(value)));
+                cardRepository.updateDayLimit((BigDecimal) oldValue, value);
                 break;
             case WEEKLY_TRANSFER_LIMIT:
                 //No further change needed

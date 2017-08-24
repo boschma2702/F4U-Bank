@@ -31,12 +31,16 @@ public class SystemVariableEditorService extends DayPassedListener {
     private SystemVariableApplyService systemVariableApplyService;
 
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
+        this.systemVariableRepository = systemVariableRepository;
+        resetSystemVariableBean();
+    }
+
+    public void resetSystemVariableBean(){
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
         if (systemVariableBean == null) {
             systemVariableBean = new SystemVariableBean();
             systemVariableRepository.save(systemVariableBean);
         }
-        this.systemVariableRepository = systemVariableRepository;
     }
 
     public void addSystemVariableChangeObject(SystemVariableChangeObject systemVariableChangeObject){
@@ -65,7 +69,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         }
     }
 
-    public void applyValue(String key, String value) {
+    public void applyValue(String key, BigDecimal value) {
         Logger.info("Applying system variable change key=%s, value=%s", key, value);
         try {
             Field field = SystemVariableBean.class.getDeclaredField(key);
@@ -73,13 +77,13 @@ public class SystemVariableEditorService extends DayPassedListener {
             Object oldValue = SystemVariableRetrieveService.getObjectInternally(systemVariableBean, key);
             switch (field.getType().getSimpleName()) {
                 case "double":
-                    field.set(systemVariableBean, Double.parseDouble(value));
+                    field.set(systemVariableBean, value.doubleValue());
                     break;
                 case "int":
-                    field.set(systemVariableBean, (int) Double.parseDouble(value));
+                    field.set(systemVariableBean, (int)value.doubleValue());
                     break;
                 case "BigDecimal":
-                    field.set(systemVariableBean, new BigDecimal(Double.parseDouble(value)));
+                    field.set(systemVariableBean, value);
                     break;
                 default:
                     //should not happen
