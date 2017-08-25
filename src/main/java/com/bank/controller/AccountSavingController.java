@@ -1,9 +1,6 @@
 package com.bank.controller;
 
-import com.bank.exception.AccountFrozenException;
-import com.bank.exception.AuthenticationException;
-import com.bank.exception.InvalidParamValueException;
-import com.bank.exception.NotAuthorizedException;
+import com.bank.exception.*;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.AccountService;
 import com.bank.service.account.accountsaving.AccountSavingCloseService;
@@ -22,7 +19,7 @@ public class AccountSavingController {
     private AccountSavingOpenService accountSavingOpenService;
 
 
-    public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
+    public void openSavingsAccount(String authToken, String iBAN) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException, NotAllowedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (accountService.checkIfAccountHolderCheckFrozen(iBAN, customerId)) {
             accountService.checkMinor(iBAN);

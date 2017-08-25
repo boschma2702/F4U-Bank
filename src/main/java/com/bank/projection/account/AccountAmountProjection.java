@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountAmountProjection {
     private double balance;
-    private double savingAccountBalance;
+    private Double savingAccountBalance;
     private Double credit;
 
     public double getBalance() {
@@ -16,11 +16,11 @@ public class AccountAmountProjection {
         this.balance = balance;
     }
 
-    public double getSavingAccountBalance() {
+    public Double getSavingAccountBalance() {
         return savingAccountBalance;
     }
 
-    public void setSavingAccountBalance(double savingAccountBalance) {
+    public void setSavingAccountBalance(Double savingAccountBalance) {
         this.savingAccountBalance = savingAccountBalance;
     }
 

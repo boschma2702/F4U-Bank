@@ -26,7 +26,7 @@ public class OverdraftLimitService {
 
     public void setOverdraft(String accountNumber, double amount) throws InvalidParamValueException {
         Logger.info("Setting overdraft limit of accountNumber=%s to amount=%s", accountNumber, amount);
-        if(!(amount>=0 && amount<= (double) systemVariableRetrieveService.getObjectInternally(MAX_OVERDRAFT_LIMIT))){
+        if(!(amount>=0 && amount<= (Double) systemVariableRetrieveService.getObjectInternally(MAX_OVERDRAFT_LIMIT))){
             Logger.error("Incorrect amount given, amount=%s", amount);
             throw new InvalidParamValueException("invalid overdraft amount");
         }

@@ -3,10 +3,7 @@ package com.bank.controller;
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.customeraccount.CustomerAccount;
-import com.bank.exception.AccountFrozenException;
-import com.bank.exception.InvalidParamValueException;
-import com.bank.exception.NoEffectException;
-import com.bank.exception.NotAuthorizedException;
+import com.bank.exception.*;
 import com.bank.projection.customer.CustomerUsernameProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.service.AuthenticationService;
@@ -45,7 +42,7 @@ public class AccountAccessController {
         }
     }
 
-    public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException, AccountFrozenException {
+    public PinProjection provideAccess(String authToken, String IBAN, String username) throws InvalidParamValueException, NotAuthorizedException, NoEffectException, AccountFrozenException, NotAllowedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         accountService.checkMinor(IBAN);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(IBAN, customerId)) {
@@ -55,7 +52,7 @@ public class AccountAccessController {
         }
     }
 
-    public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException, AccountFrozenException {
+    public void revokeAccess(String authToken, String IBAN, String username) throws NotAuthorizedException, InvalidParamValueException, NoEffectException, AccountFrozenException, NotAllowedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         accountService.checkMinor(IBAN);
         if (username == null) {

@@ -63,6 +63,8 @@ public class CustomerBean {
     @Column(name = "creation_date")
     private java.util.Date creationDate;
 
+    private boolean frozen = false;
+
     public boolean isActive() {
         return isActive;
     }
@@ -141,6 +143,14 @@ public class CustomerBean {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
     }
 
     @PrePersist

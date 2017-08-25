@@ -31,33 +31,17 @@ public class SystemVariableEditorService extends DayPassedListener {
     private SystemVariableApplyService systemVariableApplyService;
 
     public SystemVariableEditorService(SystemVariableRepository systemVariableRepository) {
-        systemVariableBean = systemVariableRepository.getSystemVariableBean();
-        if (systemVariableBean == null) {
-            systemVariableRepository.save(new SystemVariableBean());
-        }
         this.systemVariableRepository = systemVariableRepository;
+        resetSystemVariableBean();
     }
 
-//    public void setValue(String key, String value, java.sql.Date effectDate) throws InvalidParamValueException {
-//        Logger.info("Setting system variable with key=%s, value=%s, effectDate=%s", key, value, effectDate);
-//        if (effectDate.after(TimeService.TIMESIMULATOR.getCurrentDate())) {
-//            if (SystemVariableFieldChecker.hasObject(key)) {
-//                try {
-//                    Double.parseDouble(value);
-//                    changesQueue.add(new SystemVariableChangeObject(key, value, effectDate));
-//                } catch (NumberFormatException e) {
-//                    Logger.error("Could not add set value request, invalid value=%s of key=%s", value, key);
-//                    throw new InvalidParamValueException("Invalid value format");
-//                }
-//            } else {
-//                Logger.error("Could not add set value request, unknown system variable key=%s", key);
-//                throw new InvalidParamValueException("Unknown system variable");
-//            }
-//        } else {
-//            Logger.error("Could not add set value request, date already passed of key=%s value=%s", key, value);
-//            throw new InvalidParamValueException("Effect date already passed");
-//        }
-//    }
+    public void resetSystemVariableBean(){
+        systemVariableBean = systemVariableRepository.getSystemVariableBean();
+        if (systemVariableBean == null) {
+            systemVariableBean = new SystemVariableBean();
+            systemVariableRepository.save(systemVariableBean);
+        }
+    }
 
     public void addSystemVariableChangeObject(SystemVariableChangeObject systemVariableChangeObject){
         changesQueue.add(systemVariableChangeObject);
@@ -85,7 +69,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         }
     }
 
-    public void applyValue(String key, String value) {
+    public void applyValue(String key, BigDecimal value) {
         Logger.info("Applying system variable change key=%s, value=%s", key, value);
         try {
             Field field = SystemVariableBean.class.getDeclaredField(key);
@@ -93,13 +77,13 @@ public class SystemVariableEditorService extends DayPassedListener {
             Object oldValue = SystemVariableRetrieveService.getObjectInternally(systemVariableBean, key);
             switch (field.getType().getSimpleName()) {
                 case "double":
-                    field.set(systemVariableBean, Double.parseDouble(value));
+                    field.set(systemVariableBean, value.doubleValue());
                     break;
                 case "int":
-                    field.set(systemVariableBean, (int) Double.parseDouble(value));
+                    field.set(systemVariableBean, (int)value.doubleValue());
                     break;
                 case "BigDecimal":
-                    field.set(systemVariableBean, new BigDecimal(Double.parseDouble(value)));
+                    field.set(systemVariableBean, value);
                     break;
                 default:
                     //should not happen

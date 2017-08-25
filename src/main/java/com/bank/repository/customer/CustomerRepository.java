@@ -36,7 +36,8 @@ public interface CustomerRepository extends CrudRepository<CustomerBean, Integer
             "where c.customerId = ?1 " +
             "and c.customerId = customeraccount.customerId " +
             "and customeraccount.isMain = true " +
-            "and account.accountId = customeraccount.accountId")
+            "and account.accountId = customeraccount.accountId " +
+            "and account.isActive = true")
     List<AccountBean> getCustomerBeanMainAccess(int customerId);
 
     void deleteCustomerBeansByCreationDateAfter(Date date);
@@ -47,5 +48,11 @@ public interface CustomerRepository extends CrudRepository<CustomerBean, Integer
             "and month(c.dob) = month(?1) " +
             "and year(?1) - year(dob) = ?2")
     List<CustomerBean> getMinorBirthdays(Date date, int minorAge);
+
+    @Query("select case when (count(c) > 0)  then true else false end " +
+            "from CustomerBean c " +
+            "where c.customerId = ?1 " +
+            "and c.frozen = true")
+    boolean isCustomerFrozen(int customerId);
 
 }

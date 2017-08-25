@@ -19,7 +19,7 @@ public class CustomerAccessService {
         return customerRepository.getCustomerAccess(customerId);
     }
 
-    public List<AccountBean> getMainAccountAcces(int customerId) {
+    public List<AccountBean> getMainAccountAccess(int customerId) {
         Logger.info("Retrieving main accounts of customerId=%s", customerId);
         return customerRepository.getCustomerBeanMainAccess(customerId);
     }

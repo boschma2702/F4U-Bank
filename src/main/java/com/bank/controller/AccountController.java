@@ -52,6 +52,9 @@ public class AccountController {
     @Autowired
     private AccountTransferLimitService accountTransferLimitService;
 
+    @Autowired
+    private CustomerService customerService;
+
     public AccountOpenProjection openAccount(String name,
                                              String surname,
                                              String initials,
@@ -62,14 +65,19 @@ public class AccountController {
                                              String email,
                                              String username,
                                              String password) throws InvalidParamValueException, NotAuthorizedException {
-        return openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, Constants.ACCOUNT_TYPE_REGULAR, new String[]{});
+        try {
+            return openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, Constants.ACCOUNT_TYPE_REGULAR, new String[]{});
+        } catch (AccountFrozenException e) {
+            //new accounts without guardians can not throw accountFrozenException
+        }
+        throw new IllegalStateException("FrozenAccountException during opening new account");
     }
 
-    public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException {
+    public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException, AccountFrozenException, NotAllowedException {
         if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if ((Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.IS_MINOR)){
-                throw new NotAuthorizedException("Not Authorized");
+                throw new NotAllowedException("Not Authorized");
             }
             return accountOpenService.openAdditionalAccount(customerId);
         }else{
@@ -114,7 +122,7 @@ public class AccountController {
     }
 
 
-    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
+    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException, NotAllowedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)) {
             accountService.checkMinor(iBAN);
@@ -139,10 +147,10 @@ public class AccountController {
         throw new NotAuthorizedException("Not Authorized");
     }
 
-    public void setFreezeUserAccount(String authToken, String iBAN, boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
+    public void setFreezeUserAccount(String authToken, String username, boolean freeze) throws NotAuthorizedException, InvalidParamValueException, NoEffectException {
         boolean isAdmin = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         if (isAdmin) {
-            accountFreezeService.freezeAccount(accountService.getAccountBeanByAccountNumber(iBAN).getAccountId(), freeze);
+            accountFreezeService.freezeAccount(customerService.getCustomerBeanByUsername(username).getCustomerId(), freeze);
         } else {
             throw new NotAuthorizedException("Not Authorized");
         }
@@ -168,7 +176,7 @@ public class AccountController {
                                              String username,
                                              String password,
                                              String type,
-                                             String[] guardians) throws NotAuthorizedException, InvalidParamValueException {
+                                             String[] guardians) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
 
         return accountOpenService.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, type, guardians);
     }

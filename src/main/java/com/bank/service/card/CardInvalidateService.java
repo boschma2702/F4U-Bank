@@ -5,6 +5,7 @@ import com.bank.bean.card.CardBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.pin.CardProjection;
+import com.bank.projection.pin.PinProjection;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.account.AccountService;
 import com.bank.service.customer.CustomerService;
@@ -47,7 +48,7 @@ public class CardInvalidateService {
     private SystemVariableRetrieveService systemVariableRetrieveService;
 
     @Transactional
-    public CardProjection invalidateCard(int accountId, int customerId, String pinCard, boolean newPin) throws InvalidParamValueException {
+    public PinProjection invalidateCard(int accountId, int customerId, String pinCard, boolean newPin) throws InvalidParamValueException {
         Logger.info("Invalidating pinCard=%s of accountId=%s", pinCard, accountId);
         CardBean cardBean = cardService.getCardBean(pinCard, accountId);
         AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
@@ -64,11 +65,12 @@ public class CardInvalidateService {
 
         cardRepository.invalidatePinCard(accountId, pinCard, TimeService.TIMESIMULATOR.getCurrentDate());
 
-        CardProjection cardProjection = new CardProjection();
+        PinProjection cardProjection = new PinProjection();
         cardProjection.setPinCard(newCard.getPinCard());
         if(newPin){
             cardProjection.setPinCode(newCard.getPinCode());
         }
+        cardProjection.setExpirationDate(newCard.getExperationDate());
         return cardProjection;
     }
 

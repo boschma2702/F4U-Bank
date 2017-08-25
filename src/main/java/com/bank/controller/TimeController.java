@@ -6,6 +6,7 @@ import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.time.DateProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.BackupAndRestoreService;
+import com.bank.service.systemvariables.SystemVariableEditorService;
 import com.bank.service.time.TimeInitialService;
 import com.bank.service.time.TimeService;
 import com.bank.service.time.TimeSimulateService;
@@ -28,6 +29,9 @@ public class TimeController {
     @Autowired
     private BackupAndRestoreService backupAndRestoreService;
 
+    @Autowired
+    private SystemVariableEditorService systemVariableEditorService;
+
     public void simulateTime(String authToken, int nrOfDays) throws InvalidParamValueException, NoEffectException, NotAuthorizedException {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
         if(isAdministrativeEmployee) {
@@ -44,6 +48,7 @@ public class TimeController {
                 Date initialDate = timeInitialService.getInitialDate();
                 if (backupAndRestoreService.restore()) {
                     Logger.resetLog(initialDate);
+                    systemVariableEditorService.resetSystemVariableBean();
                 }
             } catch (IOException | InterruptedException e) {
                 throw new NoEffectException("Failed to restore");

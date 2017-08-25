@@ -4,6 +4,7 @@ import com.bank.bean.account.AccountBean;
 import com.bank.bean.card.CardBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.customeraccount.CustomerAccount;
+import com.bank.exception.AccountFrozenException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NoEffectException;
 import com.bank.projection.customer.CustomerUsernameProjection;
@@ -35,7 +36,7 @@ public class AccountAccessService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public PinProjection provideAccess(String accountNumber, String username) throws NoEffectException, InvalidParamValueException {
+    public PinProjection provideAccess(String accountNumber, String username) throws NoEffectException, InvalidParamValueException, AccountFrozenException {
         Logger.info("Providing access to accountNumber=%s to username=%s", accountNumber, username);
 
         CustomerBean customerBean = customerService.getCustomerBeanByUsername(username);
@@ -44,7 +45,10 @@ public class AccountAccessService {
             Logger.error("Could not find customerBean with username=%s or accountBean with accountNumber=%s", username, accountNumber);
             throw new InvalidParamValueException("Invalid account or username");
         }
-
+        if(customerBean.isFrozen() || accountBean.isFrozen()){
+            Logger.error("Could not provide access, accountNumber=%s or username=%s is frozen", accountNumber, username);
+            throw new AccountFrozenException("Account or customer frozen");
+        }
         // link customer to account
         CustomerAccount customerAccount = new CustomerAccount();
         customerAccount.setMain(false);
@@ -65,13 +69,17 @@ public class AccountAccessService {
         return pinProjection;
     }
 
-    public void revokeAccess(int customerId, int accountId) throws InvalidParamValueException, NoEffectException {
+    public void revokeAccess(int customerId, int accountId) throws InvalidParamValueException, NoEffectException, AccountFrozenException {
         Logger.info("Revoking access to accountNumber=%s of customerId=%s", accountId, customerId);
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
         AccountBean accountBean = accountService.getAccountBeanByAccountId(accountId);
         if (customerBean == null || accountBean == null) {
             Logger.error("Could not find customerBean with customerId=%s or accountBean with accountId=%s", customerId, accountId);
             throw new InvalidParamValueException("Invalid account or username");
+        }
+        if(customerBean.isFrozen() || accountBean.isFrozen()){
+            Logger.error("Could not revoke access, account or customer is frozen");
+            throw new AccountFrozenException("Account or customer is frozen");
         }
         customerAccountService.removeCustomerAccount(customerId, accountBean.getAccountId());
     }

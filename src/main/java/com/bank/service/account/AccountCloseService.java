@@ -50,7 +50,12 @@ public class AccountCloseService {
 
         if (hasOpenSavingsOrCreditAccount(accountBean)) {
             Logger.error("Could not close accountId=%s, unclosed savings and/or credit card account", accountBean.getAccountId());
-            throw new InvalidParamValueException("Unclosed savings and/or credit card account");
+            throw new NotAuthorizedException("Unclosed savings and/or credit card account");
+        }
+
+        if(accountBean.getAmount().compareTo(BigDecimal.ZERO) > 0){
+            Logger.error(String.format("Could not close account due to non zero balance of accountNumber=%s of customerId=%s", iBAN, customerId));
+            throw new NotAuthorizedException("Account has a non zero balance");
         }
 
         accountRepository.closeAccount(iBAN);
