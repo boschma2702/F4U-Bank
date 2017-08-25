@@ -4,7 +4,6 @@ import com.bank.bean.account.AccountBean;
 import com.bank.bean.card.CardBean;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.exception.InvalidParamValueException;
-import com.bank.projection.pin.CardProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.account.AccountService;
@@ -12,7 +11,6 @@ import com.bank.service.customer.CustomerService;
 import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
-import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,9 +55,9 @@ public class CardInvalidateService {
         transactionService.retrieveTransaction(accountBean, (BigDecimal) systemVariableRetrieveService.getObjectInternally(NEW_CARD_COST), "Card replacement costs");
 
         CardBean newCard;
-        if(newPin){
+        if (newPin) {
             newCard = cardCreateService.addCard(customerBean, accountBean);
-        }else{
+        } else {
             newCard = cardCreateService.addCard(customerBean, accountBean, cardBean.getPinCode());
         }
 
@@ -67,7 +65,7 @@ public class CardInvalidateService {
 
         PinProjection cardProjection = new PinProjection();
         cardProjection.setPinCard(newCard.getPinCard());
-        if(newPin){
+        if (newPin) {
             cardProjection.setPinCode(newCard.getPinCode());
         }
         cardProjection.setExpirationDate(newCard.getExperationDate());

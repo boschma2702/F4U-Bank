@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 @Service
 @JsonRpcService("/api")
@@ -24,6 +23,60 @@ public class RpcController {
      */
     @Autowired
     private AccountController accountController;
+    /**
+     * Access module
+     */
+
+    @Autowired
+    private AccountAccessController accountAccessController;
+    /**
+     * Transfer module
+     */
+    @Autowired
+    private TransactionController transactionController;
+    /**
+     * Authentication module
+     */
+    @Autowired
+    private SessionController sessionController;
+    /**
+     * Info Module
+     */
+    @Autowired
+    private CustomerController customerController;
+    /**
+     * Extension 2
+     */
+    @Autowired
+    private CardController cardController;
+    /**
+     * Time extension
+     */
+    @Autowired
+    private TimeController timeController;
+    /**
+     * Logger extension
+     */
+
+    @Autowired
+    private LoggingController loggingController;
+    /**
+     * Savings extension
+     */
+
+    @Autowired
+    private AccountSavingController accountSavingController;
+    /**
+     * CreditCard extension
+     */
+
+    @Autowired
+    private CreditCardController creditCardController;
+    /**
+     * Administrive user III
+     */
+    @Autowired
+    private SystemVariableController systemVariableController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
@@ -61,13 +114,6 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-    /**
-     * Access module
-     */
-
-    @Autowired
-    private AccountAccessController accountAccessController;
-
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
@@ -103,12 +149,6 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-    /**
-     * Transfer module
-     */
-    @Autowired
-    private TransactionController transactionController;
-
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
             @JsonRpcError(exception = AccountFrozenException.class, code = 423),
@@ -139,24 +179,12 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-    /**
-     * Authentication module
-     */
-    @Autowired
-    private SessionController sessionController;
-
     @JsonRpcErrors({
             @JsonRpcError(exception = AuthenticationException.class, code = 422)
     })
     public Object getAuthToken(@JsonRpcParam("username") String username, @JsonRpcParam("password") String password) throws AuthenticationException {
         return sessionController.getAuthToken(username, password);
     }
-
-    /**
-     * Info Module
-     */
-    @Autowired
-    private CustomerController customerController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
@@ -190,12 +218,6 @@ public class RpcController {
         return accountAccessController.getBankAccountAccess(authToken, iBAN);
     }
 
-    /**
-     * Extension 2
-     */
-    @Autowired
-    private CardController cardController;
-
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419),
@@ -206,12 +228,6 @@ public class RpcController {
         cardController.unblockCard(authToken, iBAN, pinCard);
         return new EmptyJsonResponse();
     }
-
-    /**
-     * Time extension
-     */
-    @Autowired
-    private TimeController timeController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
@@ -232,7 +248,7 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-    public Object getDate(){
+    public Object getDate() {
         return timeController.getDate();
     }
 
@@ -258,26 +274,12 @@ public class RpcController {
         return accountController.getOverdraftLimit(authToken, iBAN);
     }
 
-    /**
-     * Logger extension
-     */
-
-    @Autowired
-    private LoggingController loggingController;
-
     @JsonRpcErrors({
             @JsonRpcError(exception = NotAuthorizedException.class, code = 419)
     })
     public Object getEventLogs(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("beginDate") Date beginDate, @JsonRpcParam("endDate") Date endDate) throws NotAuthorizedException {
         return loggingController.getEventLogs(authToken, beginDate, endDate);
     }
-
-    /**
-     * Savings extension
-     */
-
-    @Autowired
-    private AccountSavingController accountSavingController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
@@ -290,7 +292,6 @@ public class RpcController {
         return new EmptyJsonResponse();
     }
 
-
     /**
      * Card invalidation extension
      */
@@ -302,13 +303,6 @@ public class RpcController {
     public Object invalidateCard(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN, @JsonRpcParam("pinCard") String pinCard, @JsonRpcParam("newPin") boolean newPin) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
         return cardController.invalidateCard(authToken, iBAN, pinCard, newPin);
     }
-
-    /**
-     * CreditCard extension
-     */
-
-    @Autowired
-    private CreditCardController creditCardController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),
@@ -381,12 +375,6 @@ public class RpcController {
                               @JsonRpcParam("guardians") String[] guardians) throws InvalidParamValueException, NotAuthorizedException, AccountFrozenException {
         return accountController.openAccount(name, surname, initials, date, ssn, address, telephoneNumber, email, username, password, type, guardians);
     }
-
-    /**
-     * Administrive user III
-     */
-    @Autowired
-    private SystemVariableController systemVariableController;
 
     @JsonRpcErrors({
             @JsonRpcError(exception = InvalidParamValueException.class, code = 418),

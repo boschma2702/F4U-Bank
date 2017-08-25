@@ -9,7 +9,7 @@ import com.bank.util.time.TimeSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -26,7 +26,6 @@ public class TimeService {
 
     @Autowired
     private BackupAndRestoreService backupAndRestoreService;
-
 
 
     @Autowired
@@ -53,7 +52,7 @@ public class TimeService {
         Date initialDate = new Date();
         Logger.info("Adding time, amount=%s", amount);
         //Check if first time a timejump took place
-        if(isFirstTimeJump()){
+        if (isFirstTimeJump()) {
             try {
                 Logger.info("Creating backup of database");
                 backupAndRestoreService.backup();
@@ -65,9 +64,9 @@ public class TimeService {
                 Logger.error("Could not create backup of database");
                 throw new NoEffectException("could not create backup");
             }
-        }else{
+        } else {
             SystemInfo systemInfo = getSystemInfo();
-            systemInfo.setTimeDiff(systemInfo.getTimeDiff()+amount);
+            systemInfo.setTimeDiff(systemInfo.getTimeDiff() + amount);
             systemInfoRepository.save(systemInfo);
         }
         TIMESIMULATOR.addTimeChange(amount);
@@ -89,6 +88,7 @@ public class TimeService {
 
     /**
      * Checks whether there is a SystemInfo row present
+     *
      * @return true if it is present, false if not
      */
     public boolean isFirstTimeJump() {
@@ -98,8 +98,6 @@ public class TimeService {
         }
         return true;
     }
-
-
 
 
 }

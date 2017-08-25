@@ -154,7 +154,7 @@ public class CustomerBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

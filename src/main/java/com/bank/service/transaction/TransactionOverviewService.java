@@ -1,6 +1,5 @@
 package com.bank.service.transaction;
 
-import com.bank.bean.account.AccountBean;
 import com.bank.bean.transaction.TransactionBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.projection.transaction.TransactionProjection;
@@ -26,10 +25,10 @@ public class TransactionOverviewService {
             List<TransactionProjection> projectionList = new ArrayList<>();
             for (TransactionBean transactionBean : list) {
                 String sourceIBAN;
-                if(transactionBean.getCreditCardBean() == null) {
+                if (transactionBean.getCreditCardBean() == null) {
                     sourceIBAN = transactionBean.getSourceBean() != null ? transactionBean.getSourceBean().getAccountNumber() : null;
-                }else{
-                    sourceIBAN = transactionBean.getCreditCardBean().getAccountBean().getAccountNumber()+"C";
+                } else {
+                    sourceIBAN = transactionBean.getCreditCardBean().getAccountBean().getAccountNumber() + "C";
                 }
                 String targetIBAN = transactionBean.getTargetBean() != null ? transactionBean.getTargetBean().getAccountNumber() : null;
                 projectionList.add(new TransactionProjection(sourceIBAN, targetIBAN, transactionBean.getTargetName(), transactionBean.getDate(), transactionBean.getAmount(), transactionBean.getComment(), transactionBean.isFromSavings()));

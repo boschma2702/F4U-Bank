@@ -26,7 +26,7 @@ public class CustomerService {
     public CustomerBean getCustomerBeanByUsername(String username) throws InvalidParamValueException {
         Logger.info("Retrieving CustomerBean from username=%s", username);
         PersonBean personBean = personService.getPersonBeanByUsername(username);
-        if(personBean.getCustomerBean()==null){
+        if (personBean.getCustomerBean() == null) {
             Logger.error("Person with username=%s is not a customer", username);
             throw new InvalidParamValueException("Person is not a customer");
         }
@@ -35,7 +35,7 @@ public class CustomerService {
 
     public void checkIfCustomerIsFrozen(int customerId) throws AccountFrozenException {
         Logger.info("Checking if customreId=%s is frozen", customerId);
-        if(customerRepository.isCustomerFrozen(customerId)){
+        if (customerRepository.isCustomerFrozen(customerId)) {
             throw new AccountFrozenException("Customer account is frozen");
         }
     }

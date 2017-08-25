@@ -38,9 +38,9 @@ public class AccountMinorInterestTransferService extends DayPassedListener {
     private void transferInterest() {
         Logger.info("Transferring interest of minor accounts");
         List<AccountBean> accountBeans = accountRepository.getAllActiveMinorAccounts();
-        for(AccountBean accountBean : accountBeans){
+        for (AccountBean accountBean : accountBeans) {
             BigDecimal bigDecimal = AmountFormatter.format(accountBean.getBuildUpInterest());
-            if(bigDecimal.compareTo(BigDecimal.ZERO) > 0){
+            if (bigDecimal.compareTo(BigDecimal.ZERO) > 0) {
                 try {
                     transactionService.doSingleTransaction(accountBean, null, bigDecimal, "Interest of past year");
                 } catch (InvalidParamValueException e) {

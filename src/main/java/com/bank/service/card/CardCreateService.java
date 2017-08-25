@@ -6,8 +6,8 @@ import com.bank.bean.customer.CustomerBean;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
-import com.bank.util.logging.Logger;
 import com.bank.util.RandomStringGenerator;
+import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +41,7 @@ public class CardCreateService {
     }
 
     @Transactional
-    public CardBean addCard(CustomerBean customerBean, AccountBean accountBean, String pinCode){
+    public CardBean addCard(CustomerBean customerBean, AccountBean accountBean, String pinCode) {
         Logger.info("Adding card to CustomerBeanId=$s and AccountBeanId=%s", customerBean.getCustomerId(), accountBean.getAccountId());
         CardBean bean = new CardBean();
         bean.setPinCard(cardPinCardGenerator.generatePinCard(accountBean.getAccountId()));

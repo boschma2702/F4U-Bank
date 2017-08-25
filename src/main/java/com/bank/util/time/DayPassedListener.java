@@ -16,10 +16,10 @@ public abstract class DayPassedListener implements Comparable<DayPassedListener>
 
     @Override
     public int compareTo(DayPassedListener o) {
-        if(getOrder()==o.getOrder()){
+        if (getOrder() == o.getOrder()) {
             return 0;
         }
-        if (getOrder()<o.getOrder()){
+        if (getOrder() < o.getOrder()) {
             return -1;
         }
         return 1;

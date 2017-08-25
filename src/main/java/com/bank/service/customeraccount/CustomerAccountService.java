@@ -35,7 +35,7 @@ public class CustomerAccountService {
 
     public CustomerAccount getCustomerAccountByAccountIdAndCustomerId(int accountId, int customerId) throws InvalidParamValueException {
         CustomerAccount customerAccount = customerAccountRepository.getFirstByAccountIdAndCustomerId(accountId, customerId);
-        if(customerAccount == null){
+        if (customerAccount == null) {
             Logger.error("Could not retrieve customerAccount of accountId=%s and customerId=%s", accountId, customerId);
             throw new InvalidParamValueException("Could not find customer");
         }
@@ -44,7 +44,7 @@ public class CustomerAccountService {
 
     public CustomerAccount getMainCustomerAccountOfAccountId(int accountId) throws InvalidParamValueException {
         CustomerAccount customerAccount = customerAccountRepository.getMainCustomerAccount(accountId);
-        if(customerAccount == null){
+        if (customerAccount == null) {
             Logger.error("Could not retrieve main customerAccount of accountId=%s", accountId);
             throw new InvalidParamValueException("Could not find main customer");
         }

@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class DateProjection {
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
 
     public Date getDate() {

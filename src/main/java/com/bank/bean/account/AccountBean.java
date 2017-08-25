@@ -2,7 +2,6 @@ package com.bank.bean.account;
 
 import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.service.time.TimeService;
-import com.bank.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -179,7 +178,7 @@ public class AccountBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

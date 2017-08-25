@@ -1,12 +1,9 @@
 package com.bank.service.systemvariables;
 
 import com.bank.bean.systemvariables.SystemVariableBean;
-import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.systemvariable.SystemVariableRepository;
-import com.bank.service.time.TimeService;
 import com.bank.util.logging.Logger;
 import com.bank.util.systemvariable.SystemVariableChangeObject;
-import com.bank.util.systemvariable.SystemVariableFieldChecker;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +16,10 @@ import java.util.*;
 @Service
 public class SystemVariableEditorService extends DayPassedListener {
 
-    private SystemVariableRepository systemVariableRepository;
-
-    private PriorityQueue<SystemVariableChangeObject> changesQueue = new PriorityQueue<>();
-
-    private SystemVariableBean systemVariableBean;
-
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
+    private SystemVariableRepository systemVariableRepository;
+    private PriorityQueue<SystemVariableChangeObject> changesQueue = new PriorityQueue<>();
+    private SystemVariableBean systemVariableBean;
     @Autowired
     private SystemVariableApplyService systemVariableApplyService;
 
@@ -35,7 +28,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         resetSystemVariableBean();
     }
 
-    public void resetSystemVariableBean(){
+    public void resetSystemVariableBean() {
         systemVariableBean = systemVariableRepository.getSystemVariableBean();
         if (systemVariableBean == null) {
             systemVariableBean = new SystemVariableBean();
@@ -43,7 +36,7 @@ public class SystemVariableEditorService extends DayPassedListener {
         }
     }
 
-    public void addSystemVariableChangeObject(SystemVariableChangeObject systemVariableChangeObject){
+    public void addSystemVariableChangeObject(SystemVariableChangeObject systemVariableChangeObject) {
         changesQueue.add(systemVariableChangeObject);
     }
 
@@ -80,7 +73,7 @@ public class SystemVariableEditorService extends DayPassedListener {
                     field.set(systemVariableBean, value.doubleValue());
                     break;
                 case "int":
-                    field.set(systemVariableBean, (int)value.doubleValue());
+                    field.set(systemVariableBean, (int) value.doubleValue());
                     break;
                 case "BigDecimal":
                     field.set(systemVariableBean, value);

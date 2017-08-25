@@ -13,9 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_1;
-import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_2;
-import static com.bank.util.systemvariable.SystemVariableNames.INTEREST_RATE_3;
+import static com.bank.util.systemvariable.SystemVariableNames.*;
 
 @Service
 public class AccountSavingInterestService extends DayPassedListener {

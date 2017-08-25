@@ -3,7 +3,6 @@ package com.bank.service.creditcard;
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.creditcard.CreditCardBean;
 import com.bank.exception.InvalidParamValueException;
-import com.bank.projection.pin.CardProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.creditcard.CreditCardRepository;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import static com.bank.util.systemvariable.SystemVariableNames.CARD_EXPIRATION_LENGTH;
-import static com.bank.util.systemvariable.SystemVariableNames.CARD_USAGE_ATTEMPTS;
-import static com.bank.util.systemvariable.SystemVariableNames.CREDIT_CARD_DEFAULT_CREDIT;
+import static com.bank.util.systemvariable.SystemVariableNames.*;
 
 @Service
 public class CreditCardCreateService {
@@ -42,7 +39,7 @@ public class CreditCardCreateService {
 
     public PinProjection createCreditCard(int accountId, String pinCode) throws InvalidParamValueException {
         Logger.info("Creating credit card for accountId=%s", accountId);
-        if(creditCardRepository.hasAccountIdCreditCard(accountId, TimeService.TIMESIMULATOR.getCurrentDate(), (Integer) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS))){
+        if (creditCardRepository.hasAccountIdCreditCard(accountId, TimeService.TIMESIMULATOR.getCurrentDate(), (Integer) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS))) {
             Logger.error("Could not create credit card, accountId=%s already has active account", accountId);
             throw new InvalidParamValueException("Already active credit card present");
         }

@@ -45,7 +45,7 @@ public class AccountAccessService {
             Logger.error("Could not find customerBean with username=%s or accountBean with accountNumber=%s", username, accountNumber);
             throw new InvalidParamValueException("Invalid account or username");
         }
-        if(customerBean.isFrozen() || accountBean.isFrozen()){
+        if (customerBean.isFrozen() || accountBean.isFrozen()) {
             Logger.error("Could not provide access, accountNumber=%s or username=%s is frozen", accountNumber, username);
             throw new AccountFrozenException("Account or customer frozen");
         }
@@ -77,7 +77,7 @@ public class AccountAccessService {
             Logger.error("Could not find customerBean with customerId=%s or accountBean with accountId=%s", customerId, accountId);
             throw new InvalidParamValueException("Invalid account or username");
         }
-        if(customerBean.isFrozen() || accountBean.isFrozen()){
+        if (customerBean.isFrozen() || accountBean.isFrozen()) {
             Logger.error("Could not revoke access, account or customer is frozen");
             throw new AccountFrozenException("Account or customer is frozen");
         }

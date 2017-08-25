@@ -10,7 +10,7 @@ public class EmployeeDefaultService {
     private static final String DEFAULT_USERNAME = "admin";
     private static final String DEFAULT_PASSWORD = "admin";
 
-    public EmployeeDefaultService(EmployeeAddService employeeAddService){
+    public EmployeeDefaultService(EmployeeAddService employeeAddService) {
         try {
             Logger.info("Adding default administrate user");
             employeeAddService.addEmployee(DEFAULT_USERNAME, DEFAULT_PASSWORD);

@@ -22,16 +22,16 @@ public class SystemInfo {
         return timeDiff;
     }
 
+    public void setTimeDiff(long timeDiff) {
+
+        this.timeDiff = timeDiff;
+    }
+
     public Date getInitialDate() {
         return initialDate;
     }
 
     public void setInitialDate(Date initialDate) {
         this.initialDate = initialDate;
-    }
-
-    public void setTimeDiff(long timeDiff) {
-
-        this.timeDiff = timeDiff;
     }
 }

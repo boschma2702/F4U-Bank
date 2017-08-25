@@ -39,7 +39,7 @@ public class AccountAmountService {
             CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByAccountId(accountId, true);
             double amount = creditCardBean.getCredit().compareTo(BigDecimal.ZERO) > 0 ? creditCardBean.getCredit().doubleValue() : 0;
             projection.setCredit(amount);
-        }catch (InvalidParamValueException e) {
+        } catch (InvalidParamValueException e) {
             // do nothing, leave credit value null
         }
         return projection;

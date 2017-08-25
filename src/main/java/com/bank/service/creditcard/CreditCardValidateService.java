@@ -5,7 +5,6 @@ import com.bank.exception.InvalidPINException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.creditcard.CreditCardRepository;
 import com.bank.service.systemvariables.SystemVariableRetrieveService;
-import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,17 +27,17 @@ public class CreditCardValidateService {
         Logger.info("Validating creditCardNumber=%s", creditCardNumber);
         CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByCreditCardNumber(creditCardNumber, true);
 
-        if(creditCardBean.getCreditCardPin().endsWith(pinCode)){
-            if(creditCardBean.getAttempts()!=0){
+        if (creditCardBean.getCreditCardPin().endsWith(pinCode)) {
+            if (creditCardBean.getAttempts() != 0) {
                 creditCardBean.setAttempts(0);
                 creditCardRepository.save(creditCardBean);
             }
-        }else{
-            if(creditCardBean.getAttempts() == (int)systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS)){
+        } else {
+            if (creditCardBean.getAttempts() == (int) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS)) {
                 Logger.info("Attempting to pay with blocked credit card, creditCardId=%s", creditCardBean.getCreditCardId());
-            }else{
-                creditCardBean.setAttempts(creditCardBean.getAttempts()+1);
-                if(creditCardBean.getAttempts() == (int)systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS)){
+            } else {
+                creditCardBean.setAttempts(creditCardBean.getAttempts() + 1);
+                if (creditCardBean.getAttempts() == (int) systemVariableRetrieveService.getObjectInternally(CARD_USAGE_ATTEMPTS)) {
                     creditCardBean.setActive(false);
                 }
             }

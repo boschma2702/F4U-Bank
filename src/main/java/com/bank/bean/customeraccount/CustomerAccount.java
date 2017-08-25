@@ -83,7 +83,7 @@ public class CustomerAccount {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 

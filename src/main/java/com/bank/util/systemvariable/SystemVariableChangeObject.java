@@ -17,7 +17,7 @@ public class SystemVariableChangeObject implements Comparable<SystemVariableChan
 
     @Override
     public int compareTo(SystemVariableChangeObject o) {
-        if(this.effectDate.after(o.getEffectDate())){
+        if (this.effectDate.after(o.getEffectDate())) {
             return 1;
         }
         return -1;

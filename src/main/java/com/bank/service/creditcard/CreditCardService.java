@@ -33,7 +33,7 @@ public class CreditCardService {
 
     public CreditCardBean getCreditCardBean(String creditCardNumber) throws InvalidParamValueException {
         CreditCardBean creditCardBean = creditCardRepository.findCreditCardBeanByCreditCardNumber(creditCardNumber);
-        if(creditCardBean == null){
+        if (creditCardBean == null) {
             Logger.error("Could not retrieve credit card with creditCardNumber=%s", creditCardNumber);
             throw new InvalidParamValueException("Could not find credit card");
         }
@@ -42,11 +42,11 @@ public class CreditCardService {
 
     public CreditCardBean getCreditCardBeanCheckFrozen(String creditCardNumber) throws InvalidParamValueException, AccountFrozenException {
         CreditCardBean creditCardBean = creditCardRepository.findCreditCardBeanByCreditCardNumber(creditCardNumber);
-        if(creditCardBean == null){
+        if (creditCardBean == null) {
             Logger.error("Could not retrieve credit card with creditCardNumber=%s", creditCardNumber);
             throw new InvalidParamValueException("Could not find credit card");
         }
-        if(creditCardBean.getAccountBean().isFrozen()){
+        if (creditCardBean.getAccountBean().isFrozen()) {
             Logger.error("Could not retrieve credit cardCardNumber=%s, account is frozen", creditCardNumber);
             throw new AccountFrozenException("Account is frozen");
         }

@@ -23,10 +23,10 @@ public class CustomerAccountTransferService {
         CustomerAccount customerAccount;
         try {
             customerAccount = customerAccountService.getCustomerAccountByAccountIdAndCustomerId(accountId, customerId);
-            if(customerAccount.isMain()){
+            if (customerAccount.isMain()) {
                 throw new NoEffectException("Customer already main account holder");
             }
-        }catch (InvalidParamValueException e){
+        } catch (InvalidParamValueException e) {
             customerAccount = new CustomerAccount();
             customerAccount.setAccountId(accountId);
             customerAccount.setCustomerId(customerId);

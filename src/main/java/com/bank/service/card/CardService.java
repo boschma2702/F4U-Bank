@@ -17,7 +17,7 @@ public class CardService {
     public CardBean getCardBean(String pinCard, int accountId) throws InvalidParamValueException {
         Logger.info("Retrieving CardBean of accountId=%s and pinCard=%s", accountId, pinCard);
         CardBean cardBean = cardRepository.getCardBean(accountId, pinCard, TimeService.TIMESIMULATOR.getCurrentDate());
-        if(cardBean==null){
+        if (cardBean == null) {
             Logger.error("Could not retrieve pinCard=%s of accountId=%s", pinCard, accountId);
             throw new InvalidParamValueException("Unknown pinCard");
         }

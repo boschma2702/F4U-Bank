@@ -1,7 +1,6 @@
 package com.bank.repository.account;
 
 import com.bank.bean.account.AccountBean;
-import com.bank.bean.customer.CustomerBean;
 import com.bank.projection.customer.CustomerUsernameProjection;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Repository

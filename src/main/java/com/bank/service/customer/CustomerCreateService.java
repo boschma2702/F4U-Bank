@@ -1,6 +1,5 @@
 package com.bank.service.customer;
 
-import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.person.PersonBean;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.repository.customer.CustomerRepository;

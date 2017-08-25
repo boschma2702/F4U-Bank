@@ -1,7 +1,7 @@
 package com.bank.bean.transaction;
 
-import com.bank.bean.card.CardBean;
 import com.bank.bean.account.AccountBean;
+import com.bank.bean.card.CardBean;
 import com.bank.bean.creditcard.CreditCardBean;
 import com.bank.service.time.TimeService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -133,7 +133,7 @@ public class TransactionBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         date = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

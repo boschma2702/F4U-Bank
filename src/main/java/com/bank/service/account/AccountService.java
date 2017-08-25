@@ -5,7 +5,6 @@ import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.AccountFrozenException;
 import com.bank.exception.InvalidParamValueException;
 import com.bank.exception.NotAllowedException;
-import com.bank.exception.NotAuthorizedException;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
 import com.bank.util.logging.Logger;
@@ -22,7 +21,7 @@ public class AccountService {
 
     public void checkMinor(String accountNumber) throws NotAllowedException {
         AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(accountNumber);
-        if(accountBean.isMinorAccount()){
+        if (accountBean.isMinorAccount()) {
             Logger.error("Minor account=%s tried to execute non allowed method", accountNumber);
             throw new NotAllowedException("Child account is not allowed to perform this method");
         }
@@ -57,7 +56,7 @@ public class AccountService {
             Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
-        if (accountBean.isFrozen()){
+        if (accountBean.isFrozen()) {
             Logger.error("Could not retrieve accountBean of accountNumber=%s, request of customerId=%s", accountBean, customerId);
             throw new AccountFrozenException("Account is frozen");
         }
@@ -72,7 +71,7 @@ public class AccountService {
             Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
-        if (accountBean.isFrozen()){
+        if (accountBean.isFrozen()) {
             Logger.error("Could not retrieve accountBean of accountNumber=%s, request of customerId=%s", accountBean, customerId);
             throw new AccountFrozenException("Account is frozen");
         }
@@ -107,7 +106,7 @@ public class AccountService {
             Logger.error("Unknown accountId=%s", accountId);
             throw new InvalidParamValueException("Unknown account number");
         }
-        if (bean.isFrozen()){
+        if (bean.isFrozen()) {
             Logger.error("Requested accountId=%s is frozen", accountId);
             throw new AccountFrozenException("Requested account is frozen");
         }
@@ -121,7 +120,7 @@ public class AccountService {
             Logger.error("Unknown accountNumber=%s", accountNumber);
             throw new InvalidParamValueException("Unknown account number");
         }
-        if (bean.isFrozen()){
+        if (bean.isFrozen()) {
             Logger.error("Requested accountId=%s is frozen", accountNumber);
             throw new AccountFrozenException("Requested account is frozen");
         }

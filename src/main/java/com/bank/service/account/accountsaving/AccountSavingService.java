@@ -27,7 +27,7 @@ public class AccountSavingService {
     public AccountSavingBean getAccountSavingsBeanByAccountBean(AccountBean accountBean) throws InvalidParamValueException {
         Logger.info("Retrieving AccountSavingBean of accountBeanId=%s", accountBean.getAccountId());
         AccountSavingBean accountSavingBean = accountSavingRepository.findAccountSavingBeanByAccountBean(accountBean);
-        if(accountSavingBean == null){
+        if (accountSavingBean == null) {
             Logger.error("Could not retrieve AccountSavingBean of accountId=%s", accountBean.getAccountId());
             throw new InvalidParamValueException("Savings account not known of given account");
         }

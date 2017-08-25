@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.InvocationListener;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class JsonRpcInvocationListener implements InvocationListener {
 
@@ -16,7 +19,7 @@ public class JsonRpcInvocationListener implements InvocationListener {
 
     @Override
     public void didInvoke(Method method, List<JsonNode> arguments, Object result, Throwable t, long duration) {
-        if(!METHODS_TO_NOT_LOG.contains(method.getName())) {
+        if (!METHODS_TO_NOT_LOG.contains(method.getName())) {
             Logger.info("Invoked method=%s, arguments=%s, duration=%sms", method.getName(), JsonArgumentsParser.getJsonRpcArgumentsMap(method, arguments), duration);
         }
     }

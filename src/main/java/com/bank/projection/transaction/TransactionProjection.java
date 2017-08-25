@@ -9,27 +9,27 @@ public class TransactionProjection {
     private String sourceIBAN;
     private String targetIBAN;
     private String targetName;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private double amount;
     private String description;
 
     public TransactionProjection(String sourceIBAN, String targetIBAN, String targetName, Date date, BigDecimal amount, String description, boolean fromSaving) {
         if (sourceIBAN != null && targetIBAN != null) {
-            if(sourceIBAN.equals(targetIBAN)){
+            if (sourceIBAN.equals(targetIBAN)) {
                 //was a savings transaction
-                if(fromSaving){
-                    this.sourceIBAN = sourceIBAN+"S";
+                if (fromSaving) {
+                    this.sourceIBAN = sourceIBAN + "S";
                     this.targetIBAN = targetIBAN;
-                }else{
+                } else {
                     this.sourceIBAN = sourceIBAN;
-                    this.targetIBAN = targetIBAN+"S";
+                    this.targetIBAN = targetIBAN + "S";
                 }
-            }else{
+            } else {
                 this.sourceIBAN = sourceIBAN;
                 this.targetIBAN = targetIBAN;
             }
-        }else {
+        } else {
             this.sourceIBAN = sourceIBAN;
             this.targetIBAN = targetIBAN;
         }

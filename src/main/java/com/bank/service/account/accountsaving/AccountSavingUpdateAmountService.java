@@ -13,7 +13,7 @@ public class AccountSavingUpdateAmountService {
     @Autowired
     private AccountSavingRepository accountSavingRepository;
 
-    public void updateAmount(int accountId, BigDecimal amount){
+    public void updateAmount(int accountId, BigDecimal amount) {
         Logger.info("Updating amount=%s of targetAccountId=%s", amount, accountId);
         accountSavingRepository.updateAmount(accountId, amount);
     }

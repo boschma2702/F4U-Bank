@@ -29,10 +29,10 @@ public class TransactionCreditCardService {
     @Transactional
     public void doTransaction(CreditCardBean creditCardBean, AccountBean targetAccountBean, BigDecimal amount) throws InvalidParamValueException {
         Logger.info("Transferring amount=%s from creditCardId=%s to targetAccountId=%s", amount.doubleValue(), creditCardBean.getCreditCardId(), targetAccountBean.getAccountId());
-        if(amount.compareTo(BigDecimal.ZERO) < 0){
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
             Logger.error("Can not complete transaction, invalid amount=%s with creditCardId=%s", amount.doubleValue(), creditCardBean.getCreditCardId());
         }
-        if(creditCardBean.getCredit().compareTo(amount) < 0){
+        if (creditCardBean.getCredit().compareTo(amount) < 0) {
             Logger.error("Can not complete transaction, creditcardlimit of creditCardNumber=%s is not sufficient to pay amount=%s", creditCardBean.getCreditCardNumber(), amount.doubleValue());
             throw new InvalidParamValueException("Credit card limit reached");
         }

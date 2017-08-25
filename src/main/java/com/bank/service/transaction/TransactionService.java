@@ -35,25 +35,25 @@ public class TransactionService {
 
     public void doTransaction(AccountBean sourceAccountBean, AccountBean targetAccountBean, BigDecimal amount, CardBean card, String description, String targetName) throws InvalidParamValueException {
         Logger.info("Making transaction form sourceAccountBeanId=%s, to targetAccountBeanId=%s", sourceAccountBean.getAccountId(), targetAccountBean.getAccountId());
-        if(amount.compareTo(BigDecimal.ZERO) <= 0){
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             Logger.info("Transaction failed, invalid amount=%s", amount);
             throw new InvalidParamValueException("Invalid Amount");
         }
-        if(sourceAccountBean.getAccountNumber().equals(targetAccountBean.getAccountNumber())){
+        if (sourceAccountBean.getAccountNumber().equals(targetAccountBean.getAccountNumber())) {
             Logger.error("Transaction failed, can not transfer money to the same accountNumber");
             throw new InvalidParamValueException("Can not transfer money to same accountNumber");
         }
         BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount);
-        if(!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)){
+        if (!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)) {
             throw new InvalidParamValueException("Source account overdraft to high");
         }
         BigDecimal newTransferLimit = transactionAmountService.getTransactionAmountSinceDays(sourceAccountBean.getAccountId(), Constants.TRANSACTION_DAYS_LIMIT).add(amount);
-        if(newTransferLimit.compareTo(sourceAccountBean.getTransferLimit()) > 0){
+        if (newTransferLimit.compareTo(sourceAccountBean.getTransferLimit()) > 0) {
             Logger.error("Could not make transaction, weekly transfer limit reached of accountId=%s", sourceAccountBean.getAccountId());
             throw new InvalidParamValueException("Weekly limit reached");
         }
 
-        if(card != null){
+        if (card != null) {
             cardSubtractDayRemainingService.subtractDayRemaining(card, amount);
         }
 
@@ -76,7 +76,7 @@ public class TransactionService {
     }
 
     public void doSingleTransaction(AccountBean targetAccountBean, CardBean card, BigDecimal amount, String message) throws InvalidParamValueException {
-        if(amount.compareTo(BigDecimal.ZERO) <= 0){
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidParamValueException("Invalid Amount");
         }
 
@@ -95,11 +95,12 @@ public class TransactionService {
     /**
      * Retrieves money form an account and sends it to 'nowhere'. Does not check if account it is allowed to retrieve
      * the amount.
+     *
      * @param sourceAccountBean
-     * @param amount to retrieve, must be positive
+     * @param amount            to retrieve, must be positive
      * @param comment
      */
-    public void retrieveTransaction(AccountBean sourceAccountBean, BigDecimal amount, String comment){
+    public void retrieveTransaction(AccountBean sourceAccountBean, BigDecimal amount, String comment) {
         TransactionBean transactionBean = new TransactionBean();
         transactionBean.setSourceBean(sourceAccountBean);
         transactionBean.setAmount(amount);

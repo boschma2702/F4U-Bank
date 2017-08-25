@@ -139,7 +139,7 @@ public class CreditCardBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(creationDate);
