@@ -4,6 +4,7 @@ import com.bank.bean.account.AccountBean;
 import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.AccountFrozenException;
 import com.bank.exception.InvalidParamValueException;
+import com.bank.exception.NotAllowedException;
 import com.bank.exception.NotAuthorizedException;
 import com.bank.repository.account.AccountRepository;
 import com.bank.repository.customeraccount.CustomerAccountRepository;
@@ -19,11 +20,11 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public void checkMinor(String accountNumber) throws NotAuthorizedException {
+    public void checkMinor(String accountNumber) throws NotAllowedException {
         AccountBean accountBean = accountRepository.findAccountBeanByAccountNumber(accountNumber);
         if(accountBean.isMinorAccount()){
             Logger.error("Minor account=%s tried to execute non allowed method", accountNumber);
-            throw new NotAuthorizedException("Child account is not allowed to perform this method");
+            throw new NotAllowedException("Child account is not allowed to perform this method");
         }
     }
 

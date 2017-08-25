@@ -73,11 +73,11 @@ public class AccountController {
         throw new IllegalStateException("FrozenAccountException during opening new account");
     }
 
-    public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException, AccountFrozenException {
+    public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException, AccountFrozenException, NotAllowedException {
         if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if ((Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.IS_MINOR)){
-                throw new NotAuthorizedException("Not Authorized");
+                throw new NotAllowedException("Not Authorized");
             }
             return accountOpenService.openAdditionalAccount(customerId);
         }else{
@@ -122,7 +122,7 @@ public class AccountController {
     }
 
 
-    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException {
+    public void setOverdraftLimit(String authToken, String iBAN, double overdraftLimit) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException, NotAllowedException {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         if (accountService.checkIfIsMainAccountHolderCheckFrozen(iBAN, customerId)) {
             accountService.checkMinor(iBAN);

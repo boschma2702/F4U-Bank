@@ -75,7 +75,7 @@ public class AccountOpenService {
         }
         if (isMinor && guardians.length < 1) {
             Logger.error("Could not open account for name=%s, surname=%s and username=%s, not enough guardians specified", name, surname, username);
-            throw new NotAuthorizedException("Not enough guardians specified");
+            throw new InvalidParamValueException("Not enough guardians specified");
         }
 
         CustomerBean customerBean = new CustomerBean();
@@ -101,7 +101,7 @@ public class AccountOpenService {
             CustomerBean guardianBean = customerService.getCustomerBeanByUsername(guardianUsername);
             if(AgeChecker.isMinor(guardianBean.getDob())){
                 Logger.error("Could not open account for name=%s, surname=%s and username=%s, guardianUsername=%s does not meet the requirements", name, surname, username, guardianUsername);
-                throw new NotAuthorizedException(String.format("Guardian %s does not meet the age requirement", guardianUsername));
+                throw new InvalidParamValueException(String.format("Guardian %s does not meet the age requirement", guardianUsername));
             }else {
                 try {
                     accountAccessService.provideAccess(cardBean.getAccountBean().getAccountNumber(), guardianUsername);

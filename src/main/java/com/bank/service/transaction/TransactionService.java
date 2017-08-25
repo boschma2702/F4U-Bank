@@ -43,7 +43,7 @@ public class TransactionService {
             Logger.error("Transaction failed, can not transfer money to the same accountNumber");
             throw new InvalidParamValueException("Can not transfer money to same accountNumber");
         }
-        BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount.negate());
+        BigDecimal newSourceAmount = sourceAccountBean.getAmount().subtract(amount);
         if(!(newSourceAmount.compareTo(BigDecimal.ZERO) >= 0 || newSourceAmount.compareTo(new BigDecimal(-sourceAccountBean.getOverdraftLimit())) >= 0)){
             throw new InvalidParamValueException("Source account overdraft to high");
         }
