@@ -1,8 +1,5 @@
 package com.bank.service.customer;
 
-import com.bank.repository.customer.CustomerInformationRepository;
-import com.bank.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

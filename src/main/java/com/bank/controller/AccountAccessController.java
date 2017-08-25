@@ -2,7 +2,6 @@ package com.bank.controller;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.customer.CustomerBean;
-import com.bank.bean.customeraccount.CustomerAccount;
 import com.bank.exception.*;
 import com.bank.projection.customer.CustomerUsernameProjection;
 import com.bank.projection.pin.PinProjection;
@@ -33,11 +32,11 @@ public class AccountAccessController {
 
     public void transferBankAccount(String authToken, String iBAN, String username) throws NotAuthorizedException, InvalidParamValueException, AccountFrozenException, NoEffectException {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-        if(isAdministrativeEmployee){
+        if (isAdministrativeEmployee) {
             CustomerBean customerBean = customerService.getCustomerBeanByUsername(username);
             AccountBean accountBean = accountService.getAccountBeanByAccountNumberCheckFrozen(iBAN);
             customerAccountTransferService.transferBankAccount(accountBean.getAccountId(), customerBean.getCustomerId());
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
@@ -65,14 +64,14 @@ public class AccountAccessController {
     }
 
     public List<CustomerUsernameProjection> getBankAccountAccess(String authToken, String IBAN) throws InvalidParamValueException, NotAuthorizedException {
-        if(AuthenticationService.instance.isCustomer(authToken)){
+        if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
             if (accountService.checkIfIsMainAccountHolder(IBAN, customerId)) {
                 return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
-        }else{
+        } else {
             boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-            if(isAdministrativeEmployee){
+            if (isAdministrativeEmployee) {
                 return accountAccessService.getBankAccountAccess(accountService.getAccountBeanByAccountNumber(IBAN).getAccountId());
             }
         }

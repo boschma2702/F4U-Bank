@@ -53,7 +53,7 @@ public class AccountCloseService {
             throw new NotAuthorizedException("Unclosed savings and/or credit card account");
         }
 
-        if(accountBean.getAmount().compareTo(BigDecimal.ZERO) > 0){
+        if (accountBean.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             Logger.error(String.format("Could not close account due to non zero balance of accountNumber=%s of customerId=%s", iBAN, customerId));
             throw new NotAuthorizedException("Account has a non zero balance");
         }
@@ -72,8 +72,8 @@ public class AccountCloseService {
         }
     }
 
-    private boolean hasOpenSavingsOrCreditAccount(AccountBean accountBean){
-        try{
+    private boolean hasOpenSavingsOrCreditAccount(AccountBean accountBean) {
+        try {
             CreditCardBean creditCardBean = creditCardService.getCreditCardBeanByAccountId(accountBean.getAccountId(), false);
         } catch (InvalidParamValueException e) {
             try {

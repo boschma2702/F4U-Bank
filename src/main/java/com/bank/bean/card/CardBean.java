@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -124,6 +123,10 @@ public class CardBean {
         return experationDate;
     }
 
+    public void setExperationDate(Date experationDate) {
+        this.experationDate = experationDate;
+    }
+
     public BigDecimal getDayLimit() {
         return dayLimit;
     }
@@ -140,12 +143,8 @@ public class CardBean {
         this.dayLimitRemaining = dayLimitRemaining;
     }
 
-    public void setExperationDate(Date experationDate) {
-        this.experationDate = experationDate;
-    }
-
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 }

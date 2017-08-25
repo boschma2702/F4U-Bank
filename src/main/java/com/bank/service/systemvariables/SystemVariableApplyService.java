@@ -19,8 +19,8 @@ public class SystemVariableApplyService {
     private CardRepository cardRepository;
 
 
-    public void applySystemVariable(String key, BigDecimal value, Object oldValue){
-        switch (key){
+    public void applySystemVariable(String key, BigDecimal value, Object oldValue) {
+        switch (key) {
             case CREDIT_CARD_MONTHLY_FEE:
                 //No further change needed
                 break;

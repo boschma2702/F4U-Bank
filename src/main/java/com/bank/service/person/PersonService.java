@@ -16,7 +16,7 @@ public class PersonService {
     public PersonBean getPersonBeanByUsername(String username) throws InvalidParamValueException {
         Logger.info("Retrieving personBean of username=%s", username);
         PersonBean personBean = personRepository.findPersonBeanByUsername(username);
-        if (personBean == null){
+        if (personBean == null) {
             Logger.error("Could not find personBean with username=%s", username);
             throw new InvalidParamValueException("Could not find username");
         }

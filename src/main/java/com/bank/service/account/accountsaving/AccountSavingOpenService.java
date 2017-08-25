@@ -24,7 +24,7 @@ public class AccountSavingOpenService {
     public void openSavingsAccount(String accountNumber) throws InvalidParamValueException {
         Logger.info("Opening savings account for accountNumber=%s", accountNumber);
         AccountBean accountBean = accountService.getAccountBeanByAccountNumber(accountNumber);
-        try{
+        try {
             accountSavingService.getAccountSavingsBeanByAccountBean(accountBean);
         } catch (InvalidParamValueException e) {
             AccountSavingBean accountSavingBean = new AccountSavingBean();

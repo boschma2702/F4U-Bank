@@ -10,6 +10,7 @@ public class AgeChecker {
 
     /**
      * Checks if the given birthDate is still below Constatns.AGE_MINOR_MAX.
+     *
      * @param birthDate
      * @return true if it is, false if not
      */

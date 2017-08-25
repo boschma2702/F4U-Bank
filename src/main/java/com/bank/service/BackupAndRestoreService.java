@@ -11,15 +11,12 @@ import java.io.*;
 @Service
 public class BackupAndRestoreService {
 
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.password}")
-    private String password;
-
-
     private static final String DUMP_NAME = "bankbackup.sql";
     private static final String DIRECTORY_DUMP = System.getProperty("user.dir") + File.separator + DUMP_NAME;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     public boolean backup() throws InterruptedException, IOException {
         Logger.info("Creating database backup");
@@ -87,8 +84,6 @@ public class BackupAndRestoreService {
         }
 
     }
-
-
 
 
 }

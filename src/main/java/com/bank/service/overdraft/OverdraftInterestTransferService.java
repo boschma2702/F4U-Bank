@@ -23,12 +23,12 @@ public class OverdraftInterestTransferService extends DayPassedListener {
     @Autowired
     private TransactionService transactionService;
 
-    public void transferOverdraftInterest(){
+    public void transferOverdraftInterest() {
         Logger.info("Transferring overdraft overdraft");
         List<AccountBean> accountBeans = accountRepository.getActiveAccountBeansWithOverdraftInterest();
-        for(AccountBean accountBean : accountBeans){
+        for (AccountBean accountBean : accountBeans) {
             BigDecimal amount = AmountFormatter.format(accountBean.getBuildUpOverdraftInterest()).negate();
-            if(amount.compareTo(BigDecimal.ZERO)>0){
+            if (amount.compareTo(BigDecimal.ZERO) > 0) {
                 transactionService.retrieveTransaction(accountBean, amount, "Overdraft overdraft");
             }
             Logger.info("Overdraft overdraft amount=%s transferred from accountId=%s", amount, accountBean.getAccountId());
@@ -42,7 +42,7 @@ public class OverdraftInterestTransferService extends DayPassedListener {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
         int amountOfDaysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        if(calendar.get(Calendar.DAY_OF_MONTH)==amountOfDaysInMonth){
+        if (calendar.get(Calendar.DAY_OF_MONTH) == amountOfDaysInMonth) {
             transferOverdraftInterest();
         }
     }

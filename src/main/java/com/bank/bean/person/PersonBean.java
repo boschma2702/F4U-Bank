@@ -3,12 +3,10 @@ package com.bank.bean.person;
 import com.bank.bean.customer.CustomerBean;
 import com.bank.bean.employee.EmployeeBean;
 import com.bank.service.time.TimeService;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -88,7 +86,7 @@ public class PersonBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 

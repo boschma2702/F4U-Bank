@@ -10,7 +10,6 @@ import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.service.customer.CustomerCreateService;
 import com.bank.service.customer.CustomerService;
-import com.bank.service.time.TimeService;
 import com.bank.util.AgeChecker;
 import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
@@ -19,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 @Service
 public class AccountOpenService {
@@ -97,12 +93,12 @@ public class AccountOpenService {
 
         CardBean cardBean = accountCreateService.createAccount(customerBean.getCustomerId(), true, isMinor);
 
-        for(String guardianUsername : guardians){
+        for (String guardianUsername : guardians) {
             CustomerBean guardianBean = customerService.getCustomerBeanByUsername(guardianUsername);
-            if(AgeChecker.isMinor(guardianBean.getDob())){
+            if (AgeChecker.isMinor(guardianBean.getDob())) {
                 Logger.error("Could not open account for name=%s, surname=%s and username=%s, guardianUsername=%s does not meet the requirements", name, surname, username, guardianUsername);
                 throw new InvalidParamValueException(String.format("Guardian %s does not meet the age requirement", guardianUsername));
-            }else {
+            } else {
                 try {
                     accountAccessService.provideAccess(cardBean.getAccountBean().getAccountNumber(), guardianUsername);
                 } catch (NoEffectException e) {
@@ -125,7 +121,7 @@ public class AccountOpenService {
     public AccountOpenProjection openAdditionalAccount(int customerId) throws AccountFrozenException {
         Logger.info("Opening an additional account for customerId=%s", customerId);
         CustomerBean customerBean = customerService.getCustomerBeanById(customerId);
-        if(customerBean.isFrozen()){
+        if (customerBean.isFrozen()) {
             Logger.error("Could not open additional account for customerId=%s", customerId);
             throw new AccountFrozenException("Account frozen");
         }

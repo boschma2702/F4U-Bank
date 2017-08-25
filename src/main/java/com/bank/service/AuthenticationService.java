@@ -21,7 +21,7 @@ public final class AuthenticationService implements Runnable {
     public static final String IS_MINOR = "isMinor";
 
     // 30 minutes
-    private static final long COOKIE_VALID_TIME = 30*60000;
+    private static final long COOKIE_VALID_TIME = 30 * 60000;
     // halve minute
     private static final long COOKIE_CHECK_INTERVAL = 30000;
 
@@ -38,6 +38,16 @@ public final class AuthenticationService implements Runnable {
         new Thread(this).start();
     }
 
+    public static void removeCookies() {
+        try {
+            COOKIE_LOCK.lock();
+            cookieTimes = new ConcurrentHashMap<>();
+            map = new HashMap<>();
+        } finally {
+            COOKIE_LOCK.unlock();
+        }
+    }
+
     public String customerLogin(int userId, Date dob) {
         Logger.info("Login of userId=%s", userId);
         String token = generateToken();
@@ -48,7 +58,7 @@ public final class AuthenticationService implements Runnable {
         return token;
     }
 
-    public String employeeLogin(int employeeId, boolean administrativeEmployee){
+    public String employeeLogin(int employeeId, boolean administrativeEmployee) {
         Logger.info("Login of employeeId=%s", employeeId);
         String token = generateToken();
         HashMap<String, Object> info = new HashMap<>();
@@ -63,10 +73,9 @@ public final class AuthenticationService implements Runnable {
         return new BigInteger(130, random).toString(32);
     }
 
-
     public final boolean isAuthenticated(String token) {
         boolean isAuthenticated = map.containsKey(token);
-        if(isAuthenticated){
+        if (isAuthenticated) {
             cookieTimes.put(token, COOKIE_VALID_TIME);
         }
         return isAuthenticated;
@@ -93,29 +102,19 @@ public final class AuthenticationService implements Runnable {
     }
 
     public boolean isCustomer(String token) throws NotAuthorizedException {
-        if(isAuthenticated(token)){
-            if(map.get(token).containsKey(USER_ID)){
+        if (isAuthenticated(token)) {
+            if (map.get(token).containsKey(USER_ID)) {
                 return true;
-            }else if(map.get(token).containsKey(EMPLOYEE_ID)){
+            } else if (map.get(token).containsKey(EMPLOYEE_ID)) {
                 return false;
             }
         }
         throw new NotAuthorizedException("not Authorized");
     }
 
-    public static void removeCookies(){
-        try{
-            COOKIE_LOCK.lock();
-            cookieTimes = new ConcurrentHashMap<>();
-            map = new HashMap<>();
-        }finally {
-            COOKIE_LOCK.unlock();
-        }
-    }
-
     @Override
     public void run() {
-        for(;;){
+        for (; ; ) {
             try {
                 Thread.sleep(COOKIE_CHECK_INTERVAL);
                 try {
@@ -132,7 +131,7 @@ public final class AuthenticationService implements Runnable {
                             cookieTimes.put(key, remainingTime);
                         }
                     }
-                }finally {
+                } finally {
                     COOKIE_LOCK.unlock();
                 }
             } catch (InterruptedException e) {

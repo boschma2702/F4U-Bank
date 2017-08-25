@@ -21,7 +21,7 @@ public class AccountTransferLimitService {
 
     public void setTransferLimit(int accountId, BigDecimal transferLimit) throws InvalidParamValueException, AccountFrozenException {
         Logger.info("Setting transfer limit of accountId=%s", accountId);
-        if(transferLimit.compareTo(BigDecimal.ZERO) < 0){
+        if (transferLimit.compareTo(BigDecimal.ZERO) < 0) {
             Logger.error("Could not set transfer limit of accountId=%s, invalid transfer limit", accountId);
             throw new InvalidParamValueException("Invalid transferLimit");
         }

@@ -1,9 +1,10 @@
 package com.bank.controller;
 
 import com.bank.bean.account.AccountBean;
-import com.bank.bean.creditcard.CreditCardBean;
-import com.bank.exception.*;
-import com.bank.projection.pin.CardProjection;
+import com.bank.exception.AccountFrozenException;
+import com.bank.exception.InvalidParamValueException;
+import com.bank.exception.NoEffectException;
+import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.pin.PinProjection;
 import com.bank.repository.creditcard.CreditCardRepository;
 import com.bank.service.AuthenticationService;
@@ -45,14 +46,14 @@ public class CardController {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         boolean isCredit = CreditCardNumberChecker.isCreditCardNumber(pinCard);
         String normalizedIBAN = isCredit ? creditCardService.getCreditCardBeanCheckFrozen(pinCard).getAccountBean().getAccountNumber() : iBan;
-        if(accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)){
-            if(isCredit){
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)) {
+            if (isCredit) {
                 creditCardUnblockService.unblockCard(pinCard, iBan);
-            }else{
+            } else {
                 int accountId = accountService.getAccountBeanByAccountNumber(iBan).getAccountId();
                 cardUnblockService.unblockCard(accountId, pinCard);
             }
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
@@ -61,14 +62,14 @@ public class CardController {
         int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
         boolean isCredit = CreditCardNumberChecker.isCreditCardNumber(pinCard);
         String normalizedIBAN = isCredit ? creditCardService.getCreditCardBeanCheckFrozen(pinCard).getAccountBean().getAccountNumber() : iBAN;
-        if(accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)){
-            if(isCredit){
+        if (accountService.checkIfIsMainAccountHolderCheckFrozen(normalizedIBAN, customerId)) {
+            if (isCredit) {
                 return creditCardInvalidateService.invalidateCard(pinCard, newPin);
-            }else {
+            } else {
                 AccountBean accountBean = accountService.getAccountBeanByAccountNumber(iBAN);
                 return cardInvalidateService.invalidateCard(accountBean.getAccountId(), customerId, pinCard, newPin);
             }
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }

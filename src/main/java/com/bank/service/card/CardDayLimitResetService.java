@@ -1,6 +1,5 @@
 package com.bank.service.card;
 
-import com.bank.bean.card.CardBean;
 import com.bank.repository.card.CardRepository;
 import com.bank.service.time.TimeService;
 import com.bank.util.logging.Logger;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class CardDayLimitResetService extends DayPassedListener {

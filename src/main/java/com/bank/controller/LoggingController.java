@@ -14,9 +14,9 @@ public class LoggingController {
 
     public List<LogEntryProjection> getEventLogs(String authToken, Date a, Date b) throws NotAuthorizedException {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-        if(isAdministrativeEmployee) {
+        if (isAdministrativeEmployee) {
             return Logger.getLogsBetween(a, b);
-        }else {
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }

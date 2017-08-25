@@ -11,7 +11,7 @@ public class CardPinCardGenerator {
     @Autowired
     private CardRepository cardRepository;
 
-    public String generatePinCard(int accountId){
+    public String generatePinCard(int accountId) {
         String pinCard = RandomStringGenerator.generateRandomIntegerString(4);
         pinCard = (cardRepository.isPinCardTaken(pinCard, accountId) ? generatePinCard(accountId) : pinCard);
         return pinCard;

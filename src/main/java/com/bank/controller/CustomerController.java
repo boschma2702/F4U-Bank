@@ -1,6 +1,5 @@
 package com.bank.controller;
 
-import com.bank.exception.AuthenticationException;
 import com.bank.exception.NotAuthorizedException;
 import com.bank.projection.customer.CustomerAccountAccessProjection;
 import com.bank.service.AuthenticationService;

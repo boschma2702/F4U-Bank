@@ -14,7 +14,7 @@ public class CardSubtractDayRemainingService {
     @Autowired
     private CardRepository cardRepository;
 
-    public void subtractDayRemaining(CardBean cardBean, BigDecimal amount){
+    public void subtractDayRemaining(CardBean cardBean, BigDecimal amount) {
         Logger.info("Subtracting day remaining day limit from cardId=%s", cardBean.getCardId());
         cardBean.setDayLimitRemaining(cardBean.getDayLimitRemaining().subtract(amount));
         cardRepository.save(cardBean);

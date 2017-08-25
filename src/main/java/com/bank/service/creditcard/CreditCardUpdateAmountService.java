@@ -13,7 +13,7 @@ public class CreditCardUpdateAmountService {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
-    public void updateAmount(int creditCardId, BigDecimal amount){
+    public void updateAmount(int creditCardId, BigDecimal amount) {
         Logger.info("Updating credit card credit of CreditCardId=%s", creditCardId);
         creditCardRepository.updateAmount(creditCardId, amount);
     }

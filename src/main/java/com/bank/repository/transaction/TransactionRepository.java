@@ -1,7 +1,6 @@
 package com.bank.repository.transaction;
 
 import com.bank.bean.transaction.TransactionBean;
-import com.bank.projection.transaction.TransactionProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

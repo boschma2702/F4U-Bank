@@ -19,7 +19,7 @@ public class TransactionSavingCreateService {
     private AccountService accountService;
 
     public void transferMoney(String sourceIBAN, String targetIBAN, String targetName, BigDecimal amount, String description) throws InvalidParamValueException {
-        if(sourceIBAN.endsWith("S")&&targetIBAN.endsWith("S")){
+        if (sourceIBAN.endsWith("S") && targetIBAN.endsWith("S")) {
             Logger.error("Can not transfer money, both accounts are savings account. sourceIBAN=%s, targetIBAN=%s", sourceIBAN, targetIBAN);
             throw new InvalidParamValueException("Cannot transfer money from saving account to another account");
         }

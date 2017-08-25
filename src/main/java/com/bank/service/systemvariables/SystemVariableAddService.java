@@ -6,7 +6,6 @@ import com.bank.service.time.TimeService;
 import com.bank.util.logging.Logger;
 import com.bank.util.systemvariable.Money;
 import com.bank.util.systemvariable.SystemVariableChangeObject;
-import com.bank.util.systemvariable.SystemVariableFieldChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ public class SystemVariableAddService {
         Logger.info("Setting system variable with key=%s, value=%s, effectDate=%s", key, value, effectDate);
         if (effectDate.after(TimeService.TIMESIMULATOR.getCurrentDate())) {
             if (checkValue(key, value)) {
-                if(checkIfAlreadyPresent(key, effectDate)){
+                if (checkIfAlreadyPresent(key, effectDate)) {
                     systemVariableEditorService.addSystemVariableChangeObject(new SystemVariableChangeObject(key, value, effectDate));
                 }
             }
@@ -63,13 +62,13 @@ public class SystemVariableAddService {
 
     private boolean checkIfAlreadyPresent(String key, Date date) throws InvalidParamValueException {
         Iterator<SystemVariableChangeObject> queue = systemVariableEditorService.getChangesQueue().iterator();
-        while (queue.hasNext()){
+        while (queue.hasNext()) {
             SystemVariableChangeObject object = queue.next();
-            if(object.getEffectDate().equals(date) && object.getKey().equals(key)){
+            if (object.getEffectDate().equals(date) && object.getKey().equals(key)) {
                 Logger.error("Key on given date already present");
                 throw new InvalidParamValueException("Key already present on given day");
             }
-            if(date.after(object.getEffectDate())){
+            if (date.after(object.getEffectDate())) {
                 break;
             }
         }

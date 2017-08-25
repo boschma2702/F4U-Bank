@@ -1,22 +1,21 @@
 package com.bank.util.time;
 
 import com.bank.service.AuthenticationService;
-import com.bank.service.time.TimeSimulateService;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.PriorityQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TimeSimulator implements Runnable {
 
+    private static final Lock LOCK_TIME = new ReentrantLock();
+    private static final Lock LOCK_FUNCTIONS = new ReentrantLock();
     private long timeChange;
     private long toAdd;
     private Thread thread;
     private PriorityQueue<DayPassedListener> dayPassedListeners = new PriorityQueue<>();
-
-    private static final Lock LOCK_TIME = new ReentrantLock();
-    private static final Lock LOCK_FUNCTIONS = new ReentrantLock();
 
 
     public TimeSimulator(long timeChange) {

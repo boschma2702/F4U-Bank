@@ -7,7 +7,6 @@ import com.bank.service.transaction.TransactionService;
 import com.bank.util.time.DayPassedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -38,14 +37,14 @@ public class CreditCardResetCreditService extends DayPassedListener {
         for (CreditCardBean creditCardBean : creditCardBeans) {
             String message = "Pay off credit card debt";
             BigDecimal amount;
-            if(creditCardBean.getCredit().compareTo(BigDecimal.ZERO) < 0){
+            if (creditCardBean.getCredit().compareTo(BigDecimal.ZERO) < 0) {
                 // credit is negative
                 amount = creditCardBean.getCreditLimit().subtract(creditCardBean.getCredit());
-            }else{
+            } else {
                 // credit is positive
                 amount = creditCardBean.getCreditLimit().subtract(creditCardBean.getCredit());
             }
-            if(amount.compareTo(BigDecimal.ZERO) > 0){
+            if (amount.compareTo(BigDecimal.ZERO) > 0) {
                 transactionService.retrieveTransaction(creditCardBean.getAccountBean(), amount, message);
             }
             creditCardBean.setCredit(creditCardBean.getCreditLimit());

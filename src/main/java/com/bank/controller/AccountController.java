@@ -1,12 +1,9 @@
 package com.bank.controller;
 
-import com.bank.bean.account.AccountBean;
 import com.bank.exception.*;
 import com.bank.projection.account.AccountAmountProjection;
 import com.bank.projection.account.AccountOpenProjection;
 import com.bank.projection.account.AccountOverdraftLimitProjection;
-import com.bank.projection.customer.CustomerUsernameProjection;
-import com.bank.projection.pin.PinProjection;
 import com.bank.service.AuthenticationService;
 import com.bank.service.account.*;
 import com.bank.service.account.accountsaving.AccountSavingCloseService;
@@ -15,13 +12,11 @@ import com.bank.service.customer.CustomerService;
 import com.bank.service.overdraft.OverdraftLimitService;
 import com.bank.util.AccountType;
 import com.bank.util.Constants;
-import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
 
 @Service
 public class AccountController {
@@ -76,11 +71,11 @@ public class AccountController {
     public AccountOpenProjection openAdditionalAccount(String authToken) throws NotAuthorizedException, AccountFrozenException, NotAllowedException {
         if (AuthenticationService.instance.isCustomer(authToken)) {
             int customerId = (Integer) AuthenticationService.instance.getObject(authToken, AuthenticationService.USER_ID);
-            if ((Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.IS_MINOR)){
+            if ((Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.IS_MINOR)) {
                 throw new NotAllowedException("Not Authorized");
             }
             return accountOpenService.openAdditionalAccount(customerId);
-        }else{
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }

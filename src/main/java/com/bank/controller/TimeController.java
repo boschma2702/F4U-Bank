@@ -34,16 +34,16 @@ public class TimeController {
 
     public void simulateTime(String authToken, int nrOfDays) throws InvalidParamValueException, NoEffectException, NotAuthorizedException {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-        if(isAdministrativeEmployee) {
+        if (isAdministrativeEmployee) {
             timeSimulateService.simulateTime(nrOfDays);
-        }else {
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
     public void reset(String authToken) throws NoEffectException, NotAuthorizedException {
         boolean isAdministrativeEmployee = (Boolean) AuthenticationService.instance.getObject(authToken, AuthenticationService.HAS_ADMINISTRATIVE_ACCESS);
-        if(isAdministrativeEmployee) {
+        if (isAdministrativeEmployee) {
             try {
                 Date initialDate = timeInitialService.getInitialDate();
                 if (backupAndRestoreService.restore()) {
@@ -53,12 +53,12 @@ public class TimeController {
             } catch (IOException | InterruptedException e) {
                 throw new NoEffectException("Failed to restore");
             }
-        }else {
+        } else {
             throw new NotAuthorizedException("Not Authorized");
         }
     }
 
-    public DateProjection getDate(){
+    public DateProjection getDate() {
         DateProjection projection = new DateProjection();
         projection.setDate(TimeService.TIMESIMULATOR.getCurrentDate());
         return projection;

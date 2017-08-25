@@ -2,7 +2,6 @@ package com.bank.bean.acountsavings;
 
 import com.bank.bean.account.AccountBean;
 import com.bank.service.time.TimeService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -83,7 +82,7 @@ public class AccountSavingBean {
     }
 
     @PrePersist
-    public void setDate(){
+    public void setDate() {
         creationDate = TimeService.TIMESIMULATOR.getCurrentDate();
     }
 

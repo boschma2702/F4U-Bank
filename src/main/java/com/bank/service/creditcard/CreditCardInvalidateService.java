@@ -3,11 +3,9 @@ package com.bank.service.creditcard;
 import com.bank.bean.account.AccountBean;
 import com.bank.bean.creditcard.CreditCardBean;
 import com.bank.exception.InvalidParamValueException;
-import com.bank.projection.pin.CardProjection;
 import com.bank.projection.pin.PinProjection;
 import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.transaction.TransactionService;
-import com.bank.util.Constants;
 import com.bank.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +45,7 @@ public class CreditCardInvalidateService {
 
         PinProjection newCardProjection = newPin ? creditCardCreateService.createCreditCard(accountBean.getAccountId()) : creditCardCreateService.createCreditCard(accountBean.getAccountId(), creditCardBean.getCreditCardPin());
 
-        if(!newPin){
+        if (!newPin) {
             newCardProjection.setPinCode(null);
         }
         return newCardProjection;

@@ -6,7 +6,6 @@ import com.bank.service.systemvariables.SystemVariableRetrieveService;
 import com.bank.service.time.TimeService;
 import com.bank.service.transaction.TransactionService;
 import com.bank.util.time.DayPassedListener;
-import com.bank.util.time.TimeSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +40,7 @@ public class CreditCardCostService extends DayPassedListener {
 
     private void payCreditCardCosts() {
         List<CreditCardBean> creditCardBeans = creditCardRepository.getAllActiveCreditCards(TimeService.TIMESIMULATOR.getCurrentDate());
-        for(CreditCardBean creditCardBean : creditCardBeans){
+        for (CreditCardBean creditCardBean : creditCardBeans) {
             String message = "Credit card costs";
             transactionService.retrieveTransaction(creditCardBean.getAccountBean(), (BigDecimal) systemVariableRetrieveService.getObjectInternally(CREDIT_CARD_MONTHLY_FEE), message);
         }

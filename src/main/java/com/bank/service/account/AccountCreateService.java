@@ -47,7 +47,7 @@ public class AccountCreateService {
         return createAccount(customerId, isMain, false);
     }
 
-    public CardBean createAccount(int customerId, boolean isMain, boolean isMinor){
+    public CardBean createAccount(int customerId, boolean isMain, boolean isMinor) {
         Logger.info("Creating an account for customerId=%s and isMain=%s", customerId, isMain);
         AccountBean accountBean = new AccountBean();
         accountBean.setAccountNumber(ibanGeneratorService.generateIBAN());
