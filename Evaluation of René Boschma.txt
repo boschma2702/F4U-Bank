@@ -1,0 +1,23 @@
+- Which implementation decisions did you make that
+  * Made your life easier when implementing later extensions
+    One thing that I reused for multiple extensions was the functionality to register a day passed listener into the system. Whenever a day passed all DayPassedListeners where called. As quite some work needed to be done based on time events, this really helped.
+    I also found that the architecture chosen aided in developing a increasingly growing system. The architecture was based on the idea of micro-services. Although this led to quite some classes (close to 150) it helped finding the parts of the system you needed to edit and allowed to "plug in" new parts in order to fulfill an extension.
+  * Made your life harder when implementing later extensions
+    I think the way I implemented checks on whether it was allowed to execute some functionality backfired the most. Due to the increased things that could hinder the execution of functionality (like frozen accounts, minor accounts etc.) the code became less clear and consistent. This part of the system kind of evolved into an unrestrained monster.
+  I also made the decision to make the services that actually changed something in the system as small as possible. This also included only requiring as few as parameters as the functionality required. This affected the efficiency of the system quite some bit, as the same objects often get retrieved from the database multiple times, instead of passing it through to the next service. This led to a struggle between maintaining the architecture and a more efficient system.
+
+
+- What would you do differently with the benefit of hindsight?
+Overall i'm quite happy with the system. The architecture is I think a good starting point, but I believe a gain in efficiency can be made if some parts of the system gets redesigned. Also the part that handled the authentication (as mentioned before) I would like to redesign (to get a solution that better checks whether a service is allowed to execute).
+Furthermore I should also gain the perseverance to document every piece of code, even if the implementation seems trivial to me. Documentation in the code is currently lacking to a great extend.
+
+
+- How can the whole setup and process be improved, if we were to repeat it?
+Personally I think it would benefit to have a protocol ready when starting (it is also very convenient for testing if the initial protocol has a function to reset the state of the system to an initial state). The first implementation was a bit guessing on what to do. Also the implementation of a thorough test suite should be really beneficial for the project. This way a variable can be removed from the time people spent on the project (and this will also lead to the different systems having a more consistent behaviour). A final thing I think is that it is a good idea to check if the people who compete in this project have a decent enough programming level and motivation (and time) to compete. This will hopefully increase the yield of the project.
+    I also think that it would benefit for the researcher that the way of committing is consistent over all groups (mainly that all the labels in the git repo have the same label names).
+It would be also interesting to see different technologies side by side (Having a poul of different programming languages and VCS), but this may be hard to realize.
+
+
+- What did you personally learn from the project?
+Quite some stuff. I believe the most significant thing is an increased appreciation for modern day banking systems (and other big systems) and a growing interest into how the banks actually manage and implement a system that must be efficient, maintainable, scalable, reusable while also guaranteeing (close to) zero down time.
+Furthermore, I also learned (experienced) that a clear architecture can really aid in developing a growing system.

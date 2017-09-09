@@ -4,6 +4,7 @@ import com.bank.service.AuthenticationService;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -58,8 +59,13 @@ public class TimeSimulator implements Runnable {
     }
 
     private void notifyDayPassedListeners(Date start, Date end) {
-        for (DayPassedListener listener : dayPassedListeners) {
+        Iterator<DayPassedListener> iterator = dayPassedListeners.iterator();
+        while(iterator.hasNext()){
+            DayPassedListener listener = iterator.next();
             listener.onDayPassed(start, end);
+            if(listener instanceof DayPassedRemoveAfterUseListener){
+                iterator.remove();
+            }
         }
     }
 
